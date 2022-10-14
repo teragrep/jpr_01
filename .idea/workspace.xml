@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Basic functionality done, adding option parametrization for pcre etc.">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2FOYqDN8I6SPWDJzXfTNX0ekGDg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/p000048u/libs/jna-5.9.0.jar&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="" />
+      <created>1664364789648</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1664364789648</updated>
+      <workItem from="1664364792162" duration="1114000" />
+      <workItem from="1664366978172" duration="1643000" />
+      <workItem from="1664452614976" duration="609000" />
+      <workItem from="1664522081712" duration="1205000" />
+      <workItem from="1664537359497" duration="3599000" />
+      <workItem from="1664775566607" duration="2841000" />
+      <workItem from="1664791855303" duration="5055000" />
+      <workItem from="1664859550688" duration="3763000" />
+      <workItem from="1664874312448" duration="2820000" />
+      <workItem from="1664881342080" duration="39000" />
+      <workItem from="1664959799713" duration="9407000" />
+      <workItem from="1664973608347" duration="2916000" />
+      <workItem from="1665047342841" duration="14137000" />
+      <workItem from="1665119478905" duration="7525000" />
+      <workItem from="1665135430362" duration="7535000" />
+      <workItem from="1665381115230" duration="2641000" />
+      <workItem from="1665388938836" duration="600000" />
+      <workItem from="1665563600794" duration="1478000" />
+      <workItem from="1665638677718" duration="8679000" />
+      <workItem from="1665724942146" duration="6324000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Basic functionality done, adding option parametrization for pcre etc." />
+    <option name="LAST_COMMIT_MESSAGE" value="Basic functionality done, adding option parametrization for pcre etc." />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
