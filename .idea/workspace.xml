@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Basic functionality done, adding option parametrization for pcre etc.">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.o" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,8 +71,16 @@
       <workItem from="1665388938836" duration="600000" />
       <workItem from="1665563600794" duration="1478000" />
       <workItem from="1665638677718" duration="8679000" />
-      <workItem from="1665724942146" duration="6324000" />
+      <workItem from="1665724942146" duration="6633000" />
     </task>
+    <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
+      <created>1665743404382</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1665743404382</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
