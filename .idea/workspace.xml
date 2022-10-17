@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Basic functionality done, adding option parametrization for pcre etc.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Deleted redundant functions.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.o" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +76,10 @@
       <workItem from="1665388938836" duration="600000" />
       <workItem from="1665563600794" duration="1478000" />
       <workItem from="1665638677718" duration="8679000" />
-      <workItem from="1665724942146" duration="6633000" />
+      <workItem from="1665724942146" duration="14053000" />
+      <workItem from="1665985184336" duration="5127000" />
+      <workItem from="1665998997784" duration="4087000" />
+      <workItem from="1666003103539" duration="9725000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -80,7 +88,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665743404382</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Deleted redundant functions.">
+      <created>1665743714796</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1665743714796</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -99,7 +114,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basic functionality done, adding option parametrization for pcre etc." />
-    <option name="LAST_COMMIT_MESSAGE" value="Basic functionality done, adding option parametrization for pcre etc." />
+    <MESSAGE value="Deleted redundant functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Deleted redundant functions." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

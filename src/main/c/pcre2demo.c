@@ -9,41 +9,41 @@
 // gcc -c -Wall -Werror -fpic src/main/c/pcre2demo.c -o src/main/c/pcre2demo.o -lpcre2-8
 // gcc -shared -Wl,-soname,libpcre2demo.so -o src/main/c/libpcre2demo.so src/main/c/pcre2demo.o -lpcre2-8
 
-
-typedef struct OptionsStruct {
+typedef struct OptionsStruct_TAG {
     int jPCRE2_ANCHORED;
     int jPCRE2_ALLOW_EMPTY_CLASS;
-    int jPCRE2_ALT_BSUX;
-    int jPCRE2_ALT_CIRCUMFLEX;
-    int jPCRE2_ALT_VERBNAMES;
-    int jPCRE2_AUTO_CALLOUT;
-    int jPCRE2_CASELESS;
-    int jPCRE2_DOLLAR_ENDONLY;
-    int jPCRE2_DOTALL;
-    int jPCRE2_DUPNAMES;
-    int jPCRE2_ENDANCHORED;
-    int jPCRE2_EXTENDED;
-    int jPCRE2_EXTENDED_MORE;
-    int jPCRE2_FIRSTLINE;
-    int jPCRE2_LITERAL;
-    int jPCRE2_MATCH_INVALID_UTF;
-    int jPCRE2_MATCH_UNSET_BACKREF;
-    int jPCRE2_MULTILINE;
-    int jPCRE2_NEVER_BACKSLASH_C;
-    int jPCRE2_NEVER_UCP;
-    int jPCRE2_NEVER_UTF;
-    int jPCRE2_NO_AUTO_CAPTURE;
-    int jPCRE2_NO_AUTO_POSSESS;
-    int jPCRE2_NO_DOTSTAR_ANCHOR;
-    int jPCRE2_NO_START_OPTIMIZE;
-    int jPCRE2_NO_UTF_CHECK;
-    int jPCRE2_UCP;
-    int jPCRE2_UNGREEDY;
-    int jPCRE2_USE_OFFSET_LIMIT;
-    int jPCRE2_UTF;
+//    int jPCRE2_ALT_BSUX;
+//    int jPCRE2_ALT_CIRCUMFLEX;
+//    int jPCRE2_ALT_VERBNAMES;
+//    int jPCRE2_AUTO_CALLOUT;
+//    int jPCRE2_CASELESS;
+//    int jPCRE2_DOLLAR_ENDONLY;
+//    int jPCRE2_DOTALL;
+//    int jPCRE2_DUPNAMES;
+//    int jPCRE2_ENDANCHORED;
+//    int jPCRE2_EXTENDED;
+//    int jPCRE2_EXTENDED_MORE;
+//    int jPCRE2_FIRSTLINE;
+//    int jPCRE2_LITERAL;
+//    int jPCRE2_MATCH_INVALID_UTF;
+//    int jPCRE2_MATCH_UNSET_BACKREF;
+//    int jPCRE2_MULTILINE;
+//    int jPCRE2_NEVER_BACKSLASH_C;
+//    int jPCRE2_NEVER_UCP;
+//    int jPCRE2_NEVER_UTF;
+//    int jPCRE2_NO_AUTO_CAPTURE;
+//    int jPCRE2_NO_AUTO_POSSESS;
+//    int jPCRE2_NO_DOTSTAR_ANCHOR;
+//    int jPCRE2_NO_START_OPTIMIZE;
+//    int jPCRE2_NO_UTF_CHECK;
+//    int jPCRE2_UCP;
+//    int jPCRE2_UNGREEDY;
+//    int jPCRE2_USE_OFFSET_LIMIT;
+//    int jPCRE2_UTF;
 } OptionsStruct;
+OptionsStruct* translate(OptionsStruct* pt, int x, int y);
 
-void *pcre2_jcompile(char *a, size_t k){ // , const OptionsStruct* sval
+void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
     pcre2_code *re;
     PCRE2_SPTR pattern;
     pattern = (PCRE2_SPTR)a;
@@ -53,6 +53,10 @@ void *pcre2_jcompile(char *a, size_t k){ // , const OptionsStruct* sval
 
     // TODO: make options work from input parameters of the function.
     uint32_t option0 = 0;
+    printf("PCRE2_ANCHORED check! %d\n", temp->jPCRE2_ANCHORED);
+    if (temp->jPCRE2_ANCHORED == 1) {
+        printf("PCRE2_ANCHORED detected! %d\n", temp->jPCRE2_ANCHORED);
+    }
     size_t pattern_length = PCRE2_ZERO_TERMINATED; // default value for finding correct size_t
     printf("pcre2_compile starting.\n");
     if (k>0) {
@@ -454,18 +458,24 @@ void printString(char *myString) {
     printf("Printing a test word: %s\n", myString);
 }
 
+void Options_sendStruct(const OptionsStruct* soptions){
+    // note: printfs called from C won't be flushed
+    // to stdout until the Java process completes
+    printf("(C) %d\n", soptions->jPCRE2_ANCHORED);
+}
+
 
 
 int main(void) {
     pcre2_versioncheck();
-    char testi[] = "From:regular.expressions@example.com\r\n""From:exddd@43434.com\r\n""From:7853456@exgem.com\r\n";
+    //char testi[] = "From:regular.expressions@example.com\r\n""From:exddd@43434.com\r\n""From:7853456@exgem.com\r\n";
     //char testi[] = "Kissa sanoi miau!";
     //pcre2_java("From:([^@]+)@([^\r]+)", testi, 1);
-    pcre2_code *re;
+    //pcre2_code *re;
     // uint32_t options = PCRE2_ANCHORED | PCRE2_NO_UTF_CHECK;
-    re = pcre2_jcompile("From:([^@]+)@([^\r]+)", 0);
-    pcre2_jmatch(testi, re, 1);
-    pcre2_jcompile_free(re);
+    //re = pcre2_jcompile("From:([^@]+)@([^\r]+)", 0);
+    //pcre2_jmatch(testi, re, 1);
+    //pcre2_jcompile_free(re);
     return 0;
 }
 

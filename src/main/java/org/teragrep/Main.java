@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) {
         //JavaPcre.printString("cat|dog the cat sat on the mat");
         int g = 0;
+        JavaPcre.pcre2_versioncheck();
         JavaPcre.pcre2_compile_java("From:([^@]+)@([^\r]+)", g);
     }
 }
