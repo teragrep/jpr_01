@@ -10,38 +10,38 @@
 // gcc -shared -Wl,-soname,libpcre2demo.so -o src/main/c/libpcre2demo.so src/main/c/pcre2demo.o -lpcre2-8
 
 typedef struct OptionsStruct_TAG {
-    int jPCRE2_ANCHORED;
-    int jPCRE2_ALLOW_EMPTY_CLASS;
-//    int jPCRE2_ALT_BSUX;
-//    int jPCRE2_ALT_CIRCUMFLEX;
-//    int jPCRE2_ALT_VERBNAMES;
-//    int jPCRE2_AUTO_CALLOUT;
-//    int jPCRE2_CASELESS;
-//    int jPCRE2_DOLLAR_ENDONLY;
-//    int jPCRE2_DOTALL;
-//    int jPCRE2_DUPNAMES;
-//    int jPCRE2_ENDANCHORED;
-//    int jPCRE2_EXTENDED;
-//    int jPCRE2_EXTENDED_MORE;
-//    int jPCRE2_FIRSTLINE;
-//    int jPCRE2_LITERAL;
-//    int jPCRE2_MATCH_INVALID_UTF;
-//    int jPCRE2_MATCH_UNSET_BACKREF;
-//    int jPCRE2_MULTILINE;
-//    int jPCRE2_NEVER_BACKSLASH_C;
-//    int jPCRE2_NEVER_UCP;
-//    int jPCRE2_NEVER_UTF;
-//    int jPCRE2_NO_AUTO_CAPTURE;
-//    int jPCRE2_NO_AUTO_POSSESS;
-//    int jPCRE2_NO_DOTSTAR_ANCHOR;
-//    int jPCRE2_NO_START_OPTIMIZE;
-//    int jPCRE2_NO_UTF_CHECK;
-//    int jPCRE2_UCP;
-//    int jPCRE2_UNGREEDY;
-//    int jPCRE2_USE_OFFSET_LIMIT;
-//    int jPCRE2_UTF;
+    uint32_t JPCRE2_ANCHORED;
+    uint32_t JPCRE2_ALLOW_EMPTY_CLASS;
+    uint32_t JPCRE2_ALT_BSUX;
+    uint32_t JPCRE2_ALT_CIRCUMFLEX;
+    uint32_t JPCRE2_ALT_VERBNAMES;
+    uint32_t JPCRE2_AUTO_CALLOUT;
+    uint32_t JPCRE2_CASELESS;
+    uint32_t JPCRE2_DOLLAR_ENDONLY;
+    uint32_t JPCRE2_DOTALL;
+    uint32_t JPCRE2_DUPNAMES;
+    uint32_t JPCRE2_ENDANCHORED;
+    uint32_t JPCRE2_EXTENDED;
+    uint32_t JPCRE2_EXTENDED_MORE;
+    uint32_t JPCRE2_FIRSTLINE;
+    uint32_t JPCRE2_LITERAL;
+    uint32_t JPCRE2_MATCH_INVALID_UTF;
+    uint32_t JPCRE2_MATCH_UNSET_BACKREF;
+    uint32_t JPCRE2_MULTILINE;
+    uint32_t JPCRE2_NEVER_BACKSLASH_C;
+    uint32_t JPCRE2_NEVER_UCP;
+    uint32_t JPCRE2_NEVER_UTF;
+    uint32_t JPCRE2_NO_AUTO_CAPTURE;
+    uint32_t JPCRE2_NO_AUTO_POSSESS;
+    uint32_t JPCRE2_NO_DOTSTAR_ANCHOR;
+    uint32_t JPCRE2_NO_START_OPTIMIZE;
+    uint32_t JPCRE2_NO_UTF_CHECK;
+    uint32_t JPCRE2_UCP;
+    uint32_t JPCRE2_UNGREEDY;
+    uint32_t JPCRE2_USE_OFFSET_LIMIT;
+    uint32_t JPCRE2_UTF;
 } OptionsStruct;
-OptionsStruct* translate(OptionsStruct* pt, int x, int y);
+//OptionsStruct* translate(OptionsStruct* pt, int x, int y);
 
 void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
     pcre2_code *re;
@@ -53,10 +53,21 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
 
     // TODO: make options work from input parameters of the function.
     uint32_t option0 = 0;
-    printf("PCRE2_ANCHORED check! %d\n", temp->jPCRE2_ANCHORED);
-    if (temp->jPCRE2_ANCHORED == 1) {
-        printf("PCRE2_ANCHORED detected! %d\n", temp->jPCRE2_ANCHORED);
+
+    if (temp->JPCRE2_ANCHORED == 0) {
+        printf("PCRE2_ANCHORED detected false! %d\n", temp->JPCRE2_ANCHORED);
+    }else{
+        temp->JPCRE2_ANCHORED = PCRE2_ANCHORED;
+        printf("PCRE2_ANCHORED detected true! %d\n", temp->JPCRE2_ANCHORED);
     }
+
+    if (temp->JPCRE2_ALLOW_EMPTY_CLASS == 0) {
+            printf("PCRE2_ALLOW_EMPTY_CLASS detected false! %d\n", temp->JPCRE2_ALLOW_EMPTY_CLASS);
+        }else{
+            temp->JPCRE2_ALLOW_EMPTY_CLASS = PCRE2_ALLOW_EMPTY_CLASS;
+            printf("PCRE2_ALLOW_EMPTY_CLASS detected true! %d\n", temp->JPCRE2_ALLOW_EMPTY_CLASS);
+        }
+
     size_t pattern_length = PCRE2_ZERO_TERMINATED; // default value for finding correct size_t
     printf("pcre2_compile starting.\n");
     if (k>0) {
@@ -461,7 +472,7 @@ void printString(char *myString) {
 void Options_sendStruct(const OptionsStruct* soptions){
     // note: printfs called from C won't be flushed
     // to stdout until the Java process completes
-    printf("(C) %d\n", soptions->jPCRE2_ANCHORED);
+    printf("(C) %d\n", soptions->JPCRE2_ANCHORED);
 }
 
 

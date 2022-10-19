@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Deleted redundant functions.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Implemented initial structure/struct for transferring variables between java and C.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -79,7 +79,10 @@
       <workItem from="1665724942146" duration="14053000" />
       <workItem from="1665985184336" duration="5127000" />
       <workItem from="1665998997784" duration="4087000" />
-      <workItem from="1666003103539" duration="9725000" />
+      <workItem from="1666003103539" duration="10137000" />
+      <workItem from="1666078759686" duration="3566000" />
+      <workItem from="1666092575131" duration="3632000" />
+      <workItem from="1666158823053" duration="7180000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -95,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665743714796</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Implemented initial structure/struct for transferring variables between java and C.">
+      <created>1666013422482</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1666013422482</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,7 +125,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basic functionality done, adding option parametrization for pcre etc." />
     <MESSAGE value="Deleted redundant functions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Deleted redundant functions." />
+    <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented initial structure/struct for transferring variables between java and C." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
