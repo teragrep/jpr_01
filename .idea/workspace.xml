@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Implemented initial structure/struct for transferring variables between java and C.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -82,7 +82,9 @@
       <workItem from="1666003103539" duration="10137000" />
       <workItem from="1666078759686" duration="3566000" />
       <workItem from="1666092575131" duration="3632000" />
-      <workItem from="1666158823053" duration="7180000" />
+      <workItem from="1666158823053" duration="7565000" />
+      <workItem from="1666242659712" duration="3459000" />
+      <workItem from="1666250077457" duration="17860000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -105,7 +107,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666013422482</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values.">
+      <created>1666184376975</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1666184376975</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,7 +135,8 @@
     <MESSAGE value="Basic functionality done, adding option parametrization for pcre etc." />
     <MESSAGE value="Deleted redundant functions." />
     <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented initial structure/struct for transferring variables between java and C." />
+    <MESSAGE value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

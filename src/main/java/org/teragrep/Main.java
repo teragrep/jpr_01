@@ -6,12 +6,11 @@ import com.sun.jna.Pointer;
 
 public class Main {
     public static void main(String[] args) {
-        //JavaPcre.printString("cat|dog the cat sat on the mat");
-        int g = 0;
-        JavaPcre.Libpcre2demo.OptionsStruct pt = JavaPcre.pcre2_init_options();
-        pt.JPCRE2_ANCHORED = true;
-        pt.JPCRE2_ALLOW_EMPTY_CLASS = true;
-        JavaPcre.pcre2_versioncheck();
-        JavaPcre.pcre2_compile_java("From:([^@]+)@([^\r]+)", g, pt);
+        JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
+        s1.pcre2_versioncheck();
+        //s1.compile_options.JPCRE2_ANCHORED = true;
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        s1.pcre2_match_java("From:regular.expressions@example.com\r\n"+"From:exddd@43434.com\r\n"+"From:7853456@exgem.com\r\n", true);
+        s1.pcre2_compile_java_free();
     }
 }

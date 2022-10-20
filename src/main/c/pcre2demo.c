@@ -10,36 +10,36 @@
 // gcc -shared -Wl,-soname,libpcre2demo.so -o src/main/c/libpcre2demo.so src/main/c/pcre2demo.o -lpcre2-8
 
 typedef struct OptionsStruct_TAG {
-    uint32_t JPCRE2_ANCHORED;
-    uint32_t JPCRE2_ALLOW_EMPTY_CLASS;
-    uint32_t JPCRE2_ALT_BSUX;
-    uint32_t JPCRE2_ALT_CIRCUMFLEX;
-    uint32_t JPCRE2_ALT_VERBNAMES;
-    uint32_t JPCRE2_AUTO_CALLOUT;
-    uint32_t JPCRE2_CASELESS;
-    uint32_t JPCRE2_DOLLAR_ENDONLY;
-    uint32_t JPCRE2_DOTALL;
-    uint32_t JPCRE2_DUPNAMES;
-    uint32_t JPCRE2_ENDANCHORED;
-    uint32_t JPCRE2_EXTENDED;
-    uint32_t JPCRE2_EXTENDED_MORE;
-    uint32_t JPCRE2_FIRSTLINE;
-    uint32_t JPCRE2_LITERAL;
-    uint32_t JPCRE2_MATCH_INVALID_UTF;
-    uint32_t JPCRE2_MATCH_UNSET_BACKREF;
-    uint32_t JPCRE2_MULTILINE;
-    uint32_t JPCRE2_NEVER_BACKSLASH_C;
-    uint32_t JPCRE2_NEVER_UCP;
-    uint32_t JPCRE2_NEVER_UTF;
-    uint32_t JPCRE2_NO_AUTO_CAPTURE;
-    uint32_t JPCRE2_NO_AUTO_POSSESS;
-    uint32_t JPCRE2_NO_DOTSTAR_ANCHOR;
-    uint32_t JPCRE2_NO_START_OPTIMIZE;
-    uint32_t JPCRE2_NO_UTF_CHECK;
-    uint32_t JPCRE2_UCP;
-    uint32_t JPCRE2_UNGREEDY;
-    uint32_t JPCRE2_USE_OFFSET_LIMIT;
-    uint32_t JPCRE2_UTF;
+    int JPCRE2_ANCHORED;
+    int JPCRE2_ALLOW_EMPTY_CLASS;
+    int JPCRE2_ALT_BSUX;
+    int JPCRE2_ALT_CIRCUMFLEX;
+    int JPCRE2_ALT_VERBNAMES;
+    int JPCRE2_AUTO_CALLOUT;
+    int JPCRE2_CASELESS;
+    int JPCRE2_DOLLAR_ENDONLY;
+    int JPCRE2_DOTALL;
+    int JPCRE2_DUPNAMES;
+    int JPCRE2_ENDANCHORED;
+    int JPCRE2_EXTENDED;
+    int JPCRE2_EXTENDED_MORE;
+    int JPCRE2_FIRSTLINE;
+    int JPCRE2_LITERAL;
+    int JPCRE2_MATCH_INVALID_UTF;
+    int JPCRE2_MATCH_UNSET_BACKREF;
+    int JPCRE2_MULTILINE;
+    int JPCRE2_NEVER_BACKSLASH_C;
+    int JPCRE2_NEVER_UCP;
+    int JPCRE2_NEVER_UTF;
+    int JPCRE2_NO_AUTO_CAPTURE;
+    int JPCRE2_NO_AUTO_POSSESS;
+    int JPCRE2_NO_DOTSTAR_ANCHOR;
+    int JPCRE2_NO_START_OPTIMIZE;
+    int JPCRE2_NO_UTF_CHECK;
+    int JPCRE2_UCP;
+    int JPCRE2_UNGREEDY;
+    int JPCRE2_USE_OFFSET_LIMIT;
+    int JPCRE2_UTF;
 } OptionsStruct;
 //OptionsStruct* translate(OptionsStruct* pt, int x, int y);
 
@@ -51,29 +51,107 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
     int errornumber;
     PCRE2_SIZE erroroffset;
 
-    // TODO: make options work from input parameters of the function.
+    // constructing the uint32_t option0 parameter for compile function from OptionsStruct values.
     uint32_t option0 = 0;
 
-    if (temp->JPCRE2_ANCHORED == 0) {
-        printf("PCRE2_ANCHORED detected false! %d\n", temp->JPCRE2_ANCHORED);
-    }else{
-        temp->JPCRE2_ANCHORED = PCRE2_ANCHORED;
-        printf("PCRE2_ANCHORED detected true! %d\n", temp->JPCRE2_ANCHORED);
+    if (temp->JPCRE2_ANCHORED != 0) {
+        option0 |= PCRE2_ANCHORED;
+    }
+    if (temp->JPCRE2_ALLOW_EMPTY_CLASS != 0) {
+        option0 |= PCRE2_ALLOW_EMPTY_CLASS;
+    }
+    if (temp->JPCRE2_ALT_BSUX != 0) {
+        option0 |= PCRE2_ALT_BSUX;
+    }
+    if (temp->JPCRE2_ALT_CIRCUMFLEX != 0) {
+        option0 |= PCRE2_ALT_CIRCUMFLEX;
+    }
+    if (temp->JPCRE2_ALT_VERBNAMES != 0) {
+        option0 |= PCRE2_ALT_VERBNAMES;
+    }
+    if (temp->JPCRE2_AUTO_CALLOUT != 0) {
+        option0 |= PCRE2_AUTO_CALLOUT;
+    }
+    if (temp->JPCRE2_CASELESS != 0) {
+        option0 |= PCRE2_CASELESS;
+    }
+    if (temp->JPCRE2_DOLLAR_ENDONLY != 0) {
+        option0 |= PCRE2_DOLLAR_ENDONLY;
+    }
+    if (temp->JPCRE2_DOTALL != 0) {
+        option0 |= PCRE2_DOTALL;
+    }
+    if (temp->JPCRE2_DUPNAMES != 0) {
+        option0 |= PCRE2_DUPNAMES;
+    }
+    if (temp->JPCRE2_ENDANCHORED != 0) {
+        option0 |= PCRE2_ENDANCHORED;
+    }
+    if (temp->JPCRE2_EXTENDED != 0) {
+        option0 |= PCRE2_EXTENDED;
+    }
+    if (temp->JPCRE2_EXTENDED_MORE != 0) {
+        option0 |= PCRE2_EXTENDED_MORE;
+    }
+    if (temp->JPCRE2_FIRSTLINE != 0) {
+        option0 |= PCRE2_FIRSTLINE;
+    }
+    if (temp->JPCRE2_LITERAL != 0) {
+        option0 |= PCRE2_LITERAL;
+    }
+    if (temp->JPCRE2_MATCH_INVALID_UTF != 0) {
+        option0 |= PCRE2_MATCH_INVALID_UTF;
+    }
+    if (temp->JPCRE2_MATCH_UNSET_BACKREF != 0) {
+        option0 |= PCRE2_MATCH_UNSET_BACKREF;
+    }
+    if (temp->JPCRE2_MULTILINE != 0) {
+        option0 |= PCRE2_MULTILINE;
+    }
+    if (temp->JPCRE2_NEVER_BACKSLASH_C != 0) {
+        option0 |= PCRE2_NEVER_BACKSLASH_C;
+    }
+    if (temp->JPCRE2_NEVER_UCP != 0) {
+        option0 |= PCRE2_NEVER_UCP;
+    }
+    if (temp->JPCRE2_NEVER_UTF != 0) {
+        option0 |= PCRE2_NEVER_UTF;
+    }
+    if (temp->JPCRE2_NO_AUTO_CAPTURE != 0) {
+        option0 |= PCRE2_NO_AUTO_CAPTURE;
+    }
+    if (temp->JPCRE2_NO_AUTO_POSSESS != 0) {
+        option0 |= PCRE2_NO_AUTO_POSSESS;
+    }
+    if (temp->JPCRE2_NO_DOTSTAR_ANCHOR != 0) {
+        option0 |= PCRE2_NO_DOTSTAR_ANCHOR;
+    }
+    if (temp->JPCRE2_NO_START_OPTIMIZE != 0) {
+        option0 |= PCRE2_NO_START_OPTIMIZE;
+    }
+    if (temp->JPCRE2_NO_UTF_CHECK != 0) {
+        option0 |= PCRE2_NO_UTF_CHECK;
+    }
+    if (temp->JPCRE2_UCP != 0) {
+        option0 |= PCRE2_UCP;
+    }
+    if (temp->JPCRE2_UNGREEDY != 0) {
+        option0 |= PCRE2_UNGREEDY;
+    }
+    if (temp->JPCRE2_USE_OFFSET_LIMIT != 0) {
+        option0 |= PCRE2_USE_OFFSET_LIMIT;
+    }
+    if (temp->JPCRE2_UTF != 0) {
+        option0 |= PCRE2_UTF;
     }
 
-    if (temp->JPCRE2_ALLOW_EMPTY_CLASS == 0) {
-            printf("PCRE2_ALLOW_EMPTY_CLASS detected false! %d\n", temp->JPCRE2_ALLOW_EMPTY_CLASS);
-        }else{
-            temp->JPCRE2_ALLOW_EMPTY_CLASS = PCRE2_ALLOW_EMPTY_CLASS;
-            printf("PCRE2_ALLOW_EMPTY_CLASS detected true! %d\n", temp->JPCRE2_ALLOW_EMPTY_CLASS);
-        }
-
-    size_t pattern_length = PCRE2_ZERO_TERMINATED; // default value for finding correct size_t
-    printf("pcre2_compile starting.\n");
+    size_t pattern_length = PCRE2_ZERO_TERMINATED; // default value for finding correct size_t of pattern
     if (k>0) {
         pattern_length = k;
     }
 
+    printf("pcre2_compile starting.\n");
+    printf("options value is: %d\n", option0);
     re = pcre2_compile(
             pattern,               /* the pattern */
             pattern_length,        /* value 0 indicates pattern is zero-terminated */
@@ -98,7 +176,9 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
 }
 
 void pcre2_jcompile_free(pcre2_code *re){
+    printf("trying to free memory.\n");
     pcre2_code_free(re);
+    printf("Memory released successfully.\n");
 }
 
 
@@ -123,7 +203,7 @@ void pcre2_jmatch(char *b, pcre2_code *re, int c){
 
     if (c==0){
         find_all = 0;
-    }else if(c==1){
+    }else if(c!=0){
         find_all = 1;
     }else{
         printf("Unrecognised option\n");
