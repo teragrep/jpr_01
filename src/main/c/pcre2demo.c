@@ -41,7 +41,46 @@ typedef struct OptionsStruct_TAG {
     int JPCRE2_USE_OFFSET_LIMIT;
     int JPCRE2_UTF;
 } OptionsStruct;
-//OptionsStruct* translate(OptionsStruct* pt, int x, int y);
+
+// TODO: make a struct here for passing an array of regex data (string, integer) to java.
+typedef struct RegexStruct_TAG {
+    int numVals;
+    char** vals;
+} RegexStruct;
+
+RegexStruct example_getStrings()
+{
+	RegexStruct sVal;
+	sVal.numVals = 3;
+	sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
+	memset(sVal.vals, 0, sizeof(char*) * sVal.numVals);
+
+	sVal.vals[0] = (char*)malloc(sizeof(char) * 4);
+	memset(sVal.vals[0], 0, sizeof(char) * 4);
+	strcpy(sVal.vals[0], "ten");
+
+	sVal.vals[1] = (char*)malloc(sizeof(char) * 7);
+	memset(sVal.vals[1], 0, sizeof(char) * 7);
+	strcpy(sVal.vals[1], "eleven");
+
+	sVal.vals[2] = (char*)malloc(sizeof(char) * 7);
+	memset(sVal.vals[2], 0, sizeof(char) * 7);
+	strcpy(sVal.vals[2], "twelve");
+
+	return sVal;
+}
+
+void example_cleanup(RegexStruct sVal)
+{
+	int loop = 0;
+	for (loop=0; loop>sVal.numVals; loop++)
+	{
+		free(sVal.vals[loop]);
+	}
+	free(sVal.vals);
+}
+
+// TODO: regex struct testing ends here.
 
 void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
     pcre2_code *re;
@@ -154,7 +193,7 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
     printf("options value is: %d\n", option0);
     re = pcre2_compile(
             pattern,               /* the pattern */
-            pattern_length,        /* value 0 indicates pattern is zero-terminated */
+            pattern_length,        /* value 0 indicates pattern is zero-terminated, anything higher indicates actual pattern length */
             option0,               /* options */
             &errornumber,          /* for error number */
             &erroroffset,          /* for error offset */
@@ -176,11 +215,122 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
 }
 
 void pcre2_jcompile_free(pcre2_code *re){
-    printf("trying to free memory.\n");
+    printf("Releasing data and compiled pattern from memory.\n");
     pcre2_code_free(re);
     printf("Memory released successfully.\n");
 }
 
+
+
+
+// this function contains matching for a single match
+void *pcre2_jmatch2(char *b, pcre2_code *re){
+    pcre2_match_data *match_data;
+    PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
+    //PCRE2_SPTR name_table;
+
+    //int crlf_is_newline;
+    int rc;
+    //int find_all;
+    int i;
+    //int utf8;
+
+    //uint32_t option_bits;
+    //uint32_t namecount;
+    //uint32_t name_entry_size;
+    //uint32_t newline;
+
+    PCRE2_SIZE subject_length;
+    PCRE2_SIZE *ovector;
+
+/*    if (c==0){
+        find_all = 0;
+    }else if(c!=0){
+        find_all = 1;
+    }else{
+        printf("Unrecognised option\n");
+        return NULL;
+    }*/
+
+    match_data = pcre2_match_data_create_from_pattern(re, NULL);
+
+    subject = (PCRE2_SPTR)b;
+    subject_length = (PCRE2_SIZE)strlen((char *)subject);
+/* Now run the match. */
+
+/* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
+    rc = pcre2_match(
+            re,                   /* the compiled pattern */
+            subject,              /* the subject string */
+            subject_length,       /* the length of the subject */
+            0,                    /* start at offset 0 in the subject */
+            0,                    /* default options */
+            match_data,           /* block for storing the result */
+            NULL);                /* use default match context */
+
+/* Matching failed: handle error cases */
+
+    if (rc < 0)
+    {
+        switch(rc)
+        {
+            case PCRE2_ERROR_NOMATCH: printf("No match\n"); break;
+                /*
+                Handle other special cases if you like
+                */
+            default: printf("Matching error %d\n", rc); break;
+        }
+        pcre2_match_data_free(match_data);   /* Release memory used for the match */
+        pcre2_code_free(re);                 /*   data and the compiled pattern. */
+        return NULL;
+    }
+
+    /* Match succeeded. Get a pointer to the output vector, where string offsets
+    are stored. */
+
+    ovector = pcre2_get_ovector_pointer(match_data);
+    printf("Match succeeded at offset %d with rc length of %d\n", (int)ovector[0], rc);
+
+    for (i = 0; i < rc; i++)
+        {
+            PCRE2_SPTR substring_start = subject + ovector[2*i];
+            PCRE2_SIZE substring_length = ovector[2*i+1] - ovector[2*i];
+            printf("%2d: %.*s\n", i, (int)substring_length, (char *)substring_start);
+        }
+
+    return match_data;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+void pcre2_jmatch_free(pcre2_match_data *match_data){
+    printf("Releasing match_data from memory.\n");
+    pcre2_match_data_free(match_data);
+    printf("Memory released successfully.\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* This is the matching function. This does only one match, further matching will be done below */
 
 void pcre2_jmatch(char *b, pcre2_code *re, int c){
     pcre2_match_data *match_data;
@@ -216,6 +366,7 @@ void pcre2_jmatch(char *b, pcre2_code *re, int c){
     subject_length = (PCRE2_SIZE)strlen((char *)subject);
 /* Now run the match. */
 
+/* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
     rc = pcre2_match(
             re,                   /* the compiled pattern */
             subject,              /* the subject string */
@@ -238,7 +389,7 @@ void pcre2_jmatch(char *b, pcre2_code *re, int c){
             default: printf("Matching error %d\n", rc); break;
         }
         pcre2_match_data_free(match_data);   /* Release memory used for the match */
-        //pcre2_code_free(re);                 /*   data and the compiled pattern. */
+        pcre2_code_free(re);                 /*   data and the compiled pattern. */
         return;
     }
 
@@ -247,9 +398,6 @@ are stored. */
 
     ovector = pcre2_get_ovector_pointer(match_data);
     printf("Match succeeded at offset %d\n", (int)ovector[0]);
-
-    // TODO: free match data here, but only for testing phase. Need a separate function to do this in the final version.
-    //pcre2_match_data_free(match_data);
 
 /*************************************************************************
 * We have found the first match within the subject string. If the output *
@@ -277,7 +425,7 @@ option is never set. */
                (char *)(subject + ovector[1]));
         printf("Run abandoned\n");
         pcre2_match_data_free(match_data);
-        //pcre2_code_free(re);
+        pcre2_code_free(re);
         return;
     }
 
@@ -291,6 +439,16 @@ application you might want to do things other than print them. */
         printf("%2d: %.*s\n", i, (int)substring_length, (char *)substring_start);
     }
 
+    // TODO: make this thing work so it is possible to return the regex results back to java for ALL the match groups.
+    for (i = 0; i < rc; i++)
+    {
+        PCRE2_UCHAR buffer[256];
+        PCRE2_SIZE *bufflen;
+        bufflen = malloc(sizeof(PCRE2_SIZE));
+        pcre2_substring_copy_bynumber(match_data, i, buffer, bufflen);
+        printf("%2d: %s\n", i, buffer);
+        free(bufflen);
+    }
 /**************************************************************************
 * That concludes the basic part of this demonstration program. We have    *
 * compiled a pattern, and performed a single match. The code that follows *
@@ -371,7 +529,7 @@ we have to extract the count of named parentheses from the pattern. */
     if (!find_all)     /* Check for -g */
     {
         pcre2_match_data_free(match_data);  /* Release the memory that was used */
-        //pcre2_code_free(re);                /* for the match data and the pattern. */
+        pcre2_code_free(re);                /* for the match data and the pattern. */
         return;                           /* Exit the program. */
     }
 
@@ -480,7 +638,7 @@ sequence. */
         {
             printf("Matching error %d\n", rc);
             pcre2_match_data_free(match_data);
-            //pcre2_code_free(re);
+            pcre2_code_free(re);
             return;
         }
 
@@ -505,7 +663,7 @@ sequence. */
                    (char *)(subject + ovector[1]));
             printf("Run abandoned\n");
             pcre2_match_data_free(match_data);
-            //pcre2_code_free(re);
+            pcre2_code_free(re);
             return;
         }
 
@@ -535,7 +693,7 @@ sequence. */
 
     printf("\n");
     pcre2_match_data_free(match_data);
-    //pcre2_code_free(re);
+    pcre2_code_free(re);
     return;
 }
 

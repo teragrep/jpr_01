@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Testing how to get the matched text from C to Java using pcre2_substring_copy_bynumber().">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -38,6 +38,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
@@ -84,7 +85,20 @@
       <workItem from="1666092575131" duration="3632000" />
       <workItem from="1666158823053" duration="7565000" />
       <workItem from="1666242659712" duration="3459000" />
-      <workItem from="1666250077457" duration="17860000" />
+      <workItem from="1666250077457" duration="18127000" />
+      <workItem from="1666330132171" duration="14019000" />
+      <workItem from="1666589733170" duration="3482000" />
+      <workItem from="1666596948266" duration="7066000" />
+      <workItem from="1666613015980" duration="3185000" />
+      <workItem from="1666675338398" duration="14346000" />
+      <workItem from="1666764397700" duration="15898000" />
+      <workItem from="1666847699670" duration="11692000" />
+      <workItem from="1666865427257" duration="2113000" />
+      <workItem from="1666933064060" duration="2429000" />
+      <workItem from="1666943547723" duration="9412000" />
+      <workItem from="1667200505215" duration="8823000" />
+      <workItem from="1667282984039" duration="3243000" />
+      <workItem from="1667371140770" duration="10480000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -114,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666184376975</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory.">
+      <created>1666271234226</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1666271234227</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,7 +157,8 @@
     <MESSAGE value="Deleted redundant functions." />
     <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
     <MESSAGE value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
+    <MESSAGE value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

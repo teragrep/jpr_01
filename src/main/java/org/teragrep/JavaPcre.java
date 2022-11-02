@@ -45,8 +45,21 @@ public class JavaPcre {
             public boolean JPCRE2_USE_OFFSET_LIMIT = false;
             public boolean JPCRE2_UTF = false;
         }
-        //OptionsStruct translate(OptionsStruct pt, boolean x, boolean y);
-        Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options);
+
+        @FieldOrder({ "numVals", "vals" })
+        public static class RegexStruct extends Structure {
+            public static class ByValue extends RegexStruct implements Structure.ByValue {}
+
+            public int numVals;
+            public Pointer vals; // char**
+        }
+        RegexStruct.ByValue example_getStrings();
+
+        void example_cleanup(RegexStruct.ByValue sVal);
+
+        Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
+
+        Pointer pcre2_jmatch2(String subject, Pointer re); // returns pointer to match data.
 
         void pcre2_jmatch(String subject, Pointer re, boolean findall);
 
@@ -55,6 +68,7 @@ public class JavaPcre {
         void pcre2_jcompile_free(Pointer re);
 
         void pcre2_versioncheck();
+        void pcre2_jmatch_free(Pointer match_data);
 
     }
 
@@ -64,16 +78,31 @@ public class JavaPcre {
     int pattern_size;
     String subject;
     Pointer re;
+    Pointer match_data;
     boolean findall;
     Libpcre2demo.OptionsStruct compile_options;
+    //Libpcre2demo.RegexStruct.ByValue regexstuff;
 
     JavaPcre(){
         compile_options = new Libpcre2demo.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
     }
+    // TODO: regex struct testing starts here.
+    public void testingregextoc(){
+        Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.example_getStrings();
+        System.out.println("example: retrieved " + regex_val.numVals + " values:");
+        // getStringArray copies the contents of the C-allocated memory buffer into a Java-managed String[]
+        final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
+        for (int regexloop=0; regexloop<regex_val.numVals; regexloop++) {
+            System.out.println("\t" + regex_vals[regexloop]);
+        }
+        System.out.println("\t(regex cleanup)");
+        Libpcre2demo.INSTANCE.example_cleanup(regex_val);
+    }
+    // TODO: regex struct testing ends here.
 
     public void printString(String myString){
         Libpcre2demo.INSTANCE.printString(myString);
-    }
+    } // FOR TESTING
 
     public void pcre2_versioncheck(){
         Libpcre2demo.INSTANCE.pcre2_versioncheck();
@@ -81,7 +110,7 @@ public class JavaPcre {
 
     public void pcre2_init_options(){
         compile_options = new Libpcre2demo.OptionsStruct();
-    }
+    } // FOR TESTING
 
     public void pcre2_compile_java(String pat, int size){
         pattern = pat;
@@ -92,10 +121,17 @@ public class JavaPcre {
     public void pcre2_match_java(String a, boolean c){
         subject = a;
         findall = c;
-        Libpcre2demo.INSTANCE.pcre2_jmatch(subject, re, findall);
+
+        //Libpcre2demo.INSTANCE.pcre2_jmatch(subject, re, findall);
+
+        match_data = Libpcre2demo.INSTANCE.pcre2_jmatch2(subject, re);
     }
 
-    public void pcre2_compile_java_free(){
+    public void pcre2_jmatch_free(){
+        Libpcre2demo.INSTANCE.pcre2_jmatch_free(match_data);
+    }
+
+    public void pcre2_Jcompile_free(){
         Libpcre2demo.INSTANCE.pcre2_jcompile_free(re);
     }
 
