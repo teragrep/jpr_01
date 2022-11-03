@@ -59,7 +59,7 @@ public class JavaPcre {
 
         Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
 
-        Pointer pcre2_jmatch2(String subject, Pointer re); // returns pointer to match data.
+        RegexStruct.ByValue pcre2_jmatch2(String subject, Pointer re); // returns pointer to match data.
 
         void pcre2_jmatch(String subject, Pointer re, boolean findall);
 
@@ -106,7 +106,7 @@ public class JavaPcre {
 
     public void pcre2_versioncheck(){
         Libpcre2demo.INSTANCE.pcre2_versioncheck();
-    }
+    } // checks the installed PCRE library version for compatibility.
 
     public void pcre2_init_options(){
         compile_options = new Libpcre2demo.OptionsStruct();
@@ -123,8 +123,20 @@ public class JavaPcre {
         findall = c;
 
         //Libpcre2demo.INSTANCE.pcre2_jmatch(subject, re, findall);
+        Libpcre2demo.RegexStruct.ByValue regex_val =  Libpcre2demo.INSTANCE.pcre2_jmatch2(subject, re);
+        final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
+        System.out.println("example: retrieved " + regex_val.numVals + " values:");
+        if (regex_val.numVals==0){
+            System.out.println("matching error or no match, DO ABSOLUTELY NOTHING! Check where you should free the memory.");
+        }else{
+            // do the stuff you need to do here
+            for (int regexloop=0; regexloop<regex_val.numVals; regexloop++){
+                System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
+            }
+        }
 
-        match_data = Libpcre2demo.INSTANCE.pcre2_jmatch2(subject, re);
+        System.out.println("\t(regex cleanup)");
+        Libpcre2demo.INSTANCE.example_cleanup(regex_val);
     }
 
     public void pcre2_jmatch_free(){

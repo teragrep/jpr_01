@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Testing how to get the matched text from C to Java using pcre2_substring_copy_bynumber().">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Added test functions for transferring regex match data from C to java.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -98,7 +98,8 @@
       <workItem from="1666943547723" duration="9412000" />
       <workItem from="1667200505215" duration="8823000" />
       <workItem from="1667282984039" duration="3243000" />
-      <workItem from="1667371140770" duration="10480000" />
+      <workItem from="1667371140770" duration="16079000" />
+      <workItem from="1667457071427" duration="17458000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -135,7 +136,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666271234227</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Added test functions for transferring regex match data from C to java.">
+      <created>1667393123071</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1667393123071</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,7 +166,8 @@
     <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
     <MESSAGE value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
     <MESSAGE value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
-    <option name="LAST_COMMIT_MESSAGE" value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
+    <MESSAGE value="Added test functions for transferring regex match data from C to java." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added test functions for transferring regex match data from C to java." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
