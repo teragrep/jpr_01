@@ -48,29 +48,7 @@ typedef struct RegexStruct_TAG {
     char** vals;
 } RegexStruct;
 
-RegexStruct example_getStrings()
-{
-	RegexStruct sVal;
-	sVal.numVals = 3;
-	sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
-	memset(sVal.vals, 0, sizeof(char*) * sVal.numVals);
-
-	sVal.vals[0] = (char*)malloc(sizeof(char) * 4);
-	memset(sVal.vals[0], 0, sizeof(char) * 4);
-	strcpy(sVal.vals[0], "ten");
-
-	sVal.vals[1] = (char*)malloc(sizeof(char) * 7);
-	memset(sVal.vals[1], 0, sizeof(char) * 7);
-	strcpy(sVal.vals[1], "eleven");
-
-	sVal.vals[2] = (char*)malloc(sizeof(char) * 7);
-	memset(sVal.vals[2], 0, sizeof(char) * 7);
-	strcpy(sVal.vals[2], "twelve");
-
-	return sVal;
-}
-
-void example_cleanup(RegexStruct sVal)
+void RegexStruct_cleanup(RegexStruct sVal)
 {
 	int loop = 0;
 	for (loop=0; loop>sVal.numVals; loop++)
@@ -227,32 +205,13 @@ void pcre2_jcompile_free(pcre2_code *re){
 
 // TODO: add RegexStruct return functionality to this function.
 // this function contains matching for a single match
-RegexStruct pcre2_jmatch2(char *b, pcre2_code *re){
+RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re){
     pcre2_match_data *match_data;
     PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
-    //PCRE2_SPTR name_table;
-
-    //int crlf_is_newline;
     int rc;
-    //int find_all;
-    //int utf8;
-
-    //uint32_t option_bits;
-    //uint32_t namecount;
-    //uint32_t name_entry_size;
-    //uint32_t newline;
 
     PCRE2_SIZE subject_length;
     PCRE2_SIZE *ovector;
-
-/*    if (c==0){
-        find_all = 0;
-    }else if(c!=0){
-        find_all = 1;
-    }else{
-        printf("Unrecognised option\n");
-        return NULL;
-    }*/
 
     match_data = pcre2_match_data_create_from_pattern(re, NULL);
 
@@ -300,8 +259,7 @@ RegexStruct pcre2_jmatch2(char *b, pcre2_code *re){
 
     // TODO: add the RegexStruct magic
     ovector = pcre2_get_ovector_pointer(match_data);
-    printf("Match succeeded at offset %d with rc length of %d\n", (int)ovector[0], rc);
-    //printf("Lets pack the match data strings to RegexStruct and see what happens\n");
+    //printf("Match succeeded at offset %d with rc length of %d\n", (int)ovector[0], rc);
 
     RegexStruct sVal;
     sVal.numVals = rc;
@@ -316,10 +274,12 @@ RegexStruct pcre2_jmatch2(char *b, pcre2_code *re){
             //printf("%2d: %.*s\n", i, (int)substring_length, (char *)substring_start);
 
             sVal.vals[i] = (char*)malloc(sizeof(char) * ((int)substring_length + 1));
-            memset(sVal.vals[i], 0, sizeof(char) * ((int)substring_length + 1));
+            memset(sVal.vals[i], 0, sizeof(char) * ((int)substring_length + 1)); // initializes the array with null values.
             memcpy(sVal.vals[i], (char *)substring_start, (int)substring_length);
+
+            // TESTING SECTION
             //strncpy(sVal.vals[i], (char *)substring_start, (int)substring_length);
-            printf("%2d: %s\n", i, sVal.vals[i]);
+            //printf("%2d: %s\n", i, sVal.vals[i]);
         }
 
     return sVal;
@@ -338,9 +298,9 @@ RegexStruct pcre2_jmatch2(char *b, pcre2_code *re){
 
 
 void pcre2_jmatch_free(pcre2_match_data *match_data){
-    printf("Releasing match_data from memory.\n");
+//    printf("Releasing match_data from memory.\n");
     pcre2_match_data_free(match_data);
-    printf("Memory released successfully.\n");
+//    printf("Memory released successfully.\n");
 }
 
 
@@ -356,7 +316,7 @@ void pcre2_jmatch_free(pcre2_match_data *match_data){
 
 /* This is the matching function. This does only one match, further matching will be done below */
 
-void pcre2_jmatch(char *b, pcre2_code *re, int c){
+void pcre2_all_jmatch(char *b, pcre2_code *re, int c){
     pcre2_match_data *match_data;
     PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
     PCRE2_SPTR name_table;

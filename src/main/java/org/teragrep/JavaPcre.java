@@ -53,13 +53,14 @@ public class JavaPcre {
             public int numVals;
             public Pointer vals; // char**
         }
-        RegexStruct.ByValue example_getStrings();
+         RegexStruct.ByValue example_getStrings();
 
-        void example_cleanup(RegexStruct.ByValue sVal);
+        //void example_cleanup(RegexStruct.ByValue sVal);
+        void RegexStruct_cleanup(RegexStruct.ByValue sVal);
 
         Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
 
-        RegexStruct.ByValue pcre2_jmatch2(String subject, Pointer re); // returns pointer to match data.
+        RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re); // returns pointer to match data.
 
         void pcre2_jmatch(String subject, Pointer re, boolean findall);
 
@@ -90,13 +91,12 @@ public class JavaPcre {
     public void testingregextoc(){
         Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.example_getStrings();
         System.out.println("example: retrieved " + regex_val.numVals + " values:");
-        // getStringArray copies the contents of the C-allocated memory buffer into a Java-managed String[]
         final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
         for (int regexloop=0; regexloop<regex_val.numVals; regexloop++) {
             System.out.println("\t" + regex_vals[regexloop]);
         }
         System.out.println("\t(regex cleanup)");
-        Libpcre2demo.INSTANCE.example_cleanup(regex_val);
+        Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
     }
     // TODO: regex struct testing ends here.
 
@@ -118,25 +118,32 @@ public class JavaPcre {
         re = Libpcre2demo.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options);
     }
 
-    public void pcre2_match_java(String a, boolean c){
+    // This is the main function for getting a single regex match group. This should be complete now, don't touch it apart from the return variables.
+    public void pcre2_singlematch_java(String a){
         subject = a;
-        findall = c;
 
-        //Libpcre2demo.INSTANCE.pcre2_jmatch(subject, re, findall);
-        Libpcre2demo.RegexStruct.ByValue regex_val =  Libpcre2demo.INSTANCE.pcre2_jmatch2(subject, re);
+        Libpcre2demo.RegexStruct.ByValue regex_val =  Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re);
         final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
-        System.out.println("example: retrieved " + regex_val.numVals + " values:");
+        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals==0){
             System.out.println("matching error or no match, DO ABSOLUTELY NOTHING! Check where you should free the memory.");
         }else{
             // do the stuff you need to do here
+            // TODO: change the function so that regex_vals can be returned to main function properly. Easy to do inside Java.
             for (int regexloop=0; regexloop<regex_val.numVals; regexloop++){
                 System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
             }
         }
 
         System.out.println("\t(regex cleanup)");
-        Libpcre2demo.INSTANCE.example_cleanup(regex_val);
+        Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
+    }
+
+    // TODO: Add the functionality for matching ALL the groups from the input subject, like it is done in pcre2_singlematch_java().
+    public void pcre2_matchall_java(String a){
+        subject = a;
+
+
     }
 
     public void pcre2_jmatch_free(){
