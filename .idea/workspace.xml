@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Function for doing a single regex and returning matched substrings back to java done.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up function namings and separated functions for finding a single match group and all match groups.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -104,7 +104,14 @@
       <workItem from="1667553616753" duration="5471000" />
       <workItem from="1667801629877" duration="1121000" />
       <workItem from="1667810324970" duration="98000" />
-      <workItem from="1667810861353" duration="11792000" />
+      <workItem from="1667810861353" duration="14583000" />
+      <workItem from="1667891769663" duration="1965000" />
+      <workItem from="1667895377305" duration="2138000" />
+      <workItem from="1667911236159" duration="7670000" />
+      <workItem from="1667977581193" duration="4173000" />
+      <workItem from="1668064209657" duration="8000" />
+      <workItem from="1668430999554" duration="6664000" />
+      <workItem from="1668497626141" duration="22435000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -155,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667480803759</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Cleaned up function namings and separated functions for finding a single match group and all match groups.">
+      <created>1667826656601</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1667826656601</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,7 +194,8 @@
     <MESSAGE value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
     <MESSAGE value="Added test functions for transferring regex match data from C to java." />
     <MESSAGE value="Function for doing a single regex and returning matched substrings back to java done." />
-    <option name="LAST_COMMIT_MESSAGE" value="Function for doing a single regex and returning matched substrings back to java done." />
+    <MESSAGE value="Cleaned up function namings and separated functions for finding a single match group and all match groups." />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up function namings and separated functions for finding a single match group and all match groups." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
