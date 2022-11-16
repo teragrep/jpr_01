@@ -55,9 +55,10 @@ void RegexStruct_cleanup(RegexStruct sVal)
 	for (loop=0; loop>sVal.numVals; loop++)
 	{
 		free(sVal.vals[loop]);
-		printf("(C) cleaning up sVal.vals[loop]...\n");
+		//printf("(C) cleaning up sVal.vals[loop]...\n");
 	}
 	free(sVal.vals);
+	free(sVal.ovector);
 }
 
 void RegexStruct_array_cleanup(RegexStruct* pStruct, int pNumofstructs)
@@ -70,7 +71,7 @@ void RegexStruct_array_cleanup(RegexStruct* pStruct, int pNumofstructs)
         free(pStruct[i].vals);
         free(pStruct[i].ovector);
     }
-    printf("(C) cleaning up memory...\n");
+    //printf("(C) cleaning up memory...\n");
     free(pStruct);
 }
 // DONE: regex struct/array implementation ends here.

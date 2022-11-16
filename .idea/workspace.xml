@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up function namings and separated functions for finding a single match group and all match groups.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
@@ -111,7 +111,8 @@
       <workItem from="1667977581193" duration="4173000" />
       <workItem from="1668064209657" duration="8000" />
       <workItem from="1668430999554" duration="6664000" />
-      <workItem from="1668497626141" duration="22435000" />
+      <workItem from="1668497626141" duration="24006000" />
+      <workItem from="1668582731016" duration="15985000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -169,7 +170,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667826656601</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java.">
+      <created>1668522401686</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1668522401686</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,7 +203,8 @@
     <MESSAGE value="Added test functions for transferring regex match data from C to java." />
     <MESSAGE value="Function for doing a single regex and returning matched substrings back to java done." />
     <MESSAGE value="Cleaned up function namings and separated functions for finding a single match group and all match groups." />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up function namings and separated functions for finding a single match group and all match groups." />
+    <MESSAGE value="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java." />
+    <option name="LAST_COMMIT_MESSAGE" value="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

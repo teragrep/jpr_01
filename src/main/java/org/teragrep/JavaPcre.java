@@ -1,5 +1,6 @@
 package org.teragrep;
 
+import java.util.*;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -124,9 +125,12 @@ public class JavaPcre {
     }
 
     // This is the main function for getting a single regex match group. This should be complete now, don't touch it apart from the return variables.
-    public void pcre2_singlematch_java(String a, int b){
+    public Map<Integer, String> pcre2_singlematch_java(String a, int b){
         subject = a;
         offset = b;
+        Map<Integer, String> rv = new LinkedHashMap<>();
+        int ind = 1;
+
         Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re, offset);
         final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
         final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
@@ -140,19 +144,26 @@ public class JavaPcre {
             System.out.println("\tMatch ends at: " + regex_ovector[1]);
             for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
                 System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
+                rv.put(ind++, regex_vals[regexloop]);
             }
             offset = regex_ovector[1];
         }
         System.out.println("\t(single regex cleanup)");
         Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
+
+        return rv;
     }
 
     // ABANDONED SOLUTION!
     // Add the functionality for matching ALL the groups from the subject, similar to how it is done in pcre2_singlematch_java() but in an array of structs.
-    public void pcre2_matchall_java(String a, int b){
+    public Map<Integer, String> pcre2_matchall_java(String a, int b){
         subject = a;
         offset = b;
+        Map<Integer, String> rv = new LinkedHashMap<>();
+        int ind = 1;
         boolean matchfound = true;
+
+
         while (matchfound) {
             Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re, offset);
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
@@ -166,6 +177,7 @@ public class JavaPcre {
                 // TODO: change the function so that regex_vals can be returned to main function properly. Easy to do inside Java.
                 System.out.println("\tMatch starts at: " + regex_ovector[0]);
                 System.out.println("\tMatch ends at: " + regex_ovector[1]);
+                rv.put(ind++, regex_vals[0]);
                 for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
                     System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
                 }
@@ -175,6 +187,7 @@ public class JavaPcre {
             Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
         }
 
+        return rv;
     }
 
     public void pcre2_jmatch_free(){
