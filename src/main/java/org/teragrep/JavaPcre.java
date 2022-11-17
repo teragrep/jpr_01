@@ -57,22 +57,16 @@ public class JavaPcre {
         }
          RegexStruct.ByValue example_getStrings();
 
-        //void example_cleanup(RegexStruct.ByValue sVal);
         void RegexStruct_cleanup(RegexStruct.ByValue sVal);
 
         Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
 
         RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset); // returns pointer to a single match data.
 
-        RegexStruct.ByValue pcre2_all_jmatch(String subject, Pointer re); // returns pointer to an array of match data.
-
-        void pcre2_jmatch(String subject, Pointer re, boolean findall);
-
-        void printString(String myString);
-
         void pcre2_jcompile_free(Pointer re);
 
         void pcre2_versioncheck();
+
         void pcre2_jmatch_free(Pointer match_data);
 
     }
@@ -85,30 +79,11 @@ public class JavaPcre {
     String subject;
     Pointer re;
     Pointer match_data;
-    boolean findall;
     Libpcre2demo.OptionsStruct compile_options;
-    //Libpcre2demo.RegexStruct.ByValue regexstuff;
 
     JavaPcre(){
         compile_options = new Libpcre2demo.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
     }
-
-    // regex struct testing starts here.
-    public void testingregextoc(){
-        Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.example_getStrings();
-        System.out.println("example: retrieved " + regex_val.numVals + " values:");
-        final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
-        for (int regexloop=0; regexloop<regex_val.numVals; regexloop++) {
-            System.out.println("\t" + regex_vals[regexloop]);
-        }
-        System.out.println("\t(regex cleanup)");
-        Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
-    }
-    // regex struct testing ends here.
-
-    public void printString(String myString){
-        Libpcre2demo.INSTANCE.printString(myString);
-    } // FOR TESTING
 
     public void pcre2_versioncheck(){
         Libpcre2demo.INSTANCE.pcre2_versioncheck();
@@ -134,58 +109,22 @@ public class JavaPcre {
         Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re, offset);
         final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
         final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
-        System.out.println("Retrieved " + regex_val.numVals + " values:");
+//        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals == 0) {
             System.out.println("matching error or no match.");
         } else {
             // do the stuff you need to do here
             // TODO: change the function so that regex_vals can be returned to main function properly. Easy to do inside Java.
-            System.out.println("\tMatch starts at: " + regex_ovector[0]);
-            System.out.println("\tMatch ends at: " + regex_ovector[1]);
+//            System.out.println("\tMatch starts at: " + regex_ovector[0]);
+//            System.out.println("\tMatch ends at: " + regex_ovector[1]);
             for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
-                System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
+//                System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
                 rv.put(ind++, regex_vals[regexloop]);
             }
             offset = regex_ovector[1];
         }
         System.out.println("\t(single regex cleanup)");
         Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
-
-        return rv;
-    }
-
-    // ABANDONED SOLUTION!
-    // Add the functionality for matching ALL the groups from the subject, similar to how it is done in pcre2_singlematch_java() but in an array of structs.
-    public Map<Integer, String> pcre2_matchall_java(String a, int b){
-        subject = a;
-        offset = b;
-        Map<Integer, String> rv = new LinkedHashMap<>();
-        int ind = 1;
-        boolean matchfound = true;
-
-
-        while (matchfound) {
-            Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re, offset);
-            final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
-            final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
-            System.out.println("Retrieved " + regex_val.numVals + " values:");
-            if (regex_val.numVals == 0) {
-                System.out.println("matching error or no match.");
-                matchfound = false;
-            } else {
-                // do the stuff you need to do here
-                // TODO: change the function so that regex_vals can be returned to main function properly. Easy to do inside Java.
-                System.out.println("\tMatch starts at: " + regex_ovector[0]);
-                System.out.println("\tMatch ends at: " + regex_ovector[1]);
-                rv.put(ind++, regex_vals[0]);
-                for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
-                    System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
-                }
-                offset = regex_ovector[1];
-            }
-            System.out.println("\t(single regex cleanup)");
-            Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
-        }
 
         return rv;
     }
