@@ -10,8 +10,8 @@ import com.sun.jna.Structure.FieldOrder;
 public class JavaPcre {
     // Initializing the interface.
     // By making the interface this way you can call the external C-function in the Java-functions that are made inside this class.
-    public interface Libpcre2demo extends Library {
-        Libpcre2demo INSTANCE = (Libpcre2demo)Native.load("pcre2demo", Libpcre2demo.class);
+    public interface LibJavaPcre extends Library {
+        LibJavaPcre INSTANCE = Native.load("JavaPcre", LibJavaPcre.class);
         // Initialize options struct values as false (zero), as it is the default setting for pcre2_compile().
         @FieldOrder({ "JPCRE2_ANCHORED", "JPCRE2_ALLOW_EMPTY_CLASS", "JPCRE2_ALT_BSUX", "JPCRE2_ALT_CIRCUMFLEX", "JPCRE2_ALT_VERBNAMES", "JPCRE2_AUTO_CALLOUT", "JPCRE2_CASELESS", "JPCRE2_DOLLAR_ENDONLY", "JPCRE2_DOTALL", "JPCRE2_DUPNAMES", "JPCRE2_ENDANCHORED", "JPCRE2_EXTENDED", "JPCRE2_EXTENDED_MORE", "JPCRE2_FIRSTLINE", "JPCRE2_LITERAL", "JPCRE2_MATCH_INVALID_UTF", "JPCRE2_MATCH_UNSET_BACKREF", "JPCRE2_MULTILINE", "JPCRE2_NEVER_BACKSLASH_C", "JPCRE2_NEVER_UCP", "JPCRE2_NEVER_UTF", "JPCRE2_NO_AUTO_CAPTURE", "JPCRE2_NO_AUTO_POSSESS", "JPCRE2_NO_DOTSTAR_ANCHOR", "JPCRE2_NO_START_OPTIMIZE", "JPCRE2_NO_UTF_CHECK", "JPCRE2_UCP", "JPCRE2_UNGREEDY", "JPCRE2_USE_OFFSET_LIMIT", "JPCRE2_UTF" })
         class OptionsStruct extends Structure {
@@ -47,15 +47,17 @@ public class JavaPcre {
             public boolean JPCRE2_UTF = false;
         }
 
-        @FieldOrder({ "numVals", "vals", "ovector" })
-        public static class RegexStruct extends Structure {
+        @FieldOrder({ "numVals", "vals", "ovector", "names", "namesnum", "namescount" })
+        class RegexStruct extends Structure {
             public static class ByValue extends RegexStruct implements Structure.ByValue {}
 
             public int numVals;
             public Pointer vals; // char**
             public Pointer ovector;
+            public Pointer names; // char**
+            public Pointer namesnum;
+            public int namescount;
         }
-         RegexStruct.ByValue example_getStrings();
 
         void RegexStruct_cleanup(RegexStruct.ByValue sVal);
 
@@ -79,62 +81,67 @@ public class JavaPcre {
     String subject;
     Pointer re;
     Pointer match_data;
-    Libpcre2demo.OptionsStruct compile_options;
+    LibJavaPcre.OptionsStruct compile_options;
+    Map<String, Integer> name_table;
+    Map<Integer, String> match_table;
 
     JavaPcre(){
-        compile_options = new Libpcre2demo.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
+        compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
     }
 
     public void pcre2_versioncheck(){
-        Libpcre2demo.INSTANCE.pcre2_versioncheck();
+        LibJavaPcre.INSTANCE.pcre2_versioncheck();
     } // checks the installed PCRE library version for compatibility.
 
-    public void pcre2_init_options(){
-        compile_options = new Libpcre2demo.OptionsStruct();
-    } // FOR TESTING
+//    public void pcre2_init_options(){
+//        compile_options = new LibJavaPcre.OptionsStruct();
+//    }
 
     public void pcre2_compile_java(String pat, int size){
         pattern = pat;
         pattern_size = size;
-        re = Libpcre2demo.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options);
+        re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options);
     }
 
     // This is the main function for getting a single regex match group. This should be complete now, don't touch it apart from the return variables.
-    public Map<Integer, String> pcre2_singlematch_java(String a, int b){
+    public void pcre2_singlematch_java(String a, int b){
+        name_table = new LinkedHashMap<>();
         subject = a;
         offset = b;
-        Map<Integer, String> rv = new LinkedHashMap<>();
-        int ind = 1;
+        match_table = new LinkedHashMap<>();
+        int ind = 0;
 
-        Libpcre2demo.RegexStruct.ByValue regex_val = Libpcre2demo.INSTANCE.pcre2_single_jmatch(subject, re, offset);
-        final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
-        final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
+
+        // TODO: fix the memory error caused by stupid handling of the "no matches" at the end of the matching. fixed?
+        LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset);
 //        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals == 0) {
-            System.out.println("matching error or no match.");
+            //System.out.println("matching error or no match.");
+            LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
-            // do the stuff you need to do here
-            // TODO: change the function so that regex_vals can be returned to main function properly. Easy to do inside Java.
-//            System.out.println("\tMatch starts at: " + regex_ovector[0]);
-//            System.out.println("\tMatch ends at: " + regex_ovector[1]);
+            final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
+            final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
+            if (regex_val.namescount > 0) {
+                final String[] regex_names = regex_val.names.getStringArray(0, regex_val.namescount);
+                final int[] namesnum = regex_val.namesnum.getIntArray(0, regex_val.namescount);
+                for (int namesloop = 0; namesloop < regex_val.namescount; namesloop++) {
+                    name_table.put(regex_names[namesloop], namesnum[namesloop]);
+                }
+            }
             for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
-//                System.out.println("\t" + regexloop + ": " + regex_vals[regexloop]);
-                rv.put(ind++, regex_vals[regexloop]);
+                match_table.put(ind++, regex_vals[regexloop]);
             }
             offset = regex_ovector[1];
+            LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         }
-        System.out.println("\t(single regex cleanup)");
-        Libpcre2demo.INSTANCE.RegexStruct_cleanup(regex_val);
-
-        return rv;
     }
 
     public void pcre2_jmatch_free(){
-        Libpcre2demo.INSTANCE.pcre2_jmatch_free(match_data);
+        LibJavaPcre.INSTANCE.pcre2_jmatch_free(match_data);
     }
 
     public void pcre2_Jcompile_free(){
-        Libpcre2demo.INSTANCE.pcre2_jcompile_free(re);
+        LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
     }
 
 }

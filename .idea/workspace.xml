@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Altered single match function and cleaned up the code so functions return proper values when calling the library functions from the main.java file.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up code. Deleted redundant and abandoned functions.">
+      <change afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/Makefile.am" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.o" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
@@ -114,7 +116,16 @@
       <workItem from="1668497626141" duration="24006000" />
       <workItem from="1668582731016" duration="16195000" />
       <workItem from="1668668998747" duration="400000" />
-      <workItem from="1668673555468" duration="6609000" />
+      <workItem from="1668673555468" duration="11426000" />
+      <workItem from="1668753605632" duration="14159000" />
+      <workItem from="1669011684532" duration="20829000" />
+      <workItem from="1669100794211" duration="11046000" />
+      <workItem from="1669122897046" duration="5513000" />
+      <workItem from="1669186752490" duration="9606000" />
+      <workItem from="1669269665987" duration="39000" />
+      <workItem from="1669270079548" duration="16548000" />
+      <workItem from="1669371835443" duration="4198000" />
+      <workItem from="1669621028307" duration="5960000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -186,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668611641208</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Cleaned up code. Deleted redundant and abandoned functions.">
+      <created>1668687748970</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1668687748970</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +232,19 @@
     <MESSAGE value="Cleaned up function namings and separated functions for finding a single match group and all match groups." />
     <MESSAGE value="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java." />
     <MESSAGE value="Altered single match function and cleaned up the code so functions return proper values when calling the library functions from the main.java file." />
-    <option name="LAST_COMMIT_MESSAGE" value="Altered single match function and cleaned up the code so functions return proper values when calling the library functions from the main.java file." />
+    <MESSAGE value="Cleaned up code. Deleted redundant and abandoned functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up code. Deleted redundant and abandoned functions." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java</url>
+          <line>124</line>
+          <option name="timeStamp" value="32" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
