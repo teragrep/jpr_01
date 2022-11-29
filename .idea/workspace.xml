@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up code. Deleted redundant and abandoned functions.">
-      <change afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/Makefile.am" afterDir="false" />
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Made changes to naming of files and functions, cleaned up code more.">
+      <change afterPath="$PROJECT_DIR$/src/main/c/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/COPYING" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/ChangeLog" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/INSTALL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/NEWS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/README" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/c/configure.ac" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.o" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/pcre2demo.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/Makefile.am" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.o" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +128,10 @@
       <workItem from="1669269665987" duration="39000" />
       <workItem from="1669270079548" duration="16548000" />
       <workItem from="1669371835443" duration="4198000" />
-      <workItem from="1669621028307" duration="5960000" />
+      <workItem from="1669621028307" duration="8669000" />
+      <workItem from="1669705520720" duration="8870000" />
+      <workItem from="1669730304462" duration="103000" />
+      <workItem from="1669730454099" duration="2216000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -204,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668687748970</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Made changes to naming of files and functions, cleaned up code more.">
+      <created>1669645717602</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1669645717602</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -233,7 +246,8 @@
     <MESSAGE value="Altered pcre2_matchall_java() and pcre2_singlematch_java() functions so that matchall can use the singlematch function iteratively. This way large payloads in the C-code will be divided to smaller parts, and the complicated dynamic struct arrays are not needed to pass the matchdata back to java." />
     <MESSAGE value="Altered single match function and cleaned up the code so functions return proper values when calling the library functions from the main.java file." />
     <MESSAGE value="Cleaned up code. Deleted redundant and abandoned functions." />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up code. Deleted redundant and abandoned functions." />
+    <MESSAGE value="Made changes to naming of files and functions, cleaned up code more." />
+    <option name="LAST_COMMIT_MESSAGE" value="Made changes to naming of files and functions, cleaned up code more." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
