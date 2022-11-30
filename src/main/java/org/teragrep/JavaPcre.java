@@ -112,7 +112,7 @@ public class JavaPcre {
         int ind = 0;
 
 
-        // TODO: fix the memory error caused by stupid handling of the "no matches" at the end of the matching. fixed?
+        // Fix the memory error caused by stupid handling of the "no matches" at the end of the matching. fixed?
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset);
 //        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals == 0) {

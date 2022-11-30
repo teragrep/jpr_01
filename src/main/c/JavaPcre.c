@@ -212,11 +212,6 @@ void pcre2_jcompile_free(pcre2_code *re){
 }
 
 
-
-
-
-
-// TODO: MAKE THIS THE PRIMARY FUNCTION FOR SINGLE AND SUBSEQUENT MATCHES. Handle it partially in java side.
 // this function contains matching for a single match
 RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     pcre2_match_data *match_data;
@@ -271,7 +266,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
             NULL);                /* use default match context */
 
 /* Matching failed: handle error cases */
-// TODO: fix this memory error.
     if (rc < 0)
     {
         switch(rc)
@@ -353,7 +347,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         //printf("%2d: %s\n", i, sVal.vals[i]);
     }
 
-    // TODO: NAMED SUBSTRINGS START HERE
+    // NAMED SUBSTRINGS START HERE
 
     (void)pcre2_pattern_info(
             re,                   /* the compiled pattern */
@@ -392,7 +386,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         {
             int n = (tabptr[0] << 8) | tabptr[1]; // << is a bitwise left shift operator.
             sVal.namesnum[i] = n; // stores the numerical value for name-number pairing to the struct.
-            // TODO: name table is stored in this format:
+            // name table is stored in this format:
             // 00 01 d  a  t  e  00 ??
             // 00 05 d  a  y  00 ?? ??
             // etc.
@@ -417,7 +411,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     return sVal;
 }
 
-// TODO: call this somehwere where it works correctly.
 void pcre2_jmatch_free(pcre2_match_data *match_data){
 //    printf("Releasing match_data from memory.\n");
     pcre2_match_data_free(match_data);
@@ -511,7 +504,6 @@ int main(void) {
     kikkare.JPCRE2_UTF=0;
 
 
-    // TODO: copy the debugged C-code back to Idea.
     RegexStruct testStruct;
     int i;
     int offset = 0;
@@ -564,7 +556,6 @@ int main(void) {
     offset = testStruct.ovector[1];
     RegexStruct_cleanup(testStruct);
 
-    // TODO: fix the handling of "no match" in the pcre2_single_jmatch(). Initialize the struct so freeing the memory works in RegexStruct_cleanup();.
     // Print the fourth member of the struct array if it exists
     testStruct = pcre2_single_jmatch(testi, re, offset);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );

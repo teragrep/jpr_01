@@ -59,9 +59,8 @@ public class Main {
             }
             }
         }
-        // I'm an idiot... You can just initialize the hashmaps (any amount you want) in the JavaPcre class and call the matchdata from there.
 
-        // TODO: check where the release of compile/match data from memory should be implemented. Separate Java functions for it are below.
+        // Make sure where the release of compile/match data from memory should be implemented which are presented below.
         // DON'T CALL THESE FUNCTIONS ANYWHERE ELSE AS LONG AS THEY ARE UNCOMMENTED RIGHT HERE!
         System.out.print("compile and match data cleanup!\n");
         //s1.pcre2_jmatch_free();

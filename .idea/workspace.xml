@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Made changes to naming of files and functions, cleaned up code more.">
-      <change afterPath="$PROJECT_DIR$/src/main/c/AUTHORS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/COPYING" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/ChangeLog" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/INSTALL" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/NEWS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/c/configure.ac" afterDir="false" />
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Added automake functionality for compiling the library">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/Makefile.am" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/Makefile.am" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/libpcre2demo.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/pcre2demo.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,20 +34,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/p000048u/libs/jna-5.9.0.jar&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/p000048u/libs/jna-5.9.0.jar",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -131,7 +124,8 @@
       <workItem from="1669621028307" duration="8669000" />
       <workItem from="1669705520720" duration="8870000" />
       <workItem from="1669730304462" duration="103000" />
-      <workItem from="1669730454099" duration="2216000" />
+      <workItem from="1669730454099" duration="3862000" />
+      <workItem from="1669792081112" duration="8176000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -217,7 +211,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669645717602</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Added automake functionality for compiling the library">
+      <created>1669732690101</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1669732690101</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,7 +248,8 @@
     <MESSAGE value="Altered single match function and cleaned up the code so functions return proper values when calling the library functions from the main.java file." />
     <MESSAGE value="Cleaned up code. Deleted redundant and abandoned functions." />
     <MESSAGE value="Made changes to naming of files and functions, cleaned up code more." />
-    <option name="LAST_COMMIT_MESSAGE" value="Made changes to naming of files and functions, cleaned up code more." />
+    <MESSAGE value="Added automake functionality for compiling the library" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added automake functionality for compiling the library" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
