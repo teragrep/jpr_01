@@ -29,12 +29,18 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>copy-sources</id>
@@ -78,12 +84,6 @@
                                 <argument>--prefix=/opt/Fail-Safe/${project.artifactId}</argument>
                             </arguments>
                             <workingDirectory>${project.build.directory}/${project.artifactId}/src/main/c</workingDirectory>
-                            <environmentVariables>
-                                <LDFLAGS>-pie -Wl,-z,relro -Wl,-z,now</LDFLAGS>
-                                <LD_LIBRARY_PATH>/opt/Fail-Safe/rsyslog/libfastjson/lib:/opt/Fail-Safe/rsyslog/libestr/lib:/opt/Fail-Safe/rsyslog/liblognorm/lib</LD_LIBRARY_PATH>
-                                <LIBS>-ldl -lrt -lestr -lfastjson -llognorm</LIBS>
-                                <CFLAGS>-ggdb -fpie -fPIC -std=c99 -I/usr/include/libfastjson -I/usr/include/liblognorm -I/usr/include/libestr -DHAVE_ATOMIC_BUILTINS64 -D_DEFAULT_SOURCE</CFLAGS>
-                            </environmentVariables>
                         </configuration>
                     </execution>
                     <execution>
@@ -114,6 +114,43 @@
                                 <argument>DESTDIR=${project.build.directory}/classes/lib</argument>
                             </arguments>
                             <workingDirectory>${project.build.directory}/${project.artifactId}/src/main/c</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- <classpathPrefix>lib</classpathPrefix> -->
+                            <!-- <mainClass>test.org.Cliente</mainClass> -->
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>lib/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>net.java.dev.jna:jna</include>
+                                </includes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>

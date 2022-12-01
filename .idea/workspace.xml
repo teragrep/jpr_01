@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Fixes to maven configuration and autotools implementation.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="More fixes to maven configuration and autotools implementation.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/README" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/README" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/configure.ac" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/configure.ac" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,31 +26,38 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="generatedSourcesFolder" value="SUBFOLDER" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="2FOYqDN8I6SPWDJzXfTNX0ekGDg" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/home/p000048u/libs/jna-5.9.0.jar",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/p000048u/libs/jna-5.9.0.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
@@ -66,6 +69,32 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="jpr-01 [clean,install]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="install" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -147,7 +176,8 @@
       <workItem from="1669730454099" duration="3862000" />
       <workItem from="1669792081112" duration="8176000" />
       <workItem from="1669879821682" duration="89000" />
-      <workItem from="1669879924129" duration="8437000" />
+      <workItem from="1669879924129" duration="17714000" />
+      <workItem from="1669902774805" duration="913000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -240,7 +270,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669732690101</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="More fixes to maven configuration and autotools implementation.">
+      <created>1669893601290</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1669893601290</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -301,7 +338,8 @@
     <MESSAGE value="Cleaned up code. Deleted redundant and abandoned functions." />
     <MESSAGE value="Made changes to naming of files and functions, cleaned up code more." />
     <MESSAGE value="Added automake functionality for compiling the library" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added automake functionality for compiling the library" />
+    <MESSAGE value="More fixes to maven configuration and autotools implementation." />
+    <option name="LAST_COMMIT_MESSAGE" value="More fixes to maven configuration and autotools implementation." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
