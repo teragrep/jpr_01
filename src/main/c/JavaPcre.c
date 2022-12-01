@@ -9,6 +9,11 @@
 // gcc -c -Wall -Werror -fpic src/main/c/JavaPcre.c -o src/main/c/JavaPcre.o -lpcre2-8
 // gcc -shared -Wl,-soname,libJavaPcre.so -o src/main/c/libJavaPcre.so src/main/c/JavaPcre.o -lpcre2-8
 
+// Autotools setup commands for this file (ignore above commands):
+// autoreconf --install
+// ./configure
+// make
+
 typedef struct OptionsStruct_TAG {
     int JPCRE2_ANCHORED;
     int JPCRE2_ALLOW_EMPTY_CLASS;
@@ -270,7 +275,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     {
         switch(rc)
         {
-            case PCRE2_ERROR_NOMATCH: printf("No match\n"); break;
+            case PCRE2_ERROR_NOMATCH: printf("No match!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"); break;
                 /*
                 Handle other special cases if you like
                 */

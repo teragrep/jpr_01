@@ -1,2 +1,4 @@
 This is a package for jpr-01 library.
 Type 'info Automake' to read the Automake manual.
+This package requires PCRE2-library to be installed:
+sudo dnf install pcre2

@@ -11,8 +11,8 @@ public class Main {
 //        s1.pcre2_versioncheck();
 //        s1.compile_options.JPCRE2_ANCHORED = true;
 
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
-        //s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        //s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
         //s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)", 0);
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern went to shit.\n");
@@ -53,10 +53,12 @@ public class Main {
                 matchfound = false;
                 System.out.print("No match!\n");
             }else{
-            System.out.print("named group:\n");
-            for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
-                System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
-            }
+                if (s1.name_table.size() > 0) {
+                    System.out.print("named group:\n");
+                }
+                for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
+                    System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
+                }
             }
         }
 

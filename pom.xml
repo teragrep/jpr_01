@@ -78,11 +78,17 @@
                                 <argument>--prefix=/opt/Fail-Safe/${project.artifactId}</argument>
                             </arguments>
                             <workingDirectory>${project.build.directory}/${project.artifactId}/src/main/c</workingDirectory>
+                            <environmentVariables>
+                                <LDFLAGS>-pie -Wl,-z,relro -Wl,-z,now</LDFLAGS>
+                                <LD_LIBRARY_PATH>/opt/Fail-Safe/rsyslog/libfastjson/lib:/opt/Fail-Safe/rsyslog/libestr/lib:/opt/Fail-Safe/rsyslog/liblognorm/lib</LD_LIBRARY_PATH>
+                                <LIBS>-ldl -lrt -lestr -lfastjson -llognorm</LIBS>
+                                <CFLAGS>-ggdb -fpie -fPIC -std=c99 -I/usr/include/libfastjson -I/usr/include/liblognorm -I/usr/include/libestr -DHAVE_ATOMIC_BUILTINS64 -D_DEFAULT_SOURCE</CFLAGS>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                     <execution>
                         <id>make</id>
-                        <phase>compile</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
@@ -96,7 +102,7 @@
                     </execution>
                     <execution>
                         <id>make-install</id>
-                        <phase>prepare-package</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>exec</goal>
                         </goals>
