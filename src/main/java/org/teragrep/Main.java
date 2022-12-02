@@ -6,16 +6,16 @@ import java.util.Map;
 * The functions called here will represent the functions that are available to use in the aforementioned library.*/
 public class Main {
     public static void main(String[] args) {
-        int a, b;
+        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
 //        s1.pcre2_versioncheck();
 //        s1.compile_options.JPCRE2_ANCHORED = true;
 
-        //s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        //s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
         //s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)", 0);
         if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern went to shit.\n");
+            System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
         }
         s1.offset = 0;
@@ -54,7 +54,7 @@ public class Main {
                 System.out.print("No match!\n");
             }else{
                 if (s1.name_table.size() > 0) {
-                    System.out.print("named group:\n");
+                    System.out.print("named groups:\n");
                 }
                 for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
                     System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );

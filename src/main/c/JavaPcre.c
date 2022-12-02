@@ -5,14 +5,16 @@
 #include <string.h>
 #include <pcre2.h>
 
-// compiler commands for this file (when working from jpr-01 folder):
+// compiler commands for this file:
 // gcc -c -Wall -Werror -fpic src/main/c/JavaPcre.c -o src/main/c/JavaPcre.o -lpcre2-8
 // gcc -shared -Wl,-soname,libJavaPcre.so -o src/main/c/libJavaPcre.so src/main/c/JavaPcre.o -lpcre2-8
 
-// Autotools setup commands for this file (ignore above commands):
+// Autotools setup commands for this file:
 // autoreconf --install
 // ./configure
 // make
+
+// None of the above matters if maven works as intended and executes the autotools scripts automatically.
 
 typedef struct OptionsStruct_TAG {
     int JPCRE2_ANCHORED;
@@ -47,7 +49,7 @@ typedef struct OptionsStruct_TAG {
     int JPCRE2_UTF;
 } OptionsStruct;
 
-// DONE?: regex struct/array implementation starts here
+// regex struct/array implementation starts here
 typedef struct RegexStruct_TAG {
     int numVals;
     char** vals;
@@ -76,7 +78,7 @@ void RegexStruct_cleanup(RegexStruct sVal)
         free(sVal.namesnum);
     }
 }
-// DONE: regex struct/array implementation ends here.
+// regex struct/array implementation ends here.
 
 void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
     pcre2_code *re;
@@ -275,7 +277,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     {
         switch(rc)
         {
-            case PCRE2_ERROR_NOMATCH: printf("No match!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"); break;
+            case PCRE2_ERROR_NOMATCH: printf("No match\n"); break;
                 /*
                 Handle other special cases if you like
                 */
@@ -287,10 +289,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         sVal.names = (char**)malloc(sizeof(char*) * 1);
         sVal.namesnum = (int*)malloc(sizeof(int) * 1);
         sVal.ovector = (int*)malloc(sizeof(int) * 1);
-        if (sVal.vals == NULL) {
-            printf("Error: Out of memory\r\n");
-            exit(-1);
-        }else if(sVal.ovector == NULL) {
+        if (sVal.vals == NULL || sVal.names == NULL || sVal.namesnum == NULL || sVal.ovector == NULL) {
             printf("Error: Out of memory\r\n");
             exit(-1);
         }
@@ -318,10 +317,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
     sVal.ovector = (int*)malloc(sizeof(int) * (2 + (sVal.numVals * 2)));
 
-    if (sVal.vals == NULL) {
-        printf("Error: Out of memory\r\n");
-        exit(-1);
-    }else if(sVal.ovector == NULL) {
+    if (sVal.vals == NULL || sVal.ovector == NULL) {
         printf("Error: Out of memory\r\n");
         exit(-1);
     }
@@ -387,6 +383,10 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         sVal.namescount = namecount;
         sVal.namesnum = (int*)malloc(sizeof(int) * sVal.namescount);
         sVal.names = (char**)malloc(sizeof(char*) * sVal.namescount);
+        if (sVal.names == NULL || sVal.namesnum == NULL) {
+            printf("Error: Out of memory\r\n");
+            exit(-1);
+        }
         for (i = 0; i < namecount; i++)
         {
             int n = (tabptr[0] << 8) | tabptr[1]; // << is a bitwise left shift operator.
@@ -399,6 +399,10 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
             // last 00 byte seems to be the zero termination of the string.
             //printf("name_entry_size: %d", (name_entry_size - 3));
             sVal.names[i] = (char*)malloc(sizeof(char) * ((int)name_entry_size - 2));
+            if (sVal.names[i] == NULL) {
+                printf("Error: Out of memory\r\n");
+                exit(-1);
+            }
             memset(sVal.names[i], 0, sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
             memcpy(sVal.names[i], (char *)(tabptr + 2), (int)(name_entry_size - 3));
 
@@ -427,46 +431,6 @@ void pcre2_versioncheck(){
     pcre2_config(PCRE2_CONFIG_VERSION, version);
     printf("This library was programmed for PCRE2 version 10.40 or newer\nThe current PCRE2 version in use is: %s\n", version);
 }
-
-//void pcre2_get_named_substrings(){
-//
-//    (void)pcre2_pattern_info(
-//          re,                   /* the compiled pattern */
-//          PCRE2_INFO_NAMECOUNT, /* get the number of named substrings */
-//          &namecount);          /* where to put the answer */
-//
-//        if (namecount == 0) printf("No named substrings\n"); else
-//          {
-//          PCRE2_SPTR tabptr;
-//          printf("Named substrings\n");
-//
-//          /* Before we can access the substrings, we must extract the table for
-//          translating names to numbers, and the size of each entry in the table. */
-//
-//          (void)pcre2_pattern_info(
-//            re,                       /* the compiled pattern */
-//            PCRE2_INFO_NAMETABLE,     /* address of the table */
-//            &name_table);             /* where to put the answer */
-//
-//          (void)pcre2_pattern_info(
-//            re,                       /* the compiled pattern */
-//            PCRE2_INFO_NAMEENTRYSIZE, /* size of each entry in the table */
-//            &name_entry_size);        /* where to put the answer */
-//
-//          /* Now we can scan the table and, for each entry, print the number, the name,
-//          and the substring itself. In the 8-bit library the number is held in two
-//          bytes, most significant first. */
-//
-//          tabptr = name_table;
-//          for (i = 0; i < namecount; i++)
-//            {
-//            int n = (tabptr[0] << 8) | tabptr[1];
-//            printf("(%d) %*s: %.*s\n", n, name_entry_size - 3, tabptr + 2,
-//              (int)(ovector[2*n+1] - ovector[2*n]), subject + ovector[2*n]);
-//            tabptr += name_entry_size;
-//            }
-//          }
-//}
 
 // Main function that is used only for testing the functions included in this library.
 int main(void) {
@@ -507,7 +471,6 @@ int main(void) {
     kikkare.JPCRE2_UNGREEDY=0;
     kikkare.JPCRE2_USE_OFFSET_LIMIT=0;
     kikkare.JPCRE2_UTF=0;
-
 
     RegexStruct testStruct;
     int i;
@@ -575,13 +538,7 @@ int main(void) {
     offset = testStruct.ovector[1];
     RegexStruct_cleanup(testStruct);
 
-
-
     pcre2_jcompile_free(re);
-
-
-
-
 
     return 0;
 }
