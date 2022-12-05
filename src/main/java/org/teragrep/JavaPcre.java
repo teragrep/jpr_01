@@ -89,9 +89,10 @@ public class JavaPcre {
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
     }
 
+    // checks the installed PCRE2 library version for compatibility.
     public void pcre2_versioncheck(){
         LibJavaPcre.INSTANCE.pcre2_versioncheck();
-    } // checks the installed PCRE library version for compatibility.
+    }
 
 //    public void pcre2_init_options(){
 //        compile_options = new LibJavaPcre.OptionsStruct();
@@ -103,7 +104,7 @@ public class JavaPcre {
         re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options);
     }
 
-    // This is the main function for getting a single regex match group. This should be complete now, don't touch it apart from the return variables.
+    // This is the main function for getting a single regex match group.
     public void pcre2_singlematch_java(String a, int b){
         name_table = new LinkedHashMap<>();
         subject = a;
@@ -112,7 +113,6 @@ public class JavaPcre {
         int ind = 0;
 
 
-        // Fix the memory error caused by stupid handling of the "no matches" at the end of the matching. fixed?
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset);
 //        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals == 0) {
@@ -136,10 +136,12 @@ public class JavaPcre {
         }
     }
 
+    // Not used, for now.
     public void pcre2_jmatch_free(){
         LibJavaPcre.INSTANCE.pcre2_jmatch_free(match_data);
     }
 
+    // frees the compiled pattern.
     public void pcre2_Jcompile_free(){
         LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
     }

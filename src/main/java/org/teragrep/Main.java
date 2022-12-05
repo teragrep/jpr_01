@@ -65,7 +65,7 @@ public class Main {
         // Make sure where the release of compile/match data from memory should be implemented which are presented below.
         // DON'T CALL THESE FUNCTIONS ANYWHERE ELSE AS LONG AS THEY ARE UNCOMMENTED RIGHT HERE!
         System.out.print("compile and match data cleanup!\n");
-        //s1.pcre2_jmatch_free();
-        s1.pcre2_Jcompile_free();
+        //s1.pcre2_jmatch_free(); // match data is freed automatically when match has been completed.
+        s1.pcre2_Jcompile_free(); // Compiled pattern data is not freed automatically as it is used multiple times by matching.
     }
 }

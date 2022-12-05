@@ -7,6 +7,7 @@
     <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Fixing error handling and cleaning up code.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -179,7 +180,8 @@
       <workItem from="1669879821682" duration="89000" />
       <workItem from="1669879924129" duration="17714000" />
       <workItem from="1669902774805" duration="1154000" />
-      <workItem from="1669962121634" duration="9351000" />
+      <workItem from="1669962121634" duration="13885000" />
+      <workItem from="1670222062047" duration="1879000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -286,7 +288,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669904035276</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Fixing error handling and cleaning up code.">
+      <created>1669983700891</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1669983700891</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

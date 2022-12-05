@@ -416,6 +416,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
 
     // NAMED SUBSTRINGS END
 
+    // printf("Releasing match_data from memory.\n");
     pcre2_match_data_free(match_data);
     return sVal;
 }
