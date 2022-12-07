@@ -114,9 +114,7 @@ public class JavaPcre {
 
 
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset);
-//        System.out.println("Retrieved " + regex_val.numVals + " values:");
         if (regex_val.numVals == 0) {
-            //System.out.println("matching error or no match.");
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);

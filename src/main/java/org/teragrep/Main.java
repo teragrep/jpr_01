@@ -11,8 +11,8 @@ public class Main {
 //        s1.pcre2_versioncheck();
 //        s1.compile_options.JPCRE2_ANCHORED = true;
 
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
-        //s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        //s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
         //s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)", 0);
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");

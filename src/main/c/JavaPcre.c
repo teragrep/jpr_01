@@ -187,8 +187,8 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
         pattern_length = k;
     }
 
-    //printf("pcre2_compile starting.\n");
-    //printf("options value is: %d\n", option0);
+    // TODO: pcre2_set_compile_extra_options() is needed for extra options that don't fit inside the option0 bits.
+    // TODO: check if compile context is needed and how to implement it.
     re = pcre2_compile(
             pattern,               /* the pattern */
             pattern_length,        /* value 0 indicates pattern is zero-terminated, anything higher indicates actual pattern length */
@@ -208,14 +208,11 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
                buffer);
         return NULL;
     }
-    //printf("pcre2_compile went fine.\n");
     return re;
 }
 
 void pcre2_jcompile_free(pcre2_code *re){
-    //printf("Releasing data and compiled pattern from memory.\n");
     pcre2_code_free(re);
-    //printf("Memory released successfully.\n");
 }
 
 
@@ -242,6 +239,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     subject_length = (PCRE2_SIZE)strlen((char *)subject);
 
     // check if this is the first or subsequent match
+    // TODO: check if these parameters are actually needed for subsequent matches.
     if(offset != 0){
 
         /* Before running the subsequent matches, check for UTF-8 and whether CRLF is a valid newline
@@ -261,7 +259,8 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     }
 
 /* Now run the match. */
-
+// TODO: forgot to add options parametrization for matching. Need to fix this.
+// TODO: check if match context is needed and how to implement it.
 /* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
     rc = pcre2_match(
             re,                   /* the compiled pattern */
@@ -310,7 +309,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     are stored. */
 
     ovector = pcre2_get_ovector_pointer(match_data);
-    //printf("Match succeeded at offset %d with rc length of %d\n", (int)ovector[0], rc);
 
     RegexStruct sVal;
     sVal.numVals = rc;
@@ -333,7 +331,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         PCRE2_SIZE substring_length = ovector[2*i+1] - ovector[2*i];
         sVal.ovector[i+2] = (int)ovector[i+2];
         sVal.ovector[i+3] = (int)ovector[i+3];
-        //printf("%2d: %.*s\n", i, (int)substring_length, (char *)substring_start);
 
         sVal.vals[i] = (char*)malloc(sizeof(char) * ((int)substring_length + 1));
         if (sVal.vals[i] == NULL) {
@@ -342,10 +339,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
         }
         memset(sVal.vals[i], 0, sizeof(char) * ((int)substring_length + 1)); // initializes the array with null values.
         memcpy(sVal.vals[i], (char *)substring_start, (int)substring_length);
-
-        // TESTING SECTION
-        //strncpy(sVal.vals[i], (char *)substring_start, (int)substring_length);
-        //printf("%2d: %s\n", i, sVal.vals[i]);
     }
 
     // NAMED SUBSTRINGS START HERE
@@ -360,7 +353,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     } else
     {
         PCRE2_SPTR tabptr;
-        //printf("Named substrings\n");
 
         /* Before we can access the substrings, we must extract the table for
         translating names to numbers, and the size of each entry in the table. */
@@ -397,7 +389,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
             // etc.
             // first two bytes (00 and 01) are the number of the capturing parenthesis, and ?? is an undefined byte.
             // last 00 byte seems to be the zero termination of the string.
-            //printf("name_entry_size: %d", (name_entry_size - 3));
             sVal.names[i] = (char*)malloc(sizeof(char) * ((int)name_entry_size - 2));
             if (sVal.names[i] == NULL) {
                 printf("Error: Out of memory\r\n");
@@ -416,15 +407,12 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
 
     // NAMED SUBSTRINGS END
 
-    // printf("Releasing match_data from memory.\n");
     pcre2_match_data_free(match_data);
     return sVal;
 }
 
 void pcre2_jmatch_free(pcre2_match_data *match_data){
-//    printf("Releasing match_data from memory.\n");
     pcre2_match_data_free(match_data);
-//    printf("Memory released successfully.\n");
 }
 
 void pcre2_versioncheck(){
