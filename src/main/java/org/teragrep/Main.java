@@ -37,11 +37,9 @@ public class Main {
         boolean matchfound = true;
         int laskuri = 1;
         while (matchfound) {
-            s1.pcre2_singlematch_java("""
-                    From:regular.expression@example.com\r
-                    From:exddd@43434.com\r
-                    From:7853456@exgem.com\r
-                    """, s1.offset);
+            s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
+                                      "From:exddd@43434.com\r\n" +
+                                      "From:7853456@exgem.com\r\n", s1.offset);
             a = 0;
             System.out.print("Match group "+laskuri+":\n");
             laskuri += 1;

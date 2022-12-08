@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up more test code and added TODO to few missing parameters.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Tried downgrading from java 17 to 8">
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,7 +183,7 @@
       <workItem from="1670397115318" duration="6309000" />
       <workItem from="1670411436046" duration="4426000" />
       <workItem from="1670487566029" duration="940000" />
-      <workItem from="1670489630830" duration="1716000" />
+      <workItem from="1670489630830" duration="2047000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -319,7 +318,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670400373117</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Tried downgrading from java 17 to 8">
+      <created>1670491434958</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1670491434958</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -386,7 +392,8 @@
     <MESSAGE value="Cleaned up code-" />
     <MESSAGE value="Added license and readme files." />
     <MESSAGE value="Cleaned up more test code and added TODO to few missing parameters." />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up more test code and added TODO to few missing parameters." />
+    <MESSAGE value="Tried downgrading from java 17 to 8" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tried downgrading from java 17 to 8" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
