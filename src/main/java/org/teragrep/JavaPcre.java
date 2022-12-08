@@ -64,6 +64,21 @@ public class JavaPcre {
             public boolean JPCRE2_UTF = false;
         }
 
+        @FieldOrder({ "JPCRE2_ANCHORED", "JPCRE2_COPY_MATCHED_SUBJECT", "JPCRE2_ENDANCHORED", "JPCRE2_NOTBOL", "JPCRE2_NOTEOL", "JPCRE2_NOTEMPTY", "JPCRE2_NOTEMPTY_ATSTART", "JPCRE2_NO_JIT", "JPCRE2_NO_UTF_CHECK", "JPCRE2_PARTIAL_HARD", "JPCRE2_PARTIAL_SOFT" })
+        class MatchOptionsStruct extends Structure {
+            public boolean JPCRE2_ANCHORED = false;
+            public boolean JPCRE2_COPY_MATCHED_SUBJECT = false;
+            public boolean JPCRE2_ENDANCHORED = false;
+            public boolean JPCRE2_NOTBOL = false;
+            public boolean JPCRE2_NOTEOL = false;
+            public boolean JPCRE2_NOTEMPTY = false;
+            public boolean JPCRE2_NOTEMPTY_ATSTART = false;
+            public boolean JPCRE2_NO_JIT = false;
+            public boolean JPCRE2_NO_UTF_CHECK = false;
+            public boolean JPCRE2_PARTIAL_HARD = false;
+            public boolean JPCRE2_PARTIAL_SOFT = false;
+        }
+
         @FieldOrder({ "numVals", "vals", "ovector", "names", "namesnum", "namescount" })
         class RegexStruct extends Structure {
             public static class ByValue extends RegexStruct implements Structure.ByValue {}
@@ -80,7 +95,7 @@ public class JavaPcre {
 
         Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
 
-        RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset); // returns pointer to a single match data.
+        RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset, MatchOptionsStruct match_options); // returns pointer to a single match data.
 
         void pcre2_jcompile_free(Pointer re);
 
@@ -99,11 +114,13 @@ public class JavaPcre {
     Pointer re;
     Pointer match_data;
     LibJavaPcre.OptionsStruct compile_options;
+    LibJavaPcre.MatchOptionsStruct match_options;
     Map<String, Integer> name_table;
     Map<Integer, String> match_table;
 
     JavaPcre(){
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
+        match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
     }
 
     // checks the installed PCRE2 library version for compatibility.
@@ -130,7 +147,7 @@ public class JavaPcre {
         int ind = 0;
 
 
-        LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset);
+        LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options);
         if (regex_val.numVals == 0) {
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
@@ -158,7 +175,11 @@ public class JavaPcre {
 
     // frees the compiled pattern.
     public void pcre2_Jcompile_free(){
-        LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
+        if (re != null){
+            LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
+        }else{
+            System.out.print("Error! No data to free.\n");
+        }
     }
 
 }

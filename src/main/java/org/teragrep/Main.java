@@ -21,15 +21,24 @@ public class Main {
         s1.offset = 0;
 
         // function for getting a single match group
-//        Map<Integer, String> test;
-//        test = s1.pcre2_singlematch_java("From:regular.expressions@example.com\r\n"+"From:exddd@43434.com\r\n"+"From:7853456@exgem.com\r\n", 82);
+//        s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
+//                                  "From:exddd@43434.com\r\n" +
+//                                  "From:7853456@exgem.com\r\n", s1.offset);
 //        a = 0;
-//        for(Map.Entry<Integer,String>it:test.entrySet()) {
+//        System.out.print("Match group:\n");
+//        for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
 //            System.out.print(a+": "+it.getValue()+"\n");
-//            a++;
+//            a += 1;
 //        }
-//        if (a==0){
+//        if (a==0) {
 //            System.out.print("No match!\n");
+//        }else{
+//            if (s1.name_table.size() > 0) {
+//                System.out.print("named groups:\n");
+//            }
+//            for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
+//                System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
+//            }
 //        }
 
 

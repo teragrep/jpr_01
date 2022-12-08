@@ -65,6 +65,20 @@ typedef struct OptionsStruct_TAG {
     int JPCRE2_UTF;
 } OptionsStruct;
 
+typedef struct MatchOptionsStruct_TAG {
+    int JPCRE2_ANCHORED;
+    int JPCRE2_COPY_MATCHED_SUBJECT;
+    int JPCRE2_ENDANCHORED;
+    int JPCRE2_NOTBOL;
+    int JPCRE2_NOTEOL;
+    int JPCRE2_NOTEMPTY;
+    int JPCRE2_NOTEMPTY_ATSTART;
+    int JPCRE2_NO_JIT;
+    int JPCRE2_NO_UTF_CHECK;
+    int JPCRE2_PARTIAL_HARD;
+    int JPCRE2_PARTIAL_SOFT;
+} MatchOptionsStruct;
+
 // regex struct/array implementation starts here
 typedef struct RegexStruct_TAG {
     int numVals;
@@ -208,7 +222,7 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
     re = pcre2_compile(
             pattern,               /* the pattern */
             pattern_length,        /* value 0 indicates pattern is zero-terminated, anything higher indicates actual pattern length */
-            option0,               /* options */
+            option0,               /* options, default is 0 */
             &errornumber,          /* for error number */
             &erroroffset,          /* for error offset */
             NULL);                 /* use default compile context */
@@ -233,7 +247,7 @@ void pcre2_jcompile_free(pcre2_code *re){
 
 
 // this function contains matching for a single match
-RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
+RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp){
     pcre2_match_data *match_data;
     PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
     PCRE2_SPTR name_table;
@@ -248,6 +262,43 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
 
     PCRE2_SIZE subject_length;
     PCRE2_SIZE *ovector;
+
+    // constructing the uint32_t option0 parameter for match function from MatchOptionsStruct values.
+    uint32_t option0 = 0;
+    if (temp->JPCRE2_ANCHORED != 0) {
+        option0 |= PCRE2_ANCHORED;
+    }
+    if (temp->JPCRE2_COPY_MATCHED_SUBJECT != 0) {
+        option0 |= PCRE2_COPY_MATCHED_SUBJECT;
+    }
+    if (temp->JPCRE2_ENDANCHORED != 0) {
+        option0 |= PCRE2_ENDANCHORED;
+    }
+    if (temp->JPCRE2_NOTBOL != 0) {
+        option0 |= PCRE2_NOTBOL;
+    }
+    if (temp->JPCRE2_NOTEOL != 0) {
+        option0 |= PCRE2_NOTEOL;
+    }
+    if (temp->JPCRE2_NOTEMPTY != 0) {
+        option0 |= PCRE2_NOTEMPTY;
+    }
+    if (temp->JPCRE2_NOTEMPTY_ATSTART != 0) {
+        option0 |= PCRE2_NOTEMPTY_ATSTART;
+    }
+    if (temp->JPCRE2_NO_JIT != 0) {
+        option0 |= PCRE2_NO_JIT;
+    }
+    if (temp->JPCRE2_NO_UTF_CHECK != 0) {
+        option0 |= PCRE2_NO_UTF_CHECK;
+    }
+    if (temp->JPCRE2_PARTIAL_HARD != 0) {
+        option0 |= PCRE2_PARTIAL_HARD;
+    }
+    if (temp->JPCRE2_PARTIAL_SOFT != 0) {
+        option0 |= PCRE2_PARTIAL_SOFT;
+    }
+
 
     match_data = pcre2_match_data_create_from_pattern(re, NULL);
 
@@ -275,7 +326,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
     }
 
 /* Now run the match. */
-// TODO: forgot to add options parametrization for matching. Need to fix this.
+// DONE: forgot to add options parametrization for matching. Need to fix this.
 // TODO: check if match context is needed and how to implement it.
 /* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
     rc = pcre2_match(
@@ -283,7 +334,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset){
             subject,              /* the subject string */
             subject_length,       /* the length of the subject */
             offset,               /* start at offset 0 in the subject */
-            0,                    /* default options */
+            option0,              /* default option is 0 */
             match_data,           /* block for storing the result */
             NULL);                /* use default match context */
 
@@ -477,6 +528,19 @@ int main(void) {
     kikkare.JPCRE2_USE_OFFSET_LIMIT=0;
     kikkare.JPCRE2_UTF=0;
 
+    MatchOptionsStruct kikkare2;
+    kikkare2.JPCRE2_ANCHORED=0;
+    kikkare2.JPCRE2_COPY_MATCHED_SUBJECT=0;
+    kikkare2.JPCRE2_ENDANCHORED=0;
+    kikkare2.JPCRE2_NOTBOL=0;
+    kikkare2.JPCRE2_NOTEOL=0;
+    kikkare2.JPCRE2_NOTEMPTY=0;
+    kikkare2.JPCRE2_NOTEMPTY_ATSTART=0;
+    kikkare2.JPCRE2_NO_JIT=0;
+    kikkare2.JPCRE2_NO_UTF_CHECK=0;
+    kikkare2.JPCRE2_PARTIAL_HARD=0;
+    kikkare2.JPCRE2_PARTIAL_SOFT=0;
+
     RegexStruct testStruct;
     int i;
     int offset = 0;
@@ -487,7 +551,7 @@ int main(void) {
         return 0;
     }
 
-    testStruct = pcre2_single_jmatch(testi, re, offset);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
     // Print the first member of the struct array
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
@@ -502,7 +566,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the second member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -516,7 +580,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the third member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -530,7 +594,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the fourth member of the struct array if it exists
-    testStruct = pcre2_single_jmatch(testi, re, offset);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");

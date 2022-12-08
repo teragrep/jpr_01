@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Tried downgrading from java 17 to 8, second round">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Added match options parametrization that was missing. Also added some of the test cases.">
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/teragrep/JavaPcreTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +21,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -46,6 +50,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.includeInheritedMembers": "true",
     "last_opened_file_path": "/home/p000048u/libs/jna-5.9.0.jar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -59,7 +66,94 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="org.teragrep" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.JavaPcreTest">
+    <configuration name="JavaPcreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaPcreTest.pcre2_compile_failure_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="METHOD_NAME" value="pcre2_compile_failure_test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaPcreTest.pcre2_options_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="METHOD_NAME" value="pcre2_options_test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaPcreTest.pcre2_singlematch_test1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="METHOD_NAME" value="pcre2_singlematch_test1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaPcreTest.pcre2_versioncheck_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="METHOD_NAME" value="pcre2_versioncheck_test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
         <option name="Make" enabled="true" />
@@ -97,6 +191,15 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.JavaPcreTest" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_versioncheck_test" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_options_test" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_singlematch_test1" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_compile_failure_test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -185,7 +288,7 @@
       <workItem from="1670397115318" duration="6309000" />
       <workItem from="1670411436046" duration="4426000" />
       <workItem from="1670487566029" duration="940000" />
-      <workItem from="1670489630830" duration="3621000" />
+      <workItem from="1670489630830" duration="19007000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -334,7 +437,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670491852463</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Added Apache license headers">
+      <created>1670493364246</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1670493364246</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -403,7 +513,10 @@
     <MESSAGE value="Cleaned up more test code and added TODO to few missing parameters." />
     <MESSAGE value="Tried downgrading from java 17 to 8" />
     <MESSAGE value="Tried downgrading from java 17 to 8, second round" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tried downgrading from java 17 to 8, second round" />
+    <MESSAGE value="Added Apache license headers" />
+    <MESSAGE value="Added match options parametrization that was missing." />
+    <MESSAGE value="Added match options parametrization that was missing. Also added some of the test cases." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added match options parametrization that was missing. Also added some of the test cases." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
