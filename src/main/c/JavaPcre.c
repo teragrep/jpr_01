@@ -263,6 +263,8 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     PCRE2_SIZE subject_length;
     PCRE2_SIZE *ovector;
 
+    RegexStruct sVal;
+
     // constructing the uint32_t option0 parameter for match function from MatchOptionsStruct values.
     uint32_t option0 = 0;
     if (temp->JPCRE2_ANCHORED != 0) {
@@ -349,7 +351,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
                 */
             default: printf("Matching error %d\n", rc); break;
         }
-        RegexStruct sVal;
         sVal.numVals = 0;
         sVal.vals = (char**)malloc(sizeof(char*) * 1);
         sVal.names = (char**)malloc(sizeof(char*) * 1);
@@ -377,7 +378,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
 
     ovector = pcre2_get_ovector_pointer(match_data);
 
-    RegexStruct sVal;
+
     sVal.numVals = rc;
     sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
     sVal.ovector = (int*)malloc(sizeof(int) * (2 + (sVal.numVals * 2)));
@@ -417,6 +418,14 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
 
     if (namecount == 0){
         sVal.namescount = namecount;
+        sVal.names = (char**)malloc(sizeof(char*) * 1);
+        sVal.namesnum = (int*)malloc(sizeof(int) * 1);
+        if (sVal.names == NULL || sVal.namesnum == NULL) {
+            printf("Error: Out of memory\r\n");
+            exit(-1);
+        }
+        memset(sVal.names, 0, sizeof(char*) * 1);
+        memset(sVal.namesnum, 0, sizeof(int) * 1);
     } else
     {
         PCRE2_SPTR tabptr;
