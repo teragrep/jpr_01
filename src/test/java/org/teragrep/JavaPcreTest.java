@@ -24,27 +24,75 @@ class JavaPcreTest {
     }
 
     @Test
+    void pcre2_extraoptions_test(){
+        JavaPcre s1 = new JavaPcre();
+        s1.pcre2_gcontext_create();
+        s1.pcre2_ccontext_create();
+        s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;
+        s1.pcre2_ccontext_set_extra_options();
+
+        s1.pcre2_ccontext_free();
+        s1.pcre2_gcontext_free();
+    }
+
+    @Test
+    void pcre2_context_test() {
+        JavaPcre s1 = new JavaPcre();
+        if (s1.gcontext == null)
+            System.out.print("gcontext null.\n");
+        if (s1.ccontext == null)
+            System.out.print("ccontext null.\n");
+        if (s1.mcontext == null)
+            System.out.print("mcontext null.\n");
+        s1.pcre2_gcontext_create();
+        s1.pcre2_ccontext_create();
+        s1.pcre2_mcontext_create();
+        if (s1.gcontext == null)
+            System.out.print("gcontext null.\n");
+        else
+            System.out.print("gcontext not null.\n");
+        if (s1.ccontext == null)
+            System.out.print("ccontext null.\n");
+        else
+            System.out.print("ccontext not null.\n");
+        if (s1.mcontext == null)
+            System.out.print("mcontext null.\n");
+        else
+            System.out.print("mcontext not null.\n");
+
+        s1.pcre2_mcontext_free();
+        s1.pcre2_ccontext_free();
+        s1.pcre2_gcontext_free();
+        if (s1.gcontext == null)
+            System.out.print("gcontext null.\n");
+        if (s1.ccontext == null)
+            System.out.print("ccontext null.\n");
+        if (s1.mcontext == null)
+            System.out.print("mcontext null.\n");
+    }
+
+    @Test
     void pcre2_compile_test() {
         JavaPcre s1 = new JavaPcre();
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
 //            return;
         }
         s1.pcre2_Jcompile_free();
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
 //            return;
         }else
             s1.pcre2_Jcompile_free();
-        s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
 //            return;
         }else
             s1.pcre2_Jcompile_free();
-        s1.pcre2_compile_java("", 0);
+        s1.pcre2_compile_java("");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
 //            return;
@@ -55,7 +103,7 @@ class JavaPcreTest {
     @Test
     void pcre2_compile_failure_test() {
         JavaPcre s1 = new JavaPcre();
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern failed.\n");
             System.out.print("Error is intended to be at pattern offset 35 in this test case, missing )-symbol in the pattern\n");
@@ -66,9 +114,13 @@ class JavaPcreTest {
     @Test
     void pcre2_singlematch_test1() {
         int a;
-        JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
-
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        JavaPcre s1 = new JavaPcre(); // also initializes the compiler/match options and context at default values.
+        s1.pcre2_gcontext_create();
+        s1.pcre2_ccontext_create();
+        s1.pcre2_mcontext_create();
+        s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;
+        s1.pcre2_ccontext_set_extra_options();
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -95,6 +147,9 @@ class JavaPcreTest {
                 System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
             }
         }
+        s1.pcre2_mcontext_free();
+        s1.pcre2_ccontext_free();
+        s1.pcre2_gcontext_free();
         s1.pcre2_Jcompile_free();
     }
 
@@ -102,7 +157,7 @@ class JavaPcreTest {
     void pcre2_singlematch_2namedgroups_test() {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -137,7 +192,7 @@ class JavaPcreTest {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
 
-        s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -172,7 +227,7 @@ class JavaPcreTest {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
 
-        s1.pcre2_compile_java("nomatch", 0);
+        s1.pcre2_compile_java("nomatch");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -206,7 +261,7 @@ class JavaPcreTest {
     void pcre2_matchall_test() {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)", 0);
+        s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -244,7 +299,7 @@ class JavaPcreTest {
     void pcre2_matchall_nomatch_test() {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
-        s1.pcre2_compile_java("nomatch", 0);
+        s1.pcre2_compile_java("nomatch");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
             return;
@@ -281,7 +336,7 @@ class JavaPcreTest {
     @Test
     void pcre2_Jcompile_free() {
         JavaPcre s1 = new JavaPcre();
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)", 0);
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
         if (s1.re == null){
             System.out.print("Error! Compiling of the match pattern ended up in error.\n");
 //            return;

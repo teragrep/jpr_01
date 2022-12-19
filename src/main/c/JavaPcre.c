@@ -65,6 +65,16 @@ typedef struct OptionsStruct_TAG {
     int JPCRE2_UTF;
 } OptionsStruct;
 
+typedef struct ExtraOptionsStruct_TAG {
+    int JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK;
+    int JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES;
+    int JPCRE2_EXTRA_ALT_BSUX;
+    int JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL;
+    int JPCRE2_EXTRA_ESCAPED_CR_IS_LF;
+    int JPCRE2_EXTRA_MATCH_LINE;
+    int JPCRE2_EXTRA_MATCH_WORD;
+} ExtraOptionsStruct;
+
 typedef struct MatchOptionsStruct_TAG {
     int JPCRE2_ANCHORED;
     int JPCRE2_COPY_MATCHED_SUBJECT;
@@ -110,7 +120,65 @@ void RegexStruct_cleanup(RegexStruct sVal)
 }
 // regex struct/array implementation ends here.
 
-void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
+void *pcre2_gcontext_create(){
+    pcre2_general_context *gcontext;
+    gcontext = pcre2_general_context_create(NULL, NULL, NULL);
+    return gcontext;
+}
+
+void pcre2_gcontext_free(pcre2_general_context *gcontext){
+    pcre2_general_context_free(gcontext);
+}
+
+void *pcre2_ccontext_create(pcre2_general_context *gcontext){
+    pcre2_compile_context *ccontext;
+    ccontext = pcre2_compile_context_create(gcontext);
+    return ccontext;
+}
+
+void pcre2_ccontext_free(pcre2_compile_context *ccontext){
+    pcre2_compile_context_free(ccontext);
+}
+
+void pcre2_ccontext_set_extra_options(pcre2_compile_context *ccontext, ExtraOptionsStruct *temp){
+    uint32_t extra_options = 0;
+
+    if (temp->JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK != 0) {
+        extra_options |= PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK;
+        }
+    if (temp->JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES != 0) {
+        extra_options |= PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES;
+        }
+    if (temp->JPCRE2_EXTRA_ALT_BSUX != 0) {
+        extra_options |= PCRE2_EXTRA_ALT_BSUX;
+        }
+    if (temp->JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL != 0) {
+        extra_options |= PCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL;
+        }
+    if (temp->JPCRE2_EXTRA_ESCAPED_CR_IS_LF != 0) {
+        extra_options |= PCRE2_EXTRA_ESCAPED_CR_IS_LF;
+        }
+    if (temp->JPCRE2_EXTRA_MATCH_LINE != 0) {
+        extra_options |= PCRE2_EXTRA_MATCH_LINE;
+        }
+    if (temp->JPCRE2_EXTRA_MATCH_WORD != 0) {
+        extra_options |= PCRE2_EXTRA_MATCH_WORD;
+        }
+
+    pcre2_set_compile_extra_options(ccontext, extra_options);
+}
+
+void *pcre2_mcontext_create(pcre2_general_context *gcontext){
+    pcre2_match_context *mcontext;
+    mcontext = pcre2_match_context_create(gcontext);
+    return mcontext;
+}
+
+void pcre2_mcontext_free(pcre2_match_context *mcontext){
+    pcre2_match_context_free(mcontext);
+}
+
+void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
     pcre2_code *re;
     PCRE2_SPTR pattern;
     pattern = (PCRE2_SPTR)a;
@@ -225,7 +293,7 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
             option0,               /* options, default is 0 */
             &errornumber,          /* for error number */
             &erroroffset,          /* for error offset */
-            NULL);                 /* use default compile context */
+            ccontext);             /* use default compile context */
 
 
 /* Compilation failed: print the error message and exit. */
@@ -247,7 +315,7 @@ void pcre2_jcompile_free(pcre2_code *re){
 
 
 // this function contains matching for a single match
-RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp){
+RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp, pcre2_match_context *mcontext){
     pcre2_match_data *match_data;
     PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
     PCRE2_SPTR name_table;
@@ -338,7 +406,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             offset,               /* start at offset 0 in the subject */
             option0,              /* default option is 0 */
             match_data,           /* block for storing the result */
-            NULL);                /* use default match context */
+            mcontext);            /* use default match context */
 
 /* Matching failed: handle error cases */
     if (rc < 0)
@@ -550,17 +618,30 @@ int main(void) {
     kikkare2.JPCRE2_PARTIAL_HARD=0;
     kikkare2.JPCRE2_PARTIAL_SOFT=0;
 
+
+    // TODO: implement general context.
+    pcre2_general_context *gcontext;
+    // TODO: implement the context for compile.
+    gcontext = pcre2_general_context_create(NULL, NULL, NULL);
+    pcre2_compile_context *ccontext;
+    ccontext = pcre2_compile_context_create(gcontext);
+    // TODO: implement the context for match.
+    pcre2_match_context *mcontext;
+    mcontext = pcre2_match_context_create(gcontext);
+
+
+
     RegexStruct testStruct;
     int i;
     int offset = 0;
     //init_StructArray(testStructs, pNumofstructs);
-    re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare);
+    re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
     // error handling
     if (re == NULL){
         return 0;
     }
 
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     // Print the first member of the struct array
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
@@ -575,7 +656,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the second member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -589,7 +670,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the third member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -603,7 +684,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the fourth member of the struct array if it exists
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -617,6 +698,10 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     pcre2_jcompile_free(re);
+    // TODO: free the contexts
+        pcre2_match_context_free(mcontext);
+        pcre2_compile_context_free(ccontext);
+        pcre2_general_context_free(gcontext);
 
     return 0;
 }

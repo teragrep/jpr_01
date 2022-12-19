@@ -64,6 +64,17 @@ public class JavaPcre {
             public boolean JPCRE2_UTF = false;
         }
 
+        @FieldOrder({ "JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK", "JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES", "JPCRE2_EXTRA_ALT_BSUX", "JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL", "JPCRE2_EXTRA_ESCAPED_CR_IS_LF", "JPCRE2_EXTRA_MATCH_LINE", "JPCRE2_EXTRA_MATCH_WORD" })
+        class ExtraOptionsStruct extends Structure {
+            public boolean JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;
+            public boolean JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES = false;
+            public boolean JPCRE2_EXTRA_ALT_BSUX = false;
+            public boolean JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL = false;
+            public boolean JPCRE2_EXTRA_ESCAPED_CR_IS_LF = false;
+            public boolean JPCRE2_EXTRA_MATCH_LINE = false;
+            public boolean JPCRE2_EXTRA_MATCH_WORD = false;
+        }
+
         @FieldOrder({ "JPCRE2_ANCHORED", "JPCRE2_COPY_MATCHED_SUBJECT", "JPCRE2_ENDANCHORED", "JPCRE2_NOTBOL", "JPCRE2_NOTEOL", "JPCRE2_NOTEMPTY", "JPCRE2_NOTEMPTY_ATSTART", "JPCRE2_NO_JIT", "JPCRE2_NO_UTF_CHECK", "JPCRE2_PARTIAL_HARD", "JPCRE2_PARTIAL_SOFT" })
         class MatchOptionsStruct extends Structure {
             public boolean JPCRE2_ANCHORED = false;
@@ -93,15 +104,22 @@ public class JavaPcre {
 
         void RegexStruct_cleanup(RegexStruct.ByValue sVal);
 
-        Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options); // returns pointer to compiled pattern re
+        Pointer pcre2_jcompile(String pattern, int i, OptionsStruct options, Pointer ccontext); // returns pointer to compiled pattern re
 
-        RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset, MatchOptionsStruct match_options); // returns pointer to a single match data.
+        RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset, MatchOptionsStruct match_options, Pointer mcontext); // returns pointer to a single match data.
 
         void pcre2_jcompile_free(Pointer re);
 
         void pcre2_versioncheck();
 
         void pcre2_jmatch_free(Pointer match_data);
+        Pointer pcre2_gcontext_create();
+        void pcre2_gcontext_free(Pointer gcontext);
+        Pointer pcre2_ccontext_create(Pointer gcontext);
+        void pcre2_ccontext_set_extra_options(Pointer ccontext, ExtraOptionsStruct extra_options);
+        void pcre2_ccontext_free(Pointer ccontext);
+        Pointer pcre2_mcontext_create(Pointer gcontext);
+        void pcre2_mcontext_free(Pointer mcontext);
 
     }
 
@@ -113,7 +131,11 @@ public class JavaPcre {
     String subject;
     Pointer re;
     Pointer match_data;
+    Pointer gcontext;
+    Pointer ccontext;
+    Pointer mcontext;
     LibJavaPcre.OptionsStruct compile_options;
+    LibJavaPcre.ExtraOptionsStruct extra_options;
     LibJavaPcre.MatchOptionsStruct match_options;
     Map<String, Integer> name_table;
     Map<Integer, String> match_table;
@@ -121,7 +143,13 @@ public class JavaPcre {
     JavaPcre(){
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
         match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
+        extra_options = new LibJavaPcre.ExtraOptionsStruct(); // initializes pcre2_compile extra options with default values of PCRE2 library.
+        pattern_size = 0; // default pattern size, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
+        gcontext = null; // default value for when context is not used in compile or match
+        ccontext = null; // default value for when context is not used in compile
+        mcontext = null; // default value for when context is not used in match
     }
+    // Make another constructor if/when memory management is implemented to the context functions.
 
     // checks the installed PCRE2 library version for compatibility.
     public void pcre2_versioncheck(){
@@ -132,10 +160,42 @@ public class JavaPcre {
 //        compile_options = new LibJavaPcre.OptionsStruct();
 //    }
 
-    public void pcre2_compile_java(String pat, int size){
+    public void pcre2_gcontext_create(){
+        gcontext = LibJavaPcre.INSTANCE.pcre2_gcontext_create();
+    }
+    public void pcre2_ccontext_create(){
+        if (gcontext == null){
+            System.out.print("Error! general context is not initialized properly!\n");
+        } else {
+            ccontext = LibJavaPcre.INSTANCE.pcre2_ccontext_create(gcontext);
+        }
+    }
+    public void pcre2_ccontext_set_extra_options(){
+        LibJavaPcre.INSTANCE.pcre2_ccontext_set_extra_options(ccontext, extra_options);
+    }
+    public void pcre2_mcontext_create(){
+        if (gcontext == null){
+            System.out.print("Error! general context is not initialized properly!\n");
+        } else {
+            mcontext = LibJavaPcre.INSTANCE.pcre2_mcontext_create(gcontext);
+        }
+    }
+    public void pcre2_gcontext_free(){
+        LibJavaPcre.INSTANCE.pcre2_gcontext_free(gcontext);
+        gcontext = null;
+    }
+    public void pcre2_ccontext_free(){
+        LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
+        ccontext = null;
+    }
+    public void pcre2_mcontext_free(){
+        LibJavaPcre.INSTANCE.pcre2_mcontext_free(mcontext);
+        mcontext = null;
+    }
+
+    public void pcre2_compile_java(String pat){
         pattern = pat;
-        pattern_size = size;
-        re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options);
+        re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
     }
 
     // This is the main function for getting a single regex match group.
@@ -147,7 +207,7 @@ public class JavaPcre {
         int ind = 0;
 
 
-        LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options);
+        LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
         if (regex_val.numVals == 0) {
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
@@ -177,6 +237,7 @@ public class JavaPcre {
     public void pcre2_Jcompile_free(){
         if (re != null){
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
+            LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
         }else{
             System.out.print("Error! No data to free.\n");
         }
