@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Changed how compile functions length parameter is passed to pcre and added initial functionality for context parametrization.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/teragrep/JavaPcreTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/teragrep/JavaPcreTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,8 +205,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.JavaPcreTest.pcre2_singlematch_test1" />
-        <item itemvalue="JUnit.JavaPcreTest.pcre2_extraoptions_test" />
         <item itemvalue="JUnit.JavaPcreTest" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_extraoptions_test" />
         <item itemvalue="JUnit.JavaPcreTest.pcre2_compile_test" />
         <item itemvalue="JUnit.JavaPcreTest.pcre2_context_test" />
       </list>
@@ -308,7 +305,8 @@
       <workItem from="1671026922418" duration="599000" />
       <workItem from="1671088845282" duration="11397000" />
       <workItem from="1671174310794" duration="8737000" />
-      <workItem from="1671435857425" duration="12839000" />
+      <workItem from="1671435857425" duration="13947000" />
+      <workItem from="1671520514344" duration="3725000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -464,7 +462,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670493364246</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile.">
+      <created>1671461031428</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1671461031428</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -536,7 +541,8 @@
     <MESSAGE value="Added Apache license headers" />
     <MESSAGE value="Added match options parametrization that was missing." />
     <MESSAGE value="Added match options parametrization that was missing. Also added some of the test cases." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added match options parametrization that was missing. Also added some of the test cases." />
+    <MESSAGE value="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile." />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

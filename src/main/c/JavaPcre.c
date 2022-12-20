@@ -285,15 +285,14 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_conte
         pattern_length = k;
     }
 
-    // TODO: pcre2_set_compile_extra_options() is needed for extra options that don't fit inside the option0 bits.
-    // TODO: check if compile context is needed and how to implement it.
+
     re = pcre2_compile(
             pattern,               /* the pattern */
             pattern_length,        /* value 0 indicates pattern is zero-terminated, anything higher indicates actual pattern length */
             option0,               /* options, default is 0 */
             &errornumber,          /* for error number */
             &erroroffset,          /* for error offset */
-            ccontext);             /* use default compile context */
+            ccontext);             /* NULL to use default compile context */
 
 
 /* Compilation failed: print the error message and exit. */
@@ -396,8 +395,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     }
 
 /* Now run the match. */
-// DONE: forgot to add options parametrization for matching. Need to fix this.
-// TODO: check if match context is needed and how to implement it.
 /* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
     rc = pcre2_match(
             re,                   /* the compiled pattern */
@@ -406,7 +403,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             offset,               /* start at offset 0 in the subject */
             option0,              /* default option is 0 */
             match_data,           /* block for storing the result */
-            mcontext);            /* use default match context */
+            mcontext);            /* NULL to use default match context */
 
 /* Matching failed: handle error cases */
     if (rc < 0)
@@ -619,13 +616,10 @@ int main(void) {
     kikkare2.JPCRE2_PARTIAL_SOFT=0;
 
 
-    // TODO: implement general context.
     pcre2_general_context *gcontext;
-    // TODO: implement the context for compile.
     gcontext = pcre2_general_context_create(NULL, NULL, NULL);
     pcre2_compile_context *ccontext;
     ccontext = pcre2_compile_context_create(gcontext);
-    // TODO: implement the context for match.
     pcre2_match_context *mcontext;
     mcontext = pcre2_match_context_create(gcontext);
 
@@ -698,7 +692,6 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     pcre2_jcompile_free(re);
-    // TODO: free the contexts
         pcre2_match_context_free(mcontext);
         pcre2_compile_context_free(ccontext);
         pcre2_general_context_free(gcontext);
