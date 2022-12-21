@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up code">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Added IDE settings to gitignore, added slf4j for error logging, added rc parameter to RegexStruct for passing match error codes to java.">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +85,7 @@
       <recent name="org.teragrep" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.JavaPcreTest">
+  <component name="RunManager" selected="Maven.jpr-01 [clean,install]">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.teragrep.Main" />
       <module name="jpr-01" />
@@ -307,7 +304,7 @@
       <workItem from="1671174310794" duration="8737000" />
       <workItem from="1671435857425" duration="13947000" />
       <workItem from="1671520514344" duration="5896000" />
-      <workItem from="1671606366592" duration="7007000" />
+      <workItem from="1671606366592" duration="8770000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -477,7 +474,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671534992197</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Added IDE settings to gitignore, added slf4j for error logging, added rc parameter to RegexStruct for passing match error codes to java.">
+      <created>1671618333407</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1671618333407</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -525,7 +529,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Deleted redundant functions." />
     <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
     <MESSAGE value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
     <MESSAGE value="Finishing touches to pcre2_compile parametrization. Also added function to release compile data from memory." />
@@ -550,7 +553,8 @@
     <MESSAGE value="Added match options parametrization that was missing. Also added some of the test cases." />
     <MESSAGE value="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile." />
     <MESSAGE value="Cleaned up code" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up code" />
+    <MESSAGE value="Added IDE settings to gitignore, added slf4j for error logging, added rc parameter to RegexStruct for passing match error codes to java." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added IDE settings to gitignore, added slf4j for error logging, added rc parameter to RegexStruct for passing match error codes to java." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
