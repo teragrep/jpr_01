@@ -23,8 +23,13 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.Structure.FieldOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JavaPcre {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaPcre.class);
+
     // Initializing the interface.
     // By making the interface this way you can call the external C-function in the Java-functions that are made inside this class.
     public interface LibJavaPcre extends Library {
@@ -90,7 +95,7 @@ public class JavaPcre {
             public boolean JPCRE2_PARTIAL_SOFT = false;
         }
 
-        @FieldOrder({ "numVals", "vals", "ovector", "names", "namesnum", "namescount" })
+        @FieldOrder({ "numVals", "vals", "ovector", "names", "namesnum", "namescount", "rc" })
         class RegexStruct extends Structure {
             public static class ByValue extends RegexStruct implements Structure.ByValue {}
 
@@ -100,6 +105,7 @@ public class JavaPcre {
             public Pointer names; // char**
             public Pointer namesnum;
             public int namescount;
+            public int rc;
         }
 
         void RegexStruct_cleanup(RegexStruct.ByValue sVal);
@@ -165,7 +171,7 @@ public class JavaPcre {
     }
     public void pcre2_ccontext_create(){
         if (gcontext == null){
-            System.out.print("Error! general context is not initialized properly!\n");
+            LOGGER.error("General context is not initialized properly!");
         } else {
             ccontext = LibJavaPcre.INSTANCE.pcre2_ccontext_create(gcontext);
         }
@@ -175,7 +181,7 @@ public class JavaPcre {
     }
     public void pcre2_mcontext_create(){
         if (gcontext == null){
-            System.out.print("Error! general context is not initialized properly!\n");
+            LOGGER.error("General context is not initialized properly!");
         } else {
             mcontext = LibJavaPcre.INSTANCE.pcre2_mcontext_create(gcontext);
         }
@@ -196,6 +202,9 @@ public class JavaPcre {
     public void pcre2_compile_java(String pat){
         pattern = pat;
         re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
+        if (re == null){
+            LOGGER.error("Compiling of the match pattern failed.");
+        }
     }
 
     // This is the main function for getting a single regex match group.
@@ -208,7 +217,11 @@ public class JavaPcre {
 
 
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
-        if (regex_val.numVals == 0) {
+        if (regex_val.rc < 0) {
+            switch(regex_val.rc){
+                case -1: LOGGER.warn("No match"); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                default: LOGGER.error("Matching error:" + regex_val.rc); break; // anything lower than -1 is a matching error.
+            }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
@@ -239,7 +252,7 @@ public class JavaPcre {
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
             LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
         }else{
-            System.out.print("Error! No data to free.\n");
+            LOGGER.error("No data to free!");
         }
     }
 

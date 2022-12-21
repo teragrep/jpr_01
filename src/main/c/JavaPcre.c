@@ -97,6 +97,7 @@ typedef struct RegexStruct_TAG {
     char** names;
     int* namesnum;
     int namescount;
+    int rc;
 } RegexStruct;
 
 void RegexStruct_cleanup(RegexStruct sVal)
@@ -410,13 +411,14 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     {
         switch(rc)
         {
-            case PCRE2_ERROR_NOMATCH: printf("No match\n"); break;
+            case PCRE2_ERROR_NOMATCH: break;
                 /*
                 Handle other special cases if you like
                 */
-            default: printf("Matching error %d\n", rc); break;
+            default: break;
         }
         sVal.numVals = 0;
+        sVal.rc = rc;
         sVal.vals = (char**)malloc(sizeof(char*) * 1);
         sVal.names = (char**)malloc(sizeof(char*) * 1);
         sVal.namesnum = (int*)malloc(sizeof(int) * 1);
@@ -445,6 +447,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
 
 
     sVal.numVals = rc;
+    sVal.rc = rc;
     sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
     sVal.ovector = (int*)malloc(sizeof(int) * (2 + (sVal.numVals * 2)));
 

@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile.">
+    <list default="true" id="542475c6-2cfd-4036-876f-b05f6722036a" name="Changes" comment="Cleaned up code">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/c/JavaPcre.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/c/JavaPcre.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +88,20 @@
       <recent name="org.teragrep" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.JavaPcreTest.pcre2_singlematch_test1">
+  <component name="RunManager" selected="JUnit.JavaPcreTest">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.Main" />
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="JavaPcreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jpr-01" />
       <extension name="coverage">
@@ -101,38 +117,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JavaPcreTest.pcre2_compile_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="jpr-01" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.teragrep.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.teragrep" />
-      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
-      <option name="METHOD_NAME" value="pcre2_compile_test" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="JavaPcreTest.pcre2_context_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="jpr-01" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.teragrep.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="org.teragrep" />
-      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
-      <option name="METHOD_NAME" value="pcre2_context_test" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="JavaPcreTest.pcre2_extraoptions_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jpr-01" />
       <extension name="coverage">
@@ -144,6 +128,22 @@
       <option name="PACKAGE_NAME" value="org.teragrep" />
       <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
       <option name="METHOD_NAME" value="pcre2_extraoptions_test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JavaPcreTest.pcre2_matchall_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="jpr-01" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.teragrep.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.teragrep" />
+      <option name="MAIN_CLASS_NAME" value="org.teragrep.JavaPcreTest" />
+      <option name="METHOD_NAME" value="pcre2_matchall_test" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -204,11 +204,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.JavaPcreTest.pcre2_singlematch_test1" />
         <item itemvalue="JUnit.JavaPcreTest" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_matchall_test" />
+        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.JavaPcreTest.pcre2_singlematch_test1" />
         <item itemvalue="JUnit.JavaPcreTest.pcre2_extraoptions_test" />
-        <item itemvalue="JUnit.JavaPcreTest.pcre2_compile_test" />
-        <item itemvalue="JUnit.JavaPcreTest.pcre2_context_test" />
       </list>
     </recent_temporary>
   </component>
@@ -306,7 +306,8 @@
       <workItem from="1671088845282" duration="11397000" />
       <workItem from="1671174310794" duration="8737000" />
       <workItem from="1671435857425" duration="13947000" />
-      <workItem from="1671520514344" duration="3725000" />
+      <workItem from="1671520514344" duration="5896000" />
+      <workItem from="1671606366592" duration="7007000" />
     </task>
     <task id="LOCAL-00001" summary="Basic functionality done, adding option parametrization for pcre etc.">
       <created>1665743404382</created>
@@ -469,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671461031428</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Cleaned up code">
+      <created>1671534992197</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1671534992197</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -517,7 +525,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Basic functionality done, adding option parametrization for pcre etc." />
     <MESSAGE value="Deleted redundant functions." />
     <MESSAGE value="Implemented initial structure/struct for transferring variables between java and C." />
     <MESSAGE value="Changed C-struct to uint32_t format from int, seems to work fine together with JNA-boolean values." />
@@ -542,18 +549,8 @@
     <MESSAGE value="Added match options parametrization that was missing." />
     <MESSAGE value="Added match options parametrization that was missing. Also added some of the test cases." />
     <MESSAGE value="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed how compile function length parameter is passed to pcre2. Added context parametrization. Added extra_options parametrization for pcre2_compile." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/teragrep/JavaPcre.java</url>
-          <line>197</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Cleaned up code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Cleaned up code" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
