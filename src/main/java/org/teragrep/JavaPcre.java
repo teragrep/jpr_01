@@ -172,6 +172,7 @@ public class JavaPcre {
     public void pcre2_ccontext_create(){
         if (gcontext == null){
             LOGGER.error("General context is not initialized properly!");
+            throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             ccontext = LibJavaPcre.INSTANCE.pcre2_ccontext_create(gcontext);
         }
@@ -182,6 +183,7 @@ public class JavaPcre {
     public void pcre2_mcontext_create(){
         if (gcontext == null){
             LOGGER.error("General context is not initialized properly!");
+            throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             mcontext = LibJavaPcre.INSTANCE.pcre2_mcontext_create(gcontext);
         }
@@ -215,11 +217,11 @@ public class JavaPcre {
         match_table = new LinkedHashMap<>();
         int ind = 0;
 
-
+        // TODO: add all error cases. error code labels are stored in the header file of the pcre2 library.
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
         if (regex_val.rc < 0) {
             switch(regex_val.rc){
-                case -1: LOGGER.warn("No match"); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -1: LOGGER.debug("No match"); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
                 default: LOGGER.error("Matching error:" + regex_val.rc); break; // anything lower than -1 is a matching error.
             }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
@@ -252,7 +254,7 @@ public class JavaPcre {
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
             LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
         }else{
-            LOGGER.error("No data to free!");
+            throw new IllegalStateException("No data to free");
         }
     }
 

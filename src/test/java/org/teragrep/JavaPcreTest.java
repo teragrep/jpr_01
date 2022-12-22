@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // import static org.junit.jupiter.api.Assertions.*;
 
 class JavaPcreTest {
@@ -12,6 +15,16 @@ class JavaPcreTest {
     void pcre2_versioncheck_test() {
         JavaPcre s1 = new JavaPcre();
         s1.pcre2_versioncheck();
+    }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaPcre.class);
+    @Test
+    void pcre2_slf4j_test() {
+        LOGGER.error("Testing error");
+        LOGGER.warn("Testing warn");
+        LOGGER.info("Testing info");
+        LOGGER.debug("Testing debug");
+        LOGGER.trace("Testing trace");
     }
 
     @Test
