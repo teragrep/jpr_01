@@ -201,6 +201,7 @@ public class JavaPcre {
         mcontext = null;
     }
 
+    // TODO: Add functionality for retrieving the compile error information from C.
     public void pcre2_compile_java(String pat){
         pattern = pat;
         re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
@@ -217,11 +218,26 @@ public class JavaPcre {
         match_table = new LinkedHashMap<>();
         int ind = 0;
 
-        // TODO: add all error cases. error code labels are stored in the header file of the pcre2 library.
+        // Matching error code labels are stored in the header file of the pcre2 library.
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
         if (regex_val.rc < 0) {
             switch(regex_val.rc){
-                case -1: LOGGER.debug("No match"); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -1: LOGGER.debug("PCRE2_ERROR_NOMATCH"); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -2: LOGGER.debug("PCRE2_ERROR_PARTIAL"); break;
+                case -31: LOGGER.error("PCRE2_ERROR_BADMAGIC"); break;
+                case -32: LOGGER.error("PCRE2_ERROR_BADMODE"); break;
+                case -33: LOGGER.error("PCRE2_ERROR_BADOFFSET"); break;
+                case -34: LOGGER.error("PCRE2_ERROR_BADOPTION"); break;
+                case -36: LOGGER.error("PCRE2_ERROR_BADUTFOFFSET"); break;
+                case -37: LOGGER.error("PCRE2_ERROR_CALLOUT"); break;
+                case -53: LOGGER.error("PCRE2_ERROR_DEPTHLIMIT"); break;
+                case -63: LOGGER.error("PCRE2_ERROR_HEAPLIMIT"); break;
+                case -65: LOGGER.error("PCRE2_ERROR_INTERNAL"); break;
+                case -46: LOGGER.error("PCRE2_ERROR_JIT_STACKLIMIT"); break;
+                case -47: LOGGER.error("PCRE2_ERROR_MATCHLIMIT"); break;
+                case -48: LOGGER.error("PCRE2_ERROR_NOMEMORY"); break;
+                case -51: LOGGER.error("PCRE2_ERROR_NULL"); break;
+                case -52: LOGGER.error("PCRE2_ERROR_RECURSELOOP"); break;
                 default: LOGGER.error("Matching error:" + regex_val.rc); break; // anything lower than -1 is a matching error.
             }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
