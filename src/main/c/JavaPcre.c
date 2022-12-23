@@ -89,6 +89,18 @@ typedef struct MatchOptionsStruct_TAG {
     int JPCRE2_PARTIAL_SOFT;
 } MatchOptionsStruct;
 
+// TODO: pass the error message to java
+typedef struct ErrorStruct_TAG {
+    int offset;
+    char* buffer;
+} ErrorStruct;
+
+typedef struct CompileData_TAG {
+    pcre2_code *re;
+    int errornumber;
+    int erroroffset;
+} CompileData;
+
 // regex struct/array implementation starts here
 typedef struct RegexStruct_TAG {
     int numVals;
@@ -179,13 +191,14 @@ void pcre2_mcontext_free(pcre2_match_context *mcontext){
     pcre2_match_context_free(mcontext);
 }
 
-void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
+CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
     pcre2_code *re;
     PCRE2_SPTR pattern;
     pattern = (PCRE2_SPTR)a;
     //char *terminated;
     int errornumber;
     PCRE2_SIZE erroroffset;
+    CompileData reVal;
 
     // constructing the uint32_t option0 parameter for compile function from OptionsStruct values.
     uint32_t option0 = 0;
@@ -297,21 +310,29 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_conte
 
 
 /* Compilation failed: print the error message and exit. */
-
+// Pass the compiledata along with errornumber/erroroffset to java, where another function can be called to get error message.
     if (re == NULL)
     {
         PCRE2_UCHAR buffer[256];
         pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
         printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset,
                buffer);
-        return NULL;
+        reVal.re = NULL;
+        reVal.errornumber = errornumber;
+        reVal.erroroffset = (int)erroroffset;
+        return reVal;
     }
-    return re;
+    reVal.re = re;
+    reVal.errornumber = 0;
+    reVal.erroroffset = 0;
+    return reVal;
 }
 
 void pcre2_jcompile_free(pcre2_code *re){
     pcre2_code_free(re);
 }
+
+
 
 
 // this function contains matching for a single match
@@ -632,7 +653,9 @@ int main(void) {
     int i;
     int offset = 0;
     //init_StructArray(testStructs, pNumofstructs);
-    re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
+    CompileData reVal = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
+    //re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
+    re = reVal.re;
     // error handling
     if (re == NULL){
         return 0;
