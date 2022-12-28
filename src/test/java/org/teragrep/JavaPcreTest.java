@@ -3,6 +3,7 @@ package org.teragrep;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.regex.PatternSyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,12 +117,14 @@ class JavaPcreTest {
     @Test
     void pcre2_compile_failure_test() {
         JavaPcre s1 = new JavaPcre();
-        s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
-        if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern failed.\n");
-            System.out.print("Error is intended to be at pattern offset 35 in this test case, missing )-symbol in the pattern\n");
-        }else
+        try {
+            s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
+        }catch (PatternSyntaxException e){
+            System.out.println(e);
+        }
+        if (s1.re != null) {
             s1.pcre2_Jcompile_free();
+        }
     }
 
     @Test

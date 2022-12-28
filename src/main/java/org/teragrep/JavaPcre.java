@@ -18,6 +18,8 @@
 package org.teragrep;
 
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
+
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -221,10 +223,10 @@ public class JavaPcre {
         //re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
         re = comp_val.re;
         if (re == null){
-            // TODO: PatternSyntaxException for pcre2_jcompile()
             LibJavaPcre.ErrorStruct.ByValue errorstuff;
             errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(comp_val.errornumber);
             LOGGER.error("Compiling of the match pattern failed. Error code " + comp_val.errornumber + " at offset " + comp_val.erroroffset + ": " + errorstuff.buffer);
+            throw new PatternSyntaxException(errorstuff.buffer, pat, comp_val.erroroffset);
         }
     }
 
