@@ -89,9 +89,7 @@ typedef struct MatchOptionsStruct_TAG {
     int JPCRE2_PARTIAL_SOFT;
 } MatchOptionsStruct;
 
-// TODO: pass the error message to java
 typedef struct ErrorStruct_TAG {
-    int offset;
     char* buffer;
 } ErrorStruct;
 
@@ -189,6 +187,14 @@ void *pcre2_mcontext_create(pcre2_general_context *gcontext){
 
 void pcre2_mcontext_free(pcre2_match_context *mcontext){
     pcre2_match_context_free(mcontext);
+}
+
+ErrorStruct pcre2_translate_error_code(int errorcode) {
+    ErrorStruct errorvals;
+    PCRE2_UCHAR buffer[256];
+    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+    errorvals.buffer = buffer;
+    return errorvals;
 }
 
 CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
@@ -315,8 +321,7 @@ CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile
     {
         PCRE2_UCHAR buffer[256];
         pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
-        printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset,
-               buffer);
+//        printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset, buffer);
         reVal.re = NULL;
         reVal.errornumber = errornumber;
         reVal.erroroffset = (int)erroroffset;
