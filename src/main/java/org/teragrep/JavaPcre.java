@@ -188,7 +188,6 @@ public class JavaPcre {
     }
     public void pcre2_ccontext_create(){
         if (gcontext == null){
-            LOGGER.error("General context is not initialized properly!");
             throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             ccontext = LibJavaPcre.INSTANCE.pcre2_ccontext_create(gcontext);
@@ -199,7 +198,6 @@ public class JavaPcre {
     }
     public void pcre2_mcontext_create(){
         if (gcontext == null){
-            LOGGER.error("General context is not initialized properly!");
             throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             mcontext = LibJavaPcre.INSTANCE.pcre2_mcontext_create(gcontext);
@@ -226,7 +224,6 @@ public class JavaPcre {
         if (re == null){
             LibJavaPcre.ErrorStruct.ByValue errorstuff;
             errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(comp_val.errornumber);
-            LOGGER.error("Compiling of the match pattern failed. Error code " + comp_val.errornumber + " at offset " + comp_val.erroroffset + ": " + errorstuff.buffer);
             throw new PatternSyntaxException(errorstuff.buffer, pat, comp_val.erroroffset);
         }
     }
@@ -234,11 +231,9 @@ public class JavaPcre {
     // This is the main function for getting a single regex match group.
     public void pcre2_singlematch_java(String a, int b){
         if (re == null) {
-            LOGGER.error("Match pattern is not compiled");
             throw new IllegalStateException("Match pattern is not compiled");
         }
         if (a == null) {
-            LOGGER.error("Subject is null");
             throw new IllegalStateException("Subject is null");
         }
         name_table = new LinkedHashMap<>();
@@ -254,7 +249,7 @@ public class JavaPcre {
             switch(regex_val.rc){
                 case -1: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
                 case -2: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -2: " + errorstuff.buffer); break;
-                default: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.error("Matching error " + regex_val.rc + ": " + errorstuff.buffer); throw new MatchException("Matching error " + regex_val.rc + ": " + errorstuff.buffer); // anything lower than -1 is a matching error.
+                default: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); throw new MatchException("Matching error " + regex_val.rc + ": " + errorstuff.buffer); // anything lower than -1 is a matching error.
             }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
