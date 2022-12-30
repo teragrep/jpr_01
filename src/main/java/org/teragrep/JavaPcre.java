@@ -167,6 +167,7 @@ public class JavaPcre {
         match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
         extra_options = new LibJavaPcre.ExtraOptionsStruct(); // initializes pcre2_compile extra options with default values of PCRE2 library.
         pattern_size = 0; // default pattern size, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
+        re = null;
         gcontext = null; // default value for when context is not used in compile or match
         ccontext = null; // default value for when context is not used in compile
         mcontext = null; // default value for when context is not used in match
@@ -232,6 +233,14 @@ public class JavaPcre {
 
     // This is the main function for getting a single regex match group.
     public void pcre2_singlematch_java(String a, int b){
+        if (re == null) {
+            LOGGER.error("Match pattern is not compiled");
+            throw new IllegalStateException("Match pattern is not compiled");
+        }
+        if (a == null) {
+            LOGGER.error("Subject is null");
+            throw new IllegalStateException("Subject is null");
+        }
         name_table = new LinkedHashMap<>();
         subject = a;
         offset = b;
@@ -276,6 +285,7 @@ public class JavaPcre {
         if (re != null){
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
             LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
+            re = null;
         }else{
             throw new IllegalStateException("No data to free");
         }

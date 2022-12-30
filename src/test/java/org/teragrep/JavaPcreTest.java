@@ -119,9 +119,75 @@ class JavaPcreTest {
         JavaPcre s1 = new JavaPcre();
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
-        }catch (PatternSyntaxException e){
+        }catch (Exception e){
             System.out.println(e);
         }
+        if (s1.re != null) {
+            s1.pcre2_Jcompile_free();
+        }
+    }
+
+
+    @Test
+    void pcre2_match_failure_test() {
+        JavaPcre s1 = new JavaPcre();
+        try {
+            s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+        // Error trigger: The value of startoffset was greater than the length of the subject.
+        s1.offset = 200;
+
+        try {
+            s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
+                    "From:exddd@43434.com\r\n" +
+                    "From:7853456@exgem.com\r\n", s1.offset);
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+
+        if (s1.re != null) {
+            s1.pcre2_Jcompile_free();
+        }
+    }
+
+    @Test
+    void pcre2_match_failure_test2() {
+        JavaPcre s1 = new JavaPcre();
+        s1.offset = 0;
+        // Match pattern is not compiled to trigger an error
+
+        try {
+            s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
+                    "From:exddd@43434.com\r\n" +
+                    "From:7853456@exgem.com\r\n", s1.offset);
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+    }
+
+    @Test
+    void pcre2_match_failure_test3() {
+        JavaPcre s1 = new JavaPcre();
+        try {
+            s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+        s1.offset = 0;
+
+        try {
+            s1.pcre2_singlematch_java(null, s1.offset);
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
+
         if (s1.re != null) {
             s1.pcre2_Jcompile_free();
         }
@@ -136,9 +202,10 @@ class JavaPcreTest {
         s1.pcre2_mcontext_create();
         s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;
         s1.pcre2_ccontext_set_extra_options();
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
-        if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern ended up in error.\n");
+        try {
+            s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
+        }catch (PatternSyntaxException e){
+            System.out.println(e);
             return;
         }
         s1.offset = 0;
@@ -251,9 +318,14 @@ class JavaPcreTest {
         s1.offset = 0;
 
         // function for getting a single match group
-        s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
-                                  "From:exddd@43434.com\r\n" +
-                                  "From:7853456@exgem.com\r\n", s1.offset);
+        try {
+            s1.pcre2_singlematch_java("From:regular.expression@example.com\r\n" +
+                    "From:exddd@43434.com\r\n" +
+                    "From:7853456@exgem.com\r\n", s1.offset);
+        }catch (Exception e){
+            System.out.println(e);
+            return;
+        }
         a = 0;
         System.out.print("Match group:\n");
         for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
