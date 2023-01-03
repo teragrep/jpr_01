@@ -142,6 +142,9 @@ public class JavaPcre {
         void pcre2_ccontext_free(Pointer ccontext);
         Pointer pcre2_mcontext_create(Pointer gcontext);
         void pcre2_mcontext_free(Pointer mcontext);
+        int pcre2_get_utf8(Pointer re);
+        int pcre2_get_crlf_is_newline(Pointer re);
+        int pcre2_check_utf8(char temp);
 
     }
 
@@ -150,6 +153,7 @@ public class JavaPcre {
     String pattern;
     int pattern_size;
     int offset;
+    boolean matchfound;
     String subject;
     Pointer re;
     Pointer match_data;
@@ -171,6 +175,7 @@ public class JavaPcre {
         gcontext = null; // default value for when context is not used in compile or match
         ccontext = null; // default value for when context is not used in compile
         mcontext = null; // default value for when context is not used in match
+        matchfound = false;
     }
     // Make another constructor if/when memory management is implemented to the context functions.
 
@@ -182,6 +187,21 @@ public class JavaPcre {
 //    public void pcre2_init_options(){
 //        compile_options = new LibJavaPcre.OptionsStruct();
 //    }
+
+    public boolean pcre2_get_utf8() {
+        int temp = LibJavaPcre.INSTANCE.pcre2_get_utf8(re);
+        return temp != 0;
+    }
+
+    public boolean pcre2_get_crlf_is_newline() {
+        int temp = LibJavaPcre.INSTANCE.pcre2_get_crlf_is_newline(re);
+        return temp != 0;
+    }
+
+    public boolean check_utf8(char temp) {
+        int tempboolean = LibJavaPcre.INSTANCE.pcre2_check_utf8(temp);
+        return tempboolean != 0;
+    }
 
     public void pcre2_gcontext_create(){
         gcontext = LibJavaPcre.INSTANCE.pcre2_gcontext_create();
@@ -228,6 +248,37 @@ public class JavaPcre {
         }
     }
 
+    public boolean checkoptionzero(){
+        return !compile_options.JPCRE2_ANCHORED && !compile_options.JPCRE2_ALLOW_EMPTY_CLASS && !compile_options.JPCRE2_ALT_BSUX && !compile_options.JPCRE2_ALT_CIRCUMFLEX && !compile_options.JPCRE2_ALT_VERBNAMES && !compile_options.JPCRE2_AUTO_CALLOUT && !compile_options.JPCRE2_CASELESS && !compile_options.JPCRE2_DOLLAR_ENDONLY && !compile_options.JPCRE2_DOTALL && !compile_options.JPCRE2_DUPNAMES && !compile_options.JPCRE2_ENDANCHORED && !compile_options.JPCRE2_EXTENDED && !compile_options.JPCRE2_EXTENDED_MORE && !compile_options.JPCRE2_FIRSTLINE && !compile_options.JPCRE2_LITERAL && !compile_options.JPCRE2_MATCH_INVALID_UTF && !compile_options.JPCRE2_MATCH_UNSET_BACKREF && !compile_options.JPCRE2_MULTILINE && !compile_options.JPCRE2_NEVER_BACKSLASH_C && !compile_options.JPCRE2_NEVER_UCP && !compile_options.JPCRE2_NEVER_UTF && !compile_options.JPCRE2_NO_AUTO_CAPTURE && !compile_options.JPCRE2_NO_AUTO_POSSESS && !compile_options.JPCRE2_NO_DOTSTAR_ANCHOR && !compile_options.JPCRE2_NO_START_OPTIMIZE && !compile_options.JPCRE2_NO_UTF_CHECK && !compile_options.JPCRE2_UCP && !compile_options.JPCRE2_UNGREEDY && !compile_options.JPCRE2_USE_OFFSET_LIMIT && !compile_options.JPCRE2_UTF;
+    }
+
+
+    int JPCRE2_AUTO_CALLOUT;
+    int JPCRE2_CASELESS;
+    int JPCRE2_DOLLAR_ENDONLY;
+    int JPCRE2_DOTALL;
+    int JPCRE2_DUPNAMES;
+    int JPCRE2_ENDANCHORED;
+    int JPCRE2_EXTENDED;
+    int JPCRE2_EXTENDED_MORE;
+    int JPCRE2_FIRSTLINE;
+    int JPCRE2_LITERAL;
+    int JPCRE2_MATCH_INVALID_UTF;
+    int JPCRE2_MATCH_UNSET_BACKREF;
+    int JPCRE2_MULTILINE;
+    int JPCRE2_NEVER_BACKSLASH_C;
+    int JPCRE2_NEVER_UCP;
+    int JPCRE2_NEVER_UTF;
+    int JPCRE2_NO_AUTO_CAPTURE;
+    int JPCRE2_NO_AUTO_POSSESS;
+    int JPCRE2_NO_DOTSTAR_ANCHOR;
+    int JPCRE2_NO_START_OPTIMIZE;
+    int JPCRE2_NO_UTF_CHECK;
+    int JPCRE2_UCP;
+    int JPCRE2_UNGREEDY;
+    int JPCRE2_USE_OFFSET_LIMIT;
+    int JPCRE2_UTF;
+
     // This is the main function for getting a single regex match group.
     public void pcre2_singlematch_java(String a, int b){
         if (re == null) {
@@ -247,12 +298,13 @@ public class JavaPcre {
         if (regex_val.rc < 0) {
             LibJavaPcre.ErrorStruct.ByValue errorstuff;
             switch(regex_val.rc){
-                case -1: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -1: matchfound = false; errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
                 case -2: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -2: " + errorstuff.buffer); break;
                 default: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); throw new MatchException("Matching error " + regex_val.rc + ": " + errorstuff.buffer); // anything lower than -1 is a matching error.
             }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
+            matchfound = true;
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
             final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
             if (regex_val.namescount > 0) {

@@ -337,8 +337,29 @@ void pcre2_jcompile_free(pcre2_code *re){
     pcre2_code_free(re);
 }
 
+int pcre2_get_utf8(pcre2_code *re){
+    uint32_t option_bits;
+    (void)pcre2_pattern_info(re, PCRE2_INFO_ALLOPTIONS, &option_bits);
+    int utf8 = (option_bits & PCRE2_UTF) != 0;
+    return utf8;
+}
 
+int pcre2_get_crlf_is_newline(pcre2_code *re){
+    uint32_t newline;
+    (void)pcre2_pattern_info(re, PCRE2_INFO_NEWLINE, &newline);
+    int crlf_is_newline = newline == PCRE2_NEWLINE_ANY ||
+                          newline == PCRE2_NEWLINE_CRLF ||
+                          newline == PCRE2_NEWLINE_ANYCRLF;
+    return crlf_is_newline;
+}
 
+int pcre2_check_utf8(char temp){
+    if ((temp & 0xc0) != 0x80){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
 // this function contains matching for a single match
 RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp, pcre2_match_context *mcontext){
