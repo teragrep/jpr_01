@@ -74,9 +74,17 @@ class JavaPcreTest {
         else
             System.out.print("mcontext not null.\n");
 
-        s1.pcre2_mcontext_free();
-        s1.pcre2_ccontext_free();
-        s1.pcre2_gcontext_free();
+        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
+
+        try {
+            s1.pcre2_Jcompile_free();
+            s1.pcre2_mcontext_free();
+            s1.pcre2_ccontext_free();
+            s1.pcre2_gcontext_free();
+            s1.pcre2_gcontext_free();
+        } catch (Exception e){
+            System.out.println(e);
+        }
         if (s1.gcontext == null)
             System.out.print("gcontext null.\n");
         if (s1.ccontext == null)
@@ -387,7 +395,7 @@ class JavaPcreTest {
 
     @Test
     void pcre2_matchall_clrf_test() {
-        int a, utf8, crlf_is_newline;
+        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
         s1.compile_options.JPCRE2_UTF = true;
         // TODO: change subject, pattern and options in a way that the recoverable crlf nomatch error can be triggered
@@ -405,7 +413,6 @@ class JavaPcreTest {
                 s1.pcre2_singlematch_java(subject, s1.offset);
             }catch (Exception e){
                 System.out.println(e);
-                boolean temp = s1.matchfound;
                 break;
             }
             a = 0;

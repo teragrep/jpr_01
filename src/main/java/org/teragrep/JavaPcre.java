@@ -224,16 +224,28 @@ public class JavaPcre {
         }
     }
     public void pcre2_gcontext_free(){
-        LibJavaPcre.INSTANCE.pcre2_gcontext_free(gcontext);
-        gcontext = null;
+        if (gcontext == null){
+            throw new IllegalArgumentException("No general context data to free.");
+        } else {
+            LibJavaPcre.INSTANCE.pcre2_gcontext_free(gcontext);
+            gcontext = null;
+        }
     }
     public void pcre2_ccontext_free(){
-        LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
-        ccontext = null;
+        if (ccontext == null){
+            throw new IllegalArgumentException("No compiler context data to free.");
+        } else {
+            LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
+            ccontext = null;
+        }
     }
     public void pcre2_mcontext_free(){
-        LibJavaPcre.INSTANCE.pcre2_mcontext_free(mcontext);
-        mcontext = null;
+        if (mcontext == null){
+            throw new IllegalArgumentException("No match context data to free.");
+        } else {
+            LibJavaPcre.INSTANCE.pcre2_mcontext_free(mcontext);
+            mcontext = null;
+        }
     }
 
     public void pcre2_compile_java(String pat){
@@ -331,7 +343,6 @@ public class JavaPcre {
     public void pcre2_Jcompile_free(){
         if (re != null){
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
-            LibJavaPcre.INSTANCE.pcre2_ccontext_free(ccontext);
             re = null;
         }else{
             throw new IllegalStateException("No data to free");
