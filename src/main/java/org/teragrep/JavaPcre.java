@@ -308,10 +308,11 @@ public class JavaPcre {
         // Matching error code labels are stored in the header file of the pcre2 library.
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
         if (regex_val.rc < 0) {
+            matchfound = false;
             LibJavaPcre.ErrorStruct.ByValue errorstuff;
             switch(regex_val.rc){
-                case -1: matchfound = false; errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
-                case -2: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -2: " + errorstuff.buffer); break;
+                case -1: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -2: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -2: " + errorstuff.buffer); break; // rc = -2 should be partial match.
                 default: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); throw new MatchException("Matching error " + regex_val.rc + ": " + errorstuff.buffer); // anything lower than -1 is a matching error.
             }
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
