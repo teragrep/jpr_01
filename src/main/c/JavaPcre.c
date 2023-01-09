@@ -193,6 +193,7 @@ ErrorStruct pcre2_translate_error_code(int errorcode) {
     ErrorStruct errorvals;
     PCRE2_UCHAR buffer[256];
     pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+    printf("(TEST) PCRE2 function failed: %s\n", buffer); // TODO: remove after testing
     errorvals.buffer = buffer;
     return errorvals;
 }
@@ -421,26 +422,6 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
 
     subject = (PCRE2_SPTR)b;
     subject_length = (PCRE2_SIZE)strlen((char *)subject);
-
-    // check if this is the first or subsequent match
-    // TODO: check if these parameters are actually needed for subsequent matches.
-    if(offset != 0){
-
-        /* Before running the subsequent matches, check for UTF-8 and whether CRLF is a valid newline
-        sequence. First, find the options with which the regex was compiled and extract
-        the UTF state. */
-
-        (void)pcre2_pattern_info(re, PCRE2_INFO_ALLOPTIONS, &option_bits);
-        //utf8 = (option_bits & PCRE2_UTF) != 0;
-
-        /* Now find the newline convention and see whether CRLF is a valid newline
-        sequence. */
-
-        (void)pcre2_pattern_info(re, PCRE2_INFO_NEWLINE, &newline);
-//        crlf_is_newline = newline == PCRE2_NEWLINE_ANY ||
-//                          newline == PCRE2_NEWLINE_CRLF ||
-//                          newline == PCRE2_NEWLINE_ANYCRLF;
-    }
 
 /* Now run the match. */
 /* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */

@@ -152,8 +152,11 @@ public class JavaPcre {
 
     String pattern;
     int pattern_size;
+    int ovector0;
+    int ovector1;
     int offset;
     boolean matchfound;
+    boolean JPCRE2_ERROR_NOMATCH;
     String subject;
     Pointer re;
     Pointer match_data;
@@ -310,13 +313,15 @@ public class JavaPcre {
         if (regex_val.rc < 0) {
             matchfound = false;
             LibJavaPcre.ErrorStruct.ByValue errorstuff;
+            errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc);
+            int errorcode = regex_val.rc;
             switch(regex_val.rc){
-                case -1: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -1: " + errorstuff.buffer); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
-                case -2: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); LOGGER.debug("Matching error -2: " + errorstuff.buffer); break; // rc = -2 should be partial match.
-                default: errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc); throw new MatchException("Matching error " + regex_val.rc + ": " + errorstuff.buffer); // anything lower than -1 is a matching error.
+                case -1: JPCRE2_ERROR_NOMATCH = true; LOGGER.debug("Matching error -1: " + errorstuff.buffer); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -2: JPCRE2_ERROR_NOMATCH = false; LOGGER.debug("Matching error -2: " + errorstuff.buffer); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -2 should be partial match.
+                default: JPCRE2_ERROR_NOMATCH = false; LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); throw new MatchException("Matching error " + errorcode + ": " + errorstuff.buffer); // anything lower than -1 is a matching error that is not recoverable.
             }
-            LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         } else {
+            JPCRE2_ERROR_NOMATCH = false;
             matchfound = true;
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
             final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
@@ -330,15 +335,16 @@ public class JavaPcre {
             for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
                 match_table.put(ind++, regex_vals[regexloop]);
             }
-            offset = regex_ovector[1];
+            ovector0 = regex_ovector[0];
+            ovector1 = regex_ovector[1];
             LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
         }
     }
 
     // Not used, for now.
-    public void pcre2_jmatch_free(){
+/*    public void pcre2_jmatch_free(){
         LibJavaPcre.INSTANCE.pcre2_jmatch_free(match_data);
-    }
+    }*/
 
     // frees the compiled pattern.
     public void pcre2_Jcompile_free(){
