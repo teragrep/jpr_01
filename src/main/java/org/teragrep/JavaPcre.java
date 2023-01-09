@@ -263,6 +263,9 @@ public class JavaPcre {
         final PointerByReference ptrRef = new PointerByReference();
         LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(-33, ptrRef);
         final Pointer p = ptrRef.getValue();
+        if (p == null) {
+            throw new NullPointerException("Error happened while allocating memory to error string");
+        }
         final String val = p.getString(0);
         System.out.println("ERRORTEST alternative: " + val);
         LibJavaPcre.INSTANCE.errorcleanup(p);
@@ -281,6 +284,9 @@ public class JavaPcre {
             final PointerByReference ptrRef = new PointerByReference();
             LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(comp_val.errornumber, ptrRef);
             final Pointer p = ptrRef.getValue();
+            if (p == null) {
+                throw new NullPointerException("Error happened while allocating memory to error string");
+            }
             final String val = p.getString(0);
             LibJavaPcre.INSTANCE.errorcleanup(p);
             throw new PatternSyntaxException(val, pattern, comp_val.erroroffset);
@@ -347,6 +353,9 @@ public class JavaPcre {
             final PointerByReference ptrRef = new PointerByReference();
             LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(errorcode, ptrRef);
             final Pointer p = ptrRef.getValue();
+            if (p == null) {
+                throw new NullPointerException("Error happened while allocating memory to error string");
+            }
             final String val = p.getString(0);
             LibJavaPcre.INSTANCE.errorcleanup(p);
 

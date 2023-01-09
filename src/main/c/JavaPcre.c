@@ -203,6 +203,10 @@ ErrorStruct pcre2_translate_error_code(int errorcode) {
 // This version seems to work
 void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
     *ppszVal = (char*)malloc(sizeof(char) * 256);
+    if (ppszVal == NULL) {
+                printf("Error: Out of memory\r\n");
+                exit(-1);
+            }
     memset(*ppszVal, 0, sizeof(char) * 256);
     PCRE2_UCHAR buffer[256];
     pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
