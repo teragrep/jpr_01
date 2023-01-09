@@ -123,9 +123,14 @@ class JavaPcreTest {
     }
 
     @Test
+    void pcre2_translator_test() {
+        JavaPcre s1 = new JavaPcre();
+        s1.pcre2_translate_error_test();
+    }
+
+    @Test
     void pcre2_compile_failure_test() {
         JavaPcre s1 = new JavaPcre();
-        // TODO: initializing any kind of string breaks error code translation:
         String aesadg;
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
@@ -141,7 +146,6 @@ class JavaPcreTest {
     @Test
     void pcre2_match_failure_test() {
         JavaPcre s1 = new JavaPcre();
-        // TODO: initializing any kind of string breaks error code translation:
         String aesadg;
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");

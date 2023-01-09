@@ -189,13 +189,29 @@ void pcre2_mcontext_free(pcre2_match_context *mcontext){
     pcre2_match_context_free(mcontext);
 }
 
+// Seems to be broken
 ErrorStruct pcre2_translate_error_code(int errorcode) {
     ErrorStruct errorvals;
     PCRE2_UCHAR buffer[256];
     pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
-    printf("(TEST) PCRE2 function failed: %s\n", buffer); // TODO: remove after testing
+    printf("(TEST) PCRE2 function failed: %s\n", buffer);
     errorvals.buffer = buffer;
+    printf("(TEST) PCRE2 function failed: %s\n", errorvals.buffer);
     return errorvals;
+}
+
+// This version seems to work
+void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
+    *ppszVal = (char*)malloc(sizeof(char) * 256);
+    memset(*ppszVal, 0, sizeof(char) * 256);
+    PCRE2_UCHAR buffer[256];
+    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+    strcpy(*ppszVal, buffer);
+}
+
+void errorcleanup(char* pszVal)
+{
+	free(pszVal);
 }
 
 CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
@@ -320,8 +336,8 @@ CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile
 // Pass the compiledata along with errornumber/erroroffset to java, where another function can be called to get error message.
     if (re == NULL)
     {
-        PCRE2_UCHAR buffer[256];
-        pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
+        //PCRE2_UCHAR buffer[256];
+        //pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
 //        printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset, buffer);
         reVal.re = NULL;
         reVal.errornumber = errornumber;

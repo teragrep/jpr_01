@@ -13,17 +13,17 @@ public class Main {
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
         // change compiler parameters before compiling:
-        s1.compile_options.JPCRE2_UTF = true;                           // enable PCRE2_UTF option for compiling, always disabled by default.
-        s1.compile_options.JPCRE2_UTF = false;                          // disable PCRE2_UTF option for compiling
-        s1.pattern_size = 0;                                            // default pattern size, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
+        //s1.compile_options.JPCRE2_UTF = true;                           // enable PCRE2_UTF option for compiling, always disabled by default.
+        //s1.compile_options.JPCRE2_UTF = false;                          // disable PCRE2_UTF option for compiling
+        // s1.pattern_size = 0;                                            // default pattern_size is 0, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
 
         // Optional compiler parameters:
-        s1.pcre2_gcontext_create();                                     // initializes general context parameter which is used for generating compiler/match context.
-        s1.pcre2_ccontext_create();                                     // initializes compiler context parameter which can contain the extra options that don't fit inside compile_options.
-        s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;      // enables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
-        s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;     // disables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
+        //s1.pcre2_gcontext_create();                                     // initializes general context parameter which is used for generating compiler/match context.
+        //s1.pcre2_ccontext_create();                                     // initializes compiler context parameter which can contain the extra options that don't fit inside compile_options.
+        //s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;      // enables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
+        //s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;     // disables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
         // etc.
-        s1.pcre2_ccontext_set_extra_options();                          // inject the extra_options modifiers to the compiler context.
+        //s1.pcre2_ccontext_set_extra_options();                          // inject the extra_options modifiers to the compiler context.
 
         // The compile function:
         try {
@@ -35,10 +35,10 @@ public class Main {
 
         // change matching options and parameters before matching:
         s1.offset = 0;                              // offset at where to start the match.
-        s1.match_options.JPCRE2_ANCHORED = true;    // enable PCRE2_ANCHORED option for matching
-        s1.match_options.JPCRE2_ANCHORED = false;   // disable PCRE2_ANCHORED option for matching
+        //s1.match_options.JPCRE2_ANCHORED = true;    // enable PCRE2_ANCHORED option for matching
+        //s1.match_options.JPCRE2_ANCHORED = false;   // disable PCRE2_ANCHORED option for matching
         //etc.
-        s1.pcre2_mcontext_create();                 // initializes match context, no real use at the moment.
+        //s1.pcre2_mcontext_create();                 // initializes match context, no real use at the moment.
 
 
         // a simple loop for getting all match groups at once:
@@ -81,11 +81,11 @@ public class Main {
 
                 else
                 {
-                    int startchar = previousoffset;
-                    if (s1.offset <= startchar)
+                    //int startchar = previousoffset;
+                    if (s1.offset <= previousoffset)
                     {
-                        if (startchar >= subject.length()) break;   /* Reached end of subject.   */
-                        s1.offset = startchar + 1;                  /* Advance by one character. */
+                        if (previousoffset >= subject.length()) break;   /* Reached end of subject.   */
+                        s1.offset = previousoffset + 1;                  /* Advance by one character. */
                         if (s1.pcre2_get_utf8())                    /* If UTF-8, it may be more  */
                         {                                           /*   than one code unit.     */
                             for (; s1.offset < subject.length(); s1.offset++)
@@ -164,12 +164,12 @@ public class Main {
             }
         }
 
-        System.out.print("\nMatching completed!");
+        System.out.print("\nMatching completed! Cleaning compile data.");
         // Make sure to release compiled data from memory. Compiled pattern data is not freed automatically as it is used multiple times by matching.
         // Also remember to free all the optional initialized context data.
-        s1.pcre2_mcontext_free();
-        s1.pcre2_ccontext_free();
-        s1.pcre2_gcontext_free();
+//        s1.pcre2_mcontext_free();
+//        s1.pcre2_ccontext_free();
+//        s1.pcre2_gcontext_free();
         s1.pcre2_Jcompile_free();
     }
 }

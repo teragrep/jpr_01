@@ -25,6 +25,7 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.Structure.FieldOrder;
+import com.sun.jna.ptr.PointerByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +146,8 @@ public class JavaPcre {
         int pcre2_get_utf8(Pointer re);
         int pcre2_get_crlf_is_newline(Pointer re);
         int pcre2_check_utf8(char temp);
+        void pcre2_translate_error_code_alternative(int errorcode, PointerByReference val);
+        void errorcleanup(Pointer p);
 
     }
 
@@ -251,15 +254,36 @@ public class JavaPcre {
         }
     }
 
+    public void pcre2_translate_error_test(){
+        // broken
+//        LibJavaPcre.ErrorStruct.ByValue errorstuff;
+//        errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(-33);
+//        System.out.println("Test buffer output: "+(String)errorstuff.buffer);
+
+        final PointerByReference ptrRef = new PointerByReference();
+        LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(-33, ptrRef);
+        final Pointer p = ptrRef.getValue();
+        final String val = p.getString(0);
+        System.out.println("ERRORTEST alternative: " + val);
+        LibJavaPcre.INSTANCE.errorcleanup(p);
+        System.out.println("ERRORTEST alternative after cleanup: " + val);
+    }
+
     public void pcre2_compile_java(String pat){
         pattern = pat;
         LibJavaPcre.CompileData.ByValue comp_val = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
         //re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
         re = comp_val.re;
         if (re == null){
-            LibJavaPcre.ErrorStruct.ByValue errorstuff;
-            errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(comp_val.errornumber);
-            throw new PatternSyntaxException(errorstuff.buffer, pat, comp_val.erroroffset);
+//            LibJavaPcre.ErrorStruct.ByValue errorstuff;
+//            errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(comp_val.errornumber);
+//            throw new PatternSyntaxException(errorstuff.buffer, pattern, comp_val.erroroffset);
+            final PointerByReference ptrRef = new PointerByReference();
+            LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(comp_val.errornumber, ptrRef);
+            final Pointer p = ptrRef.getValue();
+            final String val = p.getString(0);
+            LibJavaPcre.INSTANCE.errorcleanup(p);
+            throw new PatternSyntaxException(val, pattern, comp_val.erroroffset);
         }
     }
 
@@ -312,13 +336,24 @@ public class JavaPcre {
         LibJavaPcre.RegexStruct.ByValue regex_val = LibJavaPcre.INSTANCE.pcre2_single_jmatch(subject, re, offset, match_options, mcontext);
         if (regex_val.rc < 0) {
             matchfound = false;
-            LibJavaPcre.ErrorStruct.ByValue errorstuff;
-            errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc);
             int errorcode = regex_val.rc;
+
+            // Broken method for getting error description
+            //LibJavaPcre.ErrorStruct.ByValue errorstuff;
+            //errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(regex_val.rc);
+
+
+            // alternative and working method for getting the error description:
+            final PointerByReference ptrRef = new PointerByReference();
+            LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(errorcode, ptrRef);
+            final Pointer p = ptrRef.getValue();
+            final String val = p.getString(0);
+            LibJavaPcre.INSTANCE.errorcleanup(p);
+
             switch(regex_val.rc){
-                case -1: JPCRE2_ERROR_NOMATCH = true; LOGGER.debug("Matching error -1: " + errorstuff.buffer); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
-                case -2: JPCRE2_ERROR_NOMATCH = false; LOGGER.debug("Matching error -2: " + errorstuff.buffer); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -2 should be partial match.
-                default: JPCRE2_ERROR_NOMATCH = false; LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); throw new MatchException("Matching error " + errorcode + ": " + errorstuff.buffer); // anything lower than -1 is a matching error that is not recoverable.
+                case -1: JPCRE2_ERROR_NOMATCH = true; LOGGER.debug("Matching error -1: " + val); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+                case -2: JPCRE2_ERROR_NOMATCH = false; LOGGER.debug("Matching error -2: " + val); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -2 should be partial match.
+                default: JPCRE2_ERROR_NOMATCH = false; LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); throw new MatchException("Matching error " + errorcode + ": " + val); // anything lower than -1 is a matching error that is not recoverable.
             }
         } else {
             JPCRE2_ERROR_NOMATCH = false;
