@@ -65,7 +65,7 @@ public class Main {
                 at the end of the subject. Otherwise, arrange to run another match at the
                 same point to see if a non-empty match can be found. */
 
-                if (s1.ovector0 == s1.offset)
+                if (s1.ovector0 == s1.ovector1)
                 {
                     if (s1.ovector0 == subject.length()) break;
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
@@ -119,11 +119,11 @@ public class Main {
             if (s1.JPCRE2_ERROR_NOMATCH){
                 if (s1.checkoptionzero()){
                     break;
-                }                       /* All matches found */
+                }                                                            /* All matches found if no options set */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.offset += 1;                                     /* Advance one code unit */
-                    if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
-                            s1.offset < subject.length()-1 &&               /* we are at CRLF, */
+                    s1.ovector1 = s1.offset + 1;                             /* Advance one code unit */
+                    if (s1.pcre2_get_crlf_is_newline() &&                    /* If CRLF is a newline & */
+                            s1.offset < subject.length()-1 &&                /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
                     {s1.ovector1 +=1;}                                        /* Advance by one more. */

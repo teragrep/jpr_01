@@ -190,15 +190,15 @@ void pcre2_mcontext_free(pcre2_match_context *mcontext){
 }
 
 // Seems to be broken
-ErrorStruct pcre2_translate_error_code(int errorcode) {
-    ErrorStruct errorvals;
-    PCRE2_UCHAR buffer[256];
-    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
-    printf("(TEST) PCRE2 function failed: %s\n", buffer);
-    errorvals.buffer = buffer;
-    printf("(TEST) PCRE2 function failed: %s\n", errorvals.buffer);
-    return errorvals;
-}
+//ErrorStruct pcre2_translate_error_code(int errorcode) {
+//    ErrorStruct errorvals;
+//    PCRE2_UCHAR buffer[256];
+//    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+//    printf("(TEST) PCRE2 function failed: %s\n", buffer);
+//    errorvals.buffer = buffer;
+//    printf("(TEST) PCRE2 function failed: %s\n", errorvals.buffer);
+//    return errorvals;
+//}
 
 // This version seems to work
 void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
