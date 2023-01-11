@@ -33,12 +33,12 @@ public class Main {
             return;
         }
 
-        // change matching options and parameters before matching:
-        s1.offset = 0;                              // offset at where to start the match.
-        //s1.match_options.JPCRE2_ANCHORED = true;    // enable PCRE2_ANCHORED option for matching
-        //s1.match_options.JPCRE2_ANCHORED = false;   // disable PCRE2_ANCHORED option for matching
+        /* change matching options and parameters before matching: */
+        s1.offset = 0;                              /* offset at where to start the match */
+        //s1.match_options.JPCRE2_ANCHORED = true;  /* enable PCRE2_ANCHORED option for matching */
+        //s1.match_options.JPCRE2_ANCHORED = false; /* disable PCRE2_ANCHORED option for matching */
         //etc.
-        //s1.pcre2_mcontext_create();                 // initializes match context, no real use at the moment.
+        //s1.pcre2_mcontext_create();               /* initializes match context, no real use at the moment */
 
 
         // a simple loop for getting all match groups at once:
@@ -146,8 +146,7 @@ public class Main {
             System.out.print("\nMatch found: " + s1.matchfound + "\n");
             matchfound = s1.matchfound;
 
-            // when match is found:
-            // print match group data
+            // when match is found, print match group data
             groupcounter += 1;
             System.out.print("Match group: " + groupcounter + "\n");
             for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
@@ -164,9 +163,10 @@ public class Main {
             }
         }
 
+        /* Make sure to release compiled data from memory.
+        Compiled pattern data is not freed automatically as it is used multiple times by matching.
+        Also remember to free all the optional initialized context data. */
         System.out.print("\nMatching completed! Cleaning compile data.");
-        // Make sure to release compiled data from memory. Compiled pattern data is not freed automatically as it is used multiple times by matching.
-        // Also remember to free all the optional initialized context data.
 //        s1.pcre2_mcontext_free();
 //        s1.pcre2_ccontext_free();
 //        s1.pcre2_gcontext_free();

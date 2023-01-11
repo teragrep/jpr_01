@@ -203,10 +203,12 @@ ErrorStruct pcre2_translate_error_code(int errorcode) {
 // This version seems to work
 void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
     *ppszVal = (char*)malloc(sizeof(char) * 256);
-    memset(*ppszVal, 0, sizeof(char) * 256);
-    PCRE2_UCHAR buffer[256];
-    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
-    strcpy(*ppszVal, buffer);
+    if (*ppszVal != NULL){
+        memset(*ppszVal, 0, sizeof(char) * 256);
+        PCRE2_UCHAR buffer[256];
+        pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+        strcpy(*ppszVal, buffer);
+    }
 }
 
 void errorcleanup(char* pszVal)
