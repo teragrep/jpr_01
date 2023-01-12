@@ -276,35 +276,8 @@ public class JavaPcre {
     }
 
     public boolean checkoptionzero(){
-        return !compile_options.JPCRE2_ANCHORED && !compile_options.JPCRE2_ALLOW_EMPTY_CLASS && !compile_options.JPCRE2_ALT_BSUX && !compile_options.JPCRE2_ALT_CIRCUMFLEX && !compile_options.JPCRE2_ALT_VERBNAMES && !compile_options.JPCRE2_AUTO_CALLOUT && !compile_options.JPCRE2_CASELESS && !compile_options.JPCRE2_DOLLAR_ENDONLY && !compile_options.JPCRE2_DOTALL && !compile_options.JPCRE2_DUPNAMES && !compile_options.JPCRE2_ENDANCHORED && !compile_options.JPCRE2_EXTENDED && !compile_options.JPCRE2_EXTENDED_MORE && !compile_options.JPCRE2_FIRSTLINE && !compile_options.JPCRE2_LITERAL && !compile_options.JPCRE2_MATCH_INVALID_UTF && !compile_options.JPCRE2_MATCH_UNSET_BACKREF && !compile_options.JPCRE2_MULTILINE && !compile_options.JPCRE2_NEVER_BACKSLASH_C && !compile_options.JPCRE2_NEVER_UCP && !compile_options.JPCRE2_NEVER_UTF && !compile_options.JPCRE2_NO_AUTO_CAPTURE && !compile_options.JPCRE2_NO_AUTO_POSSESS && !compile_options.JPCRE2_NO_DOTSTAR_ANCHOR && !compile_options.JPCRE2_NO_START_OPTIMIZE && !compile_options.JPCRE2_NO_UTF_CHECK && !compile_options.JPCRE2_UCP && !compile_options.JPCRE2_UNGREEDY && !compile_options.JPCRE2_USE_OFFSET_LIMIT && !compile_options.JPCRE2_UTF;
+        return !match_options.JPCRE2_ANCHORED && !match_options.JPCRE2_COPY_MATCHED_SUBJECT && !match_options.JPCRE2_ENDANCHORED && !match_options.JPCRE2_NOTBOL && !match_options.JPCRE2_NOTEOL && !match_options.JPCRE2_NOTEMPTY && !match_options.JPCRE2_NOTEMPTY_ATSTART && !match_options.JPCRE2_NO_JIT && !match_options.JPCRE2_NO_UTF_CHECK && !match_options.JPCRE2_PARTIAL_HARD && !match_options.JPCRE2_PARTIAL_SOFT;
     }
-
-
-    int JPCRE2_AUTO_CALLOUT;
-    int JPCRE2_CASELESS;
-    int JPCRE2_DOLLAR_ENDONLY;
-    int JPCRE2_DOTALL;
-    int JPCRE2_DUPNAMES;
-    int JPCRE2_ENDANCHORED;
-    int JPCRE2_EXTENDED;
-    int JPCRE2_EXTENDED_MORE;
-    int JPCRE2_FIRSTLINE;
-    int JPCRE2_LITERAL;
-    int JPCRE2_MATCH_INVALID_UTF;
-    int JPCRE2_MATCH_UNSET_BACKREF;
-    int JPCRE2_MULTILINE;
-    int JPCRE2_NEVER_BACKSLASH_C;
-    int JPCRE2_NEVER_UCP;
-    int JPCRE2_NEVER_UTF;
-    int JPCRE2_NO_AUTO_CAPTURE;
-    int JPCRE2_NO_AUTO_POSSESS;
-    int JPCRE2_NO_DOTSTAR_ANCHOR;
-    int JPCRE2_NO_START_OPTIMIZE;
-    int JPCRE2_NO_UTF_CHECK;
-    int JPCRE2_UCP;
-    int JPCRE2_UNGREEDY;
-    int JPCRE2_USE_OFFSET_LIMIT;
-    int JPCRE2_UTF;
 
     // This is the main function for getting a single regex match group.
     public void pcre2_singlematch_java(String a, int b){
