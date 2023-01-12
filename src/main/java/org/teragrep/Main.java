@@ -1,11 +1,15 @@
 package org.teragrep;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 
 /*This is the test module for testing the pcre-regex library from Java.
 * The functions called here will represent the functions that are available to use in the aforementioned library.*/
 public class Main {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JavaPcre.class);
     public static void main(String[] args) {
         int a;
         String subject = "From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n";
@@ -52,12 +56,12 @@ public class Main {
                 try {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    LOGGER.error(e.getMessage());
                     //System.out.print("non-recoverable error!\n");
                     break;
                 }
                 if (s1.JPCRE2_ERROR_NOMATCH){
-                    System.out.print("no matches!\n");
+                    // 0 matches found from the subject, break the loop and clear compiled data at the end.
                     break;
                 }
             }else{
@@ -151,7 +155,7 @@ public class Main {
             System.out.print("\nMatch found: " + s1.matchfound + "\n");
             matchfound = s1.matchfound;
 
-            // when match is found, print match group data
+            // when match is found, print match group data which is stored in Map<Integer, String> s1.match_table
             groupcounter += 1;
             System.out.print("Match group: " + groupcounter + "\n");
             for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
@@ -159,7 +163,7 @@ public class Main {
                 a += 1;
             }
 
-            // print named group data if available
+            // print named group data if available, which is stored in Map<String, Integer> s1.name_table;
             if (s1.name_table.size() > 0) {
                 System.out.print("named groups:\n");
                 for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {

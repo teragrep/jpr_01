@@ -135,7 +135,8 @@ class JavaPcreTest {
             s1.pcre2_ccontext_free();
             s1.pcre2_gcontext_free();
         } catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
+            Assertions.assertNull(e.getMessage());
         }
         Assertions.assertEquals(null, s1.gcontext);
         Assertions.assertEquals(null, s1.ccontext);
@@ -192,7 +193,6 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
         }catch (Exception e){
-            //System.out.println(e);
             Assertions.assertEquals("missing closing parenthesis near index 35\nFrom:(?<nimi>[^@]+@(?<sposti>[^\r]+)", e.getLocalizedMessage());
         }
         if (s1.re != null) {
@@ -208,7 +208,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
         // Error trigger: The value of startoffset was greater than the length of the subject.
@@ -219,7 +219,6 @@ class JavaPcreTest {
                     "From:exddd@43434.com\r\n" +
                     "From:7853456@exgem.com\r\n", s1.offset);
         }catch (Exception e){
-            //System.out.println(e);
             Assertions.assertEquals("Matching error -33: bad offset value", e.getLocalizedMessage());
             s1.pcre2_Jcompile_free();
             return;
@@ -238,7 +237,7 @@ class JavaPcreTest {
                     "From:exddd@43434.com\r\n" +
                     "From:7853456@exgem.com\r\n", s1.offset);
         }catch (Exception e){
-            //System.out.println(e);
+            LOGGER.error(e.getMessage());
             Assertions.assertEquals("Match pattern is not compiled", e.getLocalizedMessage());
         }
     }
@@ -249,7 +248,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
         s1.offset = 0;
@@ -258,10 +257,11 @@ class JavaPcreTest {
         try {
             s1.pcre2_singlematch_java(null, s1.offset);
         }catch (Exception e){
-            //System.out.println(e);
+            //LOGGER.error(e.getMessage());
             Assertions.assertEquals("Subject is null", e.getLocalizedMessage());
-            return;
+            //return;
         }
+        Assertions.assertEquals(false, s1.JPCRE2_ERROR_NOMATCH);
 
         if (s1.re != null) {
             s1.pcre2_Jcompile_free();
@@ -275,7 +275,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
         }catch (PatternSyntaxException e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
         s1.offset = 0;
@@ -285,9 +285,7 @@ class JavaPcreTest {
                                   "From:exddd@43434.com\r\n" +
                                   "From:7853456@exgem.com\r\n", s1.offset);
         a = 0;
-//        System.out.print("Match group:\n");
         for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
-//            System.out.print(a+": "+it.getValue()+"\n");
             if (a==0) {
                 Assertions.assertEquals(0, a);
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -316,9 +314,7 @@ class JavaPcreTest {
                                   "From:exddd@43434.com\r\n" +
                                   "From:7853456@exgem.com\r\n", s1.offset);
         a = 0;
-//        System.out.print("Match group:\n");
         for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
-//            System.out.print(a+": "+it.getValue()+"\n");
             Assertions.assertTrue(a==0 || a==1 || a==2);
             if (a==0) {
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -332,13 +328,10 @@ class JavaPcreTest {
             a += 1;
         }
         if (a==0) {
-//            System.out.print("No match!\n");
         }else{
             if (s1.name_table.size() > 0) {
-//                System.out.print("named groups:\n");
             }
             for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
-//                System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
                 Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                 if (it.getValue()==1) {
                     Assertions.assertEquals("nimi", it.getKey());
@@ -366,7 +359,6 @@ class JavaPcreTest {
         a = 0;
         //System.out.print("Match group:\n");
         for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
-            //System.out.print(a+": "+it.getValue()+"\n");
             Assertions.assertTrue(a==0 || a==1 || a==2);
             if (a==0) {
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -386,7 +378,6 @@ class JavaPcreTest {
                 //System.out.print("named groups:\n");
             }
             for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
-                //System.out.println( it.getKey() + " which corresponds to substring " + it.getValue() );
                 Assertions.assertEquals(2, it.getValue());
                 Assertions.assertEquals("sposti", it.getKey());
             }
@@ -407,7 +398,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java(pattern);
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
 
@@ -426,8 +417,7 @@ class JavaPcreTest {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                     Assertions.assertEquals(s1.matchfound, false);
                 } catch (Exception e) {
-                    System.out.println(e);
-                    //System.out.print("non-recoverable error!\n");
+                    LOGGER.error(e.getMessage());
                     break;
                 }
             }else{
@@ -461,7 +451,6 @@ class JavaPcreTest {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                 } catch (Exception e) {
                     System.out.println(e);
-                    //System.out.print("non-recoverable error!\n");
                     break;
                 }
             }
@@ -491,12 +480,10 @@ class JavaPcreTest {
             }
 
             a = 0;  /* simple counter for substring numbering */
-            System.out.print("\nMatch found: " + s1.matchfound + "\n");
             matchfound = s1.matchfound;
 
             // when match is found, print match group data
             groupcounter += 1;
-            System.out.print("Match group: " + groupcounter + "\n");
             for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
                 System.out.print(a + ": " + it.getValue() + "\n");
                 a += 1;
@@ -504,9 +491,7 @@ class JavaPcreTest {
 
             // print named group data if available
             if (s1.name_table.size() > 0) {
-                System.out.print("named groups:\n");
                 for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
-                    System.out.println(it.getKey() + " which corresponds to substring " + it.getValue());
                 }
             }
         }
@@ -525,7 +510,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java(pattern);
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
 
@@ -545,8 +530,7 @@ class JavaPcreTest {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                     Assertions.assertEquals(s1.matchfound, true);
                 } catch (Exception e) {
-                    System.out.println(e);
-                    //System.out.print("non-recoverable error!\n");
+                    LOGGER.error(e.getMessage());
                     break;
                 }
             }else{
@@ -579,7 +563,7 @@ class JavaPcreTest {
                 try {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                 } catch (Exception e) {
-                    System.out.println(e);
+                    LOGGER.error(e.getMessage());
                     break;
                 }
             }
@@ -610,16 +594,13 @@ class JavaPcreTest {
 
 
             a = 0;  /* simple counter for substring numbering */
-            //System.out.print("\nMatch found: " + s1.matchfound + "\n");
             Assertions.assertEquals(s1.matchfound, true);
             matchfound = s1.matchfound;
 
             // when match is found, print match group data
             groupcounter += 1;
             Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
-            //System.out.print("Match group: " + groupcounter + "\n");
             for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
-                //System.out.print(a + ": " + it.getValue() + "\n");
                 Assertions.assertTrue(a==0 || a==1 || a==2);
                 if (a==0 && groupcounter == 1) {
                     Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -653,9 +634,7 @@ class JavaPcreTest {
 
             // print named group data if available
             if (s1.name_table.size() > 0) {
-                //System.out.print("named groups:\n");
                 for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
-                    //System.out.println(it.getKey() + " which corresponds to substring " + it.getValue());
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
                         Assertions.assertEquals("nimi", it.getKey());
@@ -682,7 +661,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java(pattern);
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
 
@@ -701,8 +680,7 @@ class JavaPcreTest {
                 try {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                 } catch (Exception e) {
-                    System.out.println(e);
-                    //System.out.print("non-recoverable error!\n");
+                    LOGGER.error(e.getMessage());
                     break;
                 }
             }else{
@@ -734,8 +712,7 @@ class JavaPcreTest {
                 try {
                     s1.pcre2_singlematch_java(subject, s1.offset);
                 } catch (Exception e) {
-                    System.out.println(e);
-                    //System.out.print("non-recoverable error!\n");
+                    LOGGER.error(e.getMessage());
                     break;
                 }
             }
@@ -767,17 +744,14 @@ class JavaPcreTest {
 
 
             a = 0;  /* simple counter for substring numbering */
-            //System.out.print("\nMatch found: " + s1.matchfound + "\n");
             Assertions.assertEquals(true, s1.matchfound);
             matchfound = s1.matchfound;
 
             // when match is found, print match group data
             groupcounter += 1;
-            //System.out.print("Match group: " + groupcounter + "\n");
 
 
             for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
-                //System.out.print(a + ": " + it.getValue() + "\n");
                 Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
                 if (a==0 && groupcounter == 1) {
                     Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -811,9 +785,7 @@ class JavaPcreTest {
 
             // print named group data if available
             if (s1.name_table.size() > 0) {
-                //System.out.print("named groups:\n");
                 for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
-                    //System.out.println(it.getKey() + " which corresponds to substring " + it.getValue());
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
                         Assertions.assertEquals("nimi", it.getKey());
@@ -824,7 +796,6 @@ class JavaPcreTest {
                 }
             }
         }
-        //System.out.print("\nMatching completed! Cleaning compile data.");
         s1.pcre2_Jcompile_free();
     }
 
@@ -839,7 +810,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java(pattern);
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
         boolean testi = s1.pcre2_get_utf8();
@@ -853,7 +824,7 @@ class JavaPcreTest {
         try {
             s1.pcre2_compile_java(pattern);
         }catch (Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
             return;
         }
         testi = s1.pcre2_get_utf8();
@@ -867,17 +838,17 @@ class JavaPcreTest {
     void pcre2_matchall_nomatch_test() {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
-        s1.pcre2_compile_java("nomatch");
-        if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern ended up in error.\n");
+        try {
+            s1.pcre2_compile_java("nomatch");
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
             return;
         }
         s1.offset = 0;
         try {
             s1.pcre2_singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n", s1.offset);
         } catch (Exception e) {
-            System.out.println(e);
-            //System.out.print("non-recoverable error!\n");
+            LOGGER.error(e.getMessage());
         }
         Assertions.assertFalse(s1.matchfound);
         s1.pcre2_Jcompile_free();
@@ -887,16 +858,19 @@ class JavaPcreTest {
     void pcre2_Jcompile_free() {
         JavaPcre s1 = new JavaPcre();
         Assertions.assertEquals(null, s1.re);
-        s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
-        if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern ended up in error.\n");
-//            return;
+        try {
+            s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
+            return;
         }
+
         Assertions.assertNotEquals(null, s1.re);
         try {
             s1.pcre2_Jcompile_free();
         }catch(Exception e){
-            System.out.println(e);
+            LOGGER.error(e.getMessage());
+            //System.out.println(e);
         }
         Assertions.assertEquals(null, s1.re);
     }
@@ -905,20 +879,17 @@ class JavaPcreTest {
     void pcre2_Jcompile_free_error(){
         JavaPcre s1 = new JavaPcre();
         s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
-        if (s1.re == null){
-            System.out.print("Error! Compiling of the match pattern ended up in error.\n");
-//            return;
-        }
+        // no exception handling to make sure assertion-functions are reached properly
+        // TODO: do this to all exceptions that are capable of blocking assertions.
+
         try {
             s1.pcre2_Jcompile_free();
         }catch(Exception e){
-            //System.out.println(e);
             Assertions.assertEquals("No data to free", e.getLocalizedMessage());
         }
         try {
             s1.pcre2_Jcompile_free();
         }catch(Exception e){
-            //System.out.println(e);
             Assertions.assertEquals("No data to free", e.getLocalizedMessage());
         }
     }

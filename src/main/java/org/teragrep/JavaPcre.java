@@ -182,6 +182,7 @@ public class JavaPcre {
         ccontext = null; // default value for when context is not used in compile
         mcontext = null; // default value for when context is not used in match
         matchfound = false;
+        JPCRE2_ERROR_NOMATCH = false;
     }
     // Make another constructor if/when memory management is implemented to the context functions.
 
