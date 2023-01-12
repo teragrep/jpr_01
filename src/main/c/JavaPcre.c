@@ -490,6 +490,11 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     are stored. */
 
     ovector = pcre2_get_ovector_pointer(match_data);
+//    printf("\novector[0] %d\n", (int)ovector[0]);
+//    printf("ovector[1] %d\n", (int)ovector[1]);
+//    printf("ovector[2] %d\n", (int)ovector[2]);
+//    printf("ovector[3] %d\n", (int)ovector[3]);
+//    printf("ovector[4] %d\n", (int)ovector[4]);
 
 
     sVal.numVals = rc;

@@ -8,8 +8,8 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         int a;
-        String subject = "From:regular.expression@example.com\r\n" + "From:exddd@43434.com\r\n" + "From:7853456@exgem.com\r\n";
-        String pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
+        String subject = "From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n";
+        String pattern = "(*ANYCRLF)From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
         // change compiler parameters before compiling:
@@ -56,6 +56,10 @@ public class Main {
                     //System.out.print("non-recoverable error!\n");
                     break;
                 }
+                if (s1.JPCRE2_ERROR_NOMATCH){
+                    System.out.print("no matches!\n");
+                    break;
+                }
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
@@ -68,6 +72,7 @@ public class Main {
                 if (s1.ovector0 == s1.ovector1)
                 {
                     if (s1.ovector0 == subject.length()) break;
+                    s1.pcre2_init_match_options();
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
                 }
@@ -117,7 +122,7 @@ public class Main {
                 Otherwise we must ensure that we skip an entire UTF character if we are in
                 UTF mode. */
             if (s1.JPCRE2_ERROR_NOMATCH){
-                if (s1.checkoptionzero()){
+                if (s1.checkmatchoptionzero()){
                     break;
                 }                                                            /* All matches found if no options set */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */

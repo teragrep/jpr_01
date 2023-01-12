@@ -190,9 +190,17 @@ public class JavaPcre {
         LibJavaPcre.INSTANCE.pcre2_versioncheck();
     }
 
-//    public void pcre2_init_options(){
-//        compile_options = new LibJavaPcre.OptionsStruct();
-//    }
+    public void pcre2_init_compile_options(){
+        compile_options = new LibJavaPcre.OptionsStruct();
+    }
+
+    public void pcre2_init_match_options(){
+        match_options = new LibJavaPcre.MatchOptionsStruct();
+    }
+
+    public void pcre2_init_extra_options(){
+        extra_options = new LibJavaPcre.ExtraOptionsStruct();
+    }
 
     public boolean pcre2_get_utf8() {
         int temp = LibJavaPcre.INSTANCE.pcre2_get_utf8(re);
@@ -275,7 +283,7 @@ public class JavaPcre {
         }
     }
 
-    public boolean checkoptionzero(){
+    public boolean checkmatchoptionzero(){
         return !match_options.JPCRE2_ANCHORED && !match_options.JPCRE2_COPY_MATCHED_SUBJECT && !match_options.JPCRE2_ENDANCHORED && !match_options.JPCRE2_NOTBOL && !match_options.JPCRE2_NOTEOL && !match_options.JPCRE2_NOTEMPTY && !match_options.JPCRE2_NOTEMPTY_ATSTART && !match_options.JPCRE2_NO_JIT && !match_options.JPCRE2_NO_UTF_CHECK && !match_options.JPCRE2_PARTIAL_HARD && !match_options.JPCRE2_PARTIAL_SOFT;
     }
 
@@ -314,9 +322,14 @@ public class JavaPcre {
             final String val = p.getString(0);
             LibJavaPcre.INSTANCE.errorcleanup(p);
 
-            switch(regex_val.rc){
-                case -1: JPCRE2_ERROR_NOMATCH = true; LOGGER.debug("Matching error -1: " + val); LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); break; // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
-                default: JPCRE2_ERROR_NOMATCH = false; LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); throw new MatchException("Matching error " + errorcode + ": " + val); // anything lower than -1 is a matching error that is not recoverable.
+            if (regex_val.rc == -1){
+                JPCRE2_ERROR_NOMATCH = true;
+                LOGGER.debug("Matching error -1: " + val);
+                LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val); // rc = -1 should be equal to rc = PCRE2_ERROR_NOMATCH in C.
+            }else{
+                JPCRE2_ERROR_NOMATCH = false;
+                LibJavaPcre.INSTANCE.RegexStruct_cleanup(regex_val);
+                throw new MatchException("Matching error " + errorcode + ": " + val); // anything lower than -1 is a matching error that is not recoverable.
             }
         } else {
             JPCRE2_ERROR_NOMATCH = false;
