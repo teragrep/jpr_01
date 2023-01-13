@@ -65,6 +65,16 @@ typedef struct OptionsStruct_TAG {
     int JPCRE2_UTF;
 } OptionsStruct;
 
+typedef struct ExtraOptionsStruct_TAG {
+    int JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK;
+    int JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES;
+    int JPCRE2_EXTRA_ALT_BSUX;
+    int JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL;
+    int JPCRE2_EXTRA_ESCAPED_CR_IS_LF;
+    int JPCRE2_EXTRA_MATCH_LINE;
+    int JPCRE2_EXTRA_MATCH_WORD;
+} ExtraOptionsStruct;
+
 typedef struct MatchOptionsStruct_TAG {
     int JPCRE2_ANCHORED;
     int JPCRE2_COPY_MATCHED_SUBJECT;
@@ -79,6 +89,16 @@ typedef struct MatchOptionsStruct_TAG {
     int JPCRE2_PARTIAL_SOFT;
 } MatchOptionsStruct;
 
+typedef struct ErrorStruct_TAG {
+    char* buffer;
+} ErrorStruct;
+
+typedef struct CompileData_TAG {
+    pcre2_code *re;
+    int errornumber;
+    int erroroffset;
+} CompileData;
+
 // regex struct/array implementation starts here
 typedef struct RegexStruct_TAG {
     int numVals;
@@ -87,6 +107,7 @@ typedef struct RegexStruct_TAG {
     char** names;
     int* namesnum;
     int namescount;
+    int rc;
 } RegexStruct;
 
 void RegexStruct_cleanup(RegexStruct sVal)
@@ -110,13 +131,99 @@ void RegexStruct_cleanup(RegexStruct sVal)
 }
 // regex struct/array implementation ends here.
 
-void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const OptionsStruct* sval
+void *pcre2_gcontext_create(){
+    pcre2_general_context *gcontext;
+    gcontext = pcre2_general_context_create(NULL, NULL, NULL);
+    return gcontext;
+}
+
+void pcre2_gcontext_free(pcre2_general_context *gcontext){
+    pcre2_general_context_free(gcontext);
+}
+
+void *pcre2_ccontext_create(pcre2_general_context *gcontext){
+    pcre2_compile_context *ccontext;
+    ccontext = pcre2_compile_context_create(gcontext);
+    return ccontext;
+}
+
+void pcre2_ccontext_free(pcre2_compile_context *ccontext){
+    pcre2_compile_context_free(ccontext);
+}
+
+void pcre2_ccontext_set_extra_options(pcre2_compile_context *ccontext, ExtraOptionsStruct *temp){
+    uint32_t extra_options = 0;
+
+    if (temp->JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK != 0) {
+        extra_options |= PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK;
+        }
+    if (temp->JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES != 0) {
+        extra_options |= PCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES;
+        }
+    if (temp->JPCRE2_EXTRA_ALT_BSUX != 0) {
+        extra_options |= PCRE2_EXTRA_ALT_BSUX;
+        }
+    if (temp->JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL != 0) {
+        extra_options |= PCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL;
+        }
+    if (temp->JPCRE2_EXTRA_ESCAPED_CR_IS_LF != 0) {
+        extra_options |= PCRE2_EXTRA_ESCAPED_CR_IS_LF;
+        }
+    if (temp->JPCRE2_EXTRA_MATCH_LINE != 0) {
+        extra_options |= PCRE2_EXTRA_MATCH_LINE;
+        }
+    if (temp->JPCRE2_EXTRA_MATCH_WORD != 0) {
+        extra_options |= PCRE2_EXTRA_MATCH_WORD;
+        }
+
+    pcre2_set_compile_extra_options(ccontext, extra_options);
+}
+
+void *pcre2_mcontext_create(pcre2_general_context *gcontext){
+    pcre2_match_context *mcontext;
+    mcontext = pcre2_match_context_create(gcontext);
+    return mcontext;
+}
+
+void pcre2_mcontext_free(pcre2_match_context *mcontext){
+    pcre2_match_context_free(mcontext);
+}
+
+// Seems to be broken
+//ErrorStruct pcre2_translate_error_code(int errorcode) {
+//    ErrorStruct errorvals;
+//    PCRE2_UCHAR buffer[256];
+//    pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+//    printf("(TEST) PCRE2 function failed: %s\n", buffer);
+//    errorvals.buffer = buffer;
+//    printf("(TEST) PCRE2 function failed: %s\n", errorvals.buffer);
+//    return errorvals;
+//}
+
+// This version seems to work
+void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
+    *ppszVal = (char*)malloc(sizeof(char) * 256);
+    if (*ppszVal != NULL){
+        memset(*ppszVal, 0, sizeof(char) * 256);
+        PCRE2_UCHAR buffer[256];
+        pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+        strcpy(*ppszVal, buffer);
+    }
+}
+
+void errorcleanup(char* pszVal)
+{
+	free(pszVal);
+}
+
+CompileData pcre2_jcompile(char *a, size_t k, OptionsStruct *temp, pcre2_compile_context *ccontext){ // , const OptionsStruct* sval
     pcre2_code *re;
     PCRE2_SPTR pattern;
     pattern = (PCRE2_SPTR)a;
     //char *terminated;
     int errornumber;
     PCRE2_SIZE erroroffset;
+    CompileData reVal;
 
     // constructing the uint32_t option0 parameter for compile function from OptionsStruct values.
     uint32_t option0 = 0;
@@ -217,37 +324,64 @@ void *pcre2_jcompile(char *a, size_t k, OptionsStruct *temp){ // , const Options
         pattern_length = k;
     }
 
-    // TODO: pcre2_set_compile_extra_options() is needed for extra options that don't fit inside the option0 bits.
-    // TODO: check if compile context is needed and how to implement it.
+
     re = pcre2_compile(
             pattern,               /* the pattern */
             pattern_length,        /* value 0 indicates pattern is zero-terminated, anything higher indicates actual pattern length */
             option0,               /* options, default is 0 */
             &errornumber,          /* for error number */
             &erroroffset,          /* for error offset */
-            NULL);                 /* use default compile context */
+            ccontext);             /* NULL to use default compile context */
 
 
 /* Compilation failed: print the error message and exit. */
-
+// Pass the compiledata along with errornumber/erroroffset to java, where another function can be called to get error message.
     if (re == NULL)
     {
-        PCRE2_UCHAR buffer[256];
-        pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
-        printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset,
-               buffer);
-        return NULL;
+        //PCRE2_UCHAR buffer[256];
+        //pcre2_get_error_message(errornumber, buffer, sizeof(buffer));
+//        printf("PCRE2 compilation failed at offset %d: %s\n", (int)erroroffset, buffer);
+        reVal.re = NULL;
+        reVal.errornumber = errornumber;
+        reVal.erroroffset = (int)erroroffset;
+        return reVal;
     }
-    return re;
+    reVal.re = re;
+    reVal.errornumber = 0;
+    reVal.erroroffset = 0;
+    return reVal;
 }
 
 void pcre2_jcompile_free(pcre2_code *re){
     pcre2_code_free(re);
 }
 
+int pcre2_get_utf8(pcre2_code *re){
+    uint32_t option_bits;
+    (void)pcre2_pattern_info(re, PCRE2_INFO_ALLOPTIONS, &option_bits);
+    int utf8 = (option_bits & PCRE2_UTF) != 0;
+    return utf8;
+}
+
+int pcre2_get_crlf_is_newline(pcre2_code *re){
+    uint32_t newline;
+    (void)pcre2_pattern_info(re, PCRE2_INFO_NEWLINE, &newline);
+    int crlf_is_newline = newline == PCRE2_NEWLINE_ANY ||
+                          newline == PCRE2_NEWLINE_CRLF ||
+                          newline == PCRE2_NEWLINE_ANYCRLF;
+    return crlf_is_newline;
+}
+
+int pcre2_check_utf8(char temp){
+    if ((temp & 0xc0) != 0x80){
+        return 1;
+    }else{
+        return 0;
+    }
+}
 
 // this function contains matching for a single match
-RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp){
+RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp, pcre2_match_context *mcontext){
     pcre2_match_data *match_data;
     PCRE2_SPTR subject;     /* the appropriate width (in this case, 8 bits). */
     PCRE2_SPTR name_table;
@@ -307,29 +441,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     subject = (PCRE2_SPTR)b;
     subject_length = (PCRE2_SIZE)strlen((char *)subject);
 
-    // check if this is the first or subsequent match
-    // TODO: check if these parameters are actually needed for subsequent matches.
-    if(offset != 0){
-
-        /* Before running the subsequent matches, check for UTF-8 and whether CRLF is a valid newline
-        sequence. First, find the options with which the regex was compiled and extract
-        the UTF state. */
-
-        (void)pcre2_pattern_info(re, PCRE2_INFO_ALLOPTIONS, &option_bits);
-        //utf8 = (option_bits & PCRE2_UTF) != 0;
-
-        /* Now find the newline convention and see whether CRLF is a valid newline
-        sequence. */
-
-        (void)pcre2_pattern_info(re, PCRE2_INFO_NEWLINE, &newline);
-//        crlf_is_newline = newline == PCRE2_NEWLINE_ANY ||
-//                          newline == PCRE2_NEWLINE_CRLF ||
-//                          newline == PCRE2_NEWLINE_ANYCRLF;
-    }
-
 /* Now run the match. */
-// DONE: forgot to add options parametrization for matching. Need to fix this.
-// TODO: check if match context is needed and how to implement it.
 /* When matching is complete, rc will contain the length of the array returned by pcre2_get_ovector_pointer() */
     rc = pcre2_match(
             re,                   /* the compiled pattern */
@@ -338,20 +450,21 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             offset,               /* start at offset 0 in the subject */
             option0,              /* default option is 0 */
             match_data,           /* block for storing the result */
-            NULL);                /* use default match context */
+            mcontext);            /* NULL to use default match context */
 
 /* Matching failed: handle error cases */
     if (rc < 0)
     {
         switch(rc)
         {
-            case PCRE2_ERROR_NOMATCH: printf("No match\n"); break;
+            case PCRE2_ERROR_NOMATCH: break;
                 /*
                 Handle other special cases if you like
                 */
-            default: printf("Matching error %d\n", rc); break;
+            default: break;
         }
         sVal.numVals = 0;
+        sVal.rc = rc;
         sVal.vals = (char**)malloc(sizeof(char*) * 1);
         sVal.names = (char**)malloc(sizeof(char*) * 1);
         sVal.namesnum = (int*)malloc(sizeof(int) * 1);
@@ -377,9 +490,15 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
     are stored. */
 
     ovector = pcre2_get_ovector_pointer(match_data);
+//    printf("\novector[0] %d\n", (int)ovector[0]);
+//    printf("ovector[1] %d\n", (int)ovector[1]);
+//    printf("ovector[2] %d\n", (int)ovector[2]);
+//    printf("ovector[3] %d\n", (int)ovector[3]);
+//    printf("ovector[4] %d\n", (int)ovector[4]);
 
 
     sVal.numVals = rc;
+    sVal.rc = rc;
     sVal.vals = (char**)malloc(sizeof(char*) * sVal.numVals);
     sVal.ovector = (int*)malloc(sizeof(int) * (2 + (sVal.numVals * 2)));
 
@@ -550,17 +669,29 @@ int main(void) {
     kikkare2.JPCRE2_PARTIAL_HARD=0;
     kikkare2.JPCRE2_PARTIAL_SOFT=0;
 
+
+    pcre2_general_context *gcontext;
+    gcontext = pcre2_general_context_create(NULL, NULL, NULL);
+    pcre2_compile_context *ccontext;
+    ccontext = pcre2_compile_context_create(gcontext);
+    pcre2_match_context *mcontext;
+    mcontext = pcre2_match_context_create(gcontext);
+
+
+
     RegexStruct testStruct;
     int i;
     int offset = 0;
     //init_StructArray(testStructs, pNumofstructs);
-    re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare);
+    CompileData reVal = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
+    //re = pcre2_jcompile("From:(?<username>[^@]+)@(?<emailprovider>[^\r]+)", 0, &kikkare, ccontext);
+    re = reVal.re;
     // error handling
     if (re == NULL){
         return 0;
     }
 
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     // Print the first member of the struct array
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
@@ -575,7 +706,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the second member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -589,7 +720,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the third member of the struct array
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -603,7 +734,7 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     // Print the fourth member of the struct array if it exists
-    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2);
+    testStruct = pcre2_single_jmatch(testi, re, offset, &kikkare2, mcontext);
     printf("Match succeeded at offset %d\n", testStruct.ovector[0] );
     if (testStruct.namescount > 0){
         printf("Printing the named substrings:\n");
@@ -617,6 +748,9 @@ int main(void) {
     RegexStruct_cleanup(testStruct);
 
     pcre2_jcompile_free(re);
+        pcre2_match_context_free(mcontext);
+        pcre2_compile_context_free(ccontext);
+        pcre2_general_context_free(gcontext);
 
     return 0;
 }
