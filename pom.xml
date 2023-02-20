@@ -6,7 +6,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>jpr_01</artifactId>
   <name>jpr_01</name>
-  <description>A minimal RELP implementation.</description>
+  <description>Java bindings for PCRE 2 library</description>
   <url>https://teragrep.com</url>
   <groupId>com.teragrep</groupId>
   <version>${revision}${sha1}${changelist}</version>
