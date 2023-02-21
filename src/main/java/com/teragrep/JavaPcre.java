@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package org.teragrep;
+package com.teragrep;
 
 import java.util.*;
 import java.util.regex.PatternSyntaxException;
@@ -172,7 +172,7 @@ public class JavaPcre {
     Map<String, Integer> name_table;
     Map<Integer, String> match_table;
 
-    JavaPcre(){
+    public JavaPcre(){
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
         match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
         extra_options = new LibJavaPcre.ExtraOptionsStruct(); // initializes pcre2_compile extra options with default values of PCRE2 library.
