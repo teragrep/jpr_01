@@ -731,6 +731,150 @@ class JavaPcreTest {
     }
 
 
+    @Test
+    void pcre2_get_name_match_table() {
+        int a;
+        String subject = "From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n";
+        String pattern = "(*ANYCRLF)From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)"; // (*ANYCRLF) in the pattern enables the PCRE2_NEWLINE_ANYCRLF newline-option
+        JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
+
+        s1.compile_options.JPCRE2_UTF = true;                           // enable PCRE2_UTF option for compiling, always disabled by default.
+
+        // The compile function:
+        s1.pcre2_compile_java(pattern);
+        // no exception handling to make sure assertion-functions are reached properly
+
+
+        /* change matching options and parameters before matching: */
+        s1.offset = 0;                              /* offset at where to start the match */
+
+
+        // a simple loop for getting all match groups at once:
+        boolean matchfound = true;  // for allowing the initial run of matching
+        int groupcounter = 0;            // simple counter for match group numbering.
+        int previousoffset;         // integer for storing the previous offset.
+
+        while (matchfound) {
+            if (groupcounter == 0) {
+                // the matching function for first match:
+                s1.pcre2_singlematch_java(subject, s1.offset);
+                // no exception handling to make sure assertion-functions are reached properly
+            }else{
+                // the matching function for concurrent matches:
+                previousoffset = s1.offset;
+                s1.offset = s1.ovector1; /* Start at end of previous match */
+
+                if (s1.ovector0 == s1.ovector1)
+                {
+                    if (s1.ovector0 == subject.length()) break;
+                    s1.pcre2_init_match_options();
+                    s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
+                    s1.match_options.JPCRE2_ANCHORED = true;
+                }
+
+                else
+                {
+                    if (s1.offset <= previousoffset)
+                    {
+                        if (previousoffset >= subject.length()) break;   /* Reached end of subject.   */
+                        s1.offset = previousoffset + 1;                  /* Advance by one character. */
+                        if (s1.pcre2_get_utf8())                    /* If UTF-8, it may be more  */
+                        {                                           /*   than one code unit.     */
+                            for (; s1.offset < subject.length(); s1.offset++)
+                                if (s1.check_utf8(subject.charAt(s1.offset))) break;
+                        }
+                    }
+                }
+                s1.pcre2_singlematch_java(subject, s1.offset);
+            }
+            if (s1.JPCRE2_ERROR_NOMATCH){
+                if (s1.checkmatchoptionzero()){
+                    break;
+                }                       /* All matches found */
+                if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
+                    s1.ovector1 = s1.offset + 1;                             /* Advance one code unit */
+                    Assertions.assertEquals(true, s1.pcre2_get_crlf_is_newline()); // should be true when (ANYCRLF*) is starting the pattern
+                    if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
+                            s1.offset < subject.length()-1 &&               /* we are at CRLF, */
+                            subject.charAt(s1.offset) == '\r' &&
+                            subject.charAt(s1.offset - 1) == '\n')
+                    {s1.ovector1 += 1;}                                        /* Advance by one more. */
+                    else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
+                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                                break;
+                            }else{
+                                s1.ovector1 += 1;
+                            }
+                        }
+                    }
+                    matchfound = true;
+                    continue;
+                }
+            }
+
+
+            a = 0;  /* simple counter for substring numbering */
+            Assertions.assertEquals(true, s1.matchfound);
+            matchfound = s1.matchfound;
+
+            // when match is found, print match group data
+            groupcounter += 1;
+            s1.pcre2_get_match_table();
+            s1.pcre2_get_name_table();
+            Assertions.assertEquals(s1.match_table, s1.pcre2_get_match_table());
+            Assertions.assertEquals(s1.name_table, s1.pcre2_get_name_table());
+
+
+            for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
+                Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
+                if (a==0 && groupcounter == 1) {
+                    Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
+                }
+                if (a==1 && groupcounter == 1) {
+                    Assertions.assertEquals("regular.expression", it.getValue());
+                }
+                if (a==2 && groupcounter == 1) {
+                    Assertions.assertEquals("example.com", it.getValue());
+                }
+                if (a==0 && groupcounter == 2) {
+                    Assertions.assertEquals("From:exddd@43434.com", it.getValue());
+                }
+                if (a==1 && groupcounter == 2) {
+                    Assertions.assertEquals("exddd", it.getValue());
+                }
+                if (a==2 && groupcounter == 2) {
+                    Assertions.assertEquals("43434.com", it.getValue());
+                }
+                if (a==0 && groupcounter == 3) {
+                    Assertions.assertEquals("From:7853456@exgem.com", it.getValue());
+                }
+                if (a==1 && groupcounter == 3) {
+                    Assertions.assertEquals("7853456", it.getValue());
+                }
+                if (a==2 && groupcounter == 3) {
+                    Assertions.assertEquals("exgem.com", it.getValue());
+                }
+                a += 1;
+            }
+
+            // print named group data if available
+            if (s1.name_table.size() > 0) {
+                for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
+                    Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
+                    if (it.getValue()==1) {
+                        Assertions.assertEquals("nimi", it.getKey());
+                    }
+                    else if (it.getValue()==2) {
+                        Assertions.assertEquals("sposti", it.getKey());
+                    }
+                }
+            }
+        }
+        s1.pcre2_Jcompile_free();
+    }
+
+
 
 
     @Test

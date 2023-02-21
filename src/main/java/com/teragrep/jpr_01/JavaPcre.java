@@ -169,8 +169,8 @@ public class JavaPcre {
     LibJavaPcre.OptionsStruct compile_options;
     LibJavaPcre.ExtraOptionsStruct extra_options;
     LibJavaPcre.MatchOptionsStruct match_options;
-    public Map<String, Integer> name_table;
-    public Map<Integer, String> match_table;
+    Map<String, Integer> name_table;
+    Map<Integer, String> match_table;
 
     public JavaPcre(){
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
@@ -185,6 +185,14 @@ public class JavaPcre {
         JPCRE2_ERROR_NOMATCH = false;
     }
     // Make another constructor if/when memory management is implemented to the context functions.
+
+    public Map<String, Integer>  pcre2_get_name_table(){
+        return name_table;
+    }
+
+    public Map<Integer, String>  pcre2_get_match_table(){
+        return match_table;
+    }
 
     // checks the installed PCRE2 library version for compatibility.
     public void pcre2_versioncheck(){
