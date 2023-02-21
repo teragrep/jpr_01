@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package com.teragrep;
+package com.teragrep.jpr_01;
 
 public class MatchException extends RuntimeException {
     public MatchException(String message, Throwable cause){

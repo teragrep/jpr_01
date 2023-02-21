@@ -15,7 +15,7 @@
    limitations under the License.
  */
 
-package com.teragrep;
+package com.teragrep.jpr_01;
 
 import java.util.*;
 import java.util.regex.PatternSyntaxException;
