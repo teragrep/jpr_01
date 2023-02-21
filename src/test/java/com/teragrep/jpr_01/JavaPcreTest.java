@@ -1,4 +1,4 @@
-package com.teragrep;
+package com.teragrep.jpr_01;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;

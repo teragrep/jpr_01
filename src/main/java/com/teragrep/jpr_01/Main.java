@@ -1,4 +1,4 @@
-package com.teragrep;
+package com.teragrep.jpr_01;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
