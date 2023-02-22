@@ -161,8 +161,8 @@ public class Main {
 
 
             a = 0;  /* simple counter for substring numbering */
-            System.out.print("\nMatch found: " + s1.matchfound + "\n");
-            matchfound = s1.matchfound;
+            System.out.print("\nMatch found: " + s1.get_matchfound() + "\n");
+            matchfound = s1.get_matchfound();
 
             // when match is found, print match group data which is stored in Map<Integer, String> s1.match_table
             groupcounter += 1;

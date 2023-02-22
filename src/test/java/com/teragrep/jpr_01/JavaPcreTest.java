@@ -374,7 +374,7 @@ class JavaPcreTest {
         String pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
-        Assertions.assertEquals(s1.matchfound, false);
+        Assertions.assertEquals(s1.get_matchfound(), false);
 
         // The compile function:
         s1.pcre2_compile_java(pattern);
@@ -390,10 +390,10 @@ class JavaPcreTest {
         while (matchfound) {
             if (groupcounter == 0) {
                 // the matching function for first match:
-                Assertions.assertEquals(s1.matchfound, false);
+                Assertions.assertEquals(s1.get_matchfound(), false);
                 s1.pcre2_singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
-                Assertions.assertEquals(s1.matchfound, false);
+                Assertions.assertEquals(s1.get_matchfound(), false);
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.get_offset();
@@ -457,7 +457,7 @@ class JavaPcreTest {
                     continue;
                 }
             }
-            matchfound = s1.matchfound;
+            matchfound = s1.get_matchfound();
         }
         Assertions.assertEquals(s1.JPCRE2_ERROR_NOMATCH, true);
         s1.pcre2_Jcompile_free();
@@ -485,10 +485,10 @@ class JavaPcreTest {
         while (matchfound) {
             if (groupcounter == 0) {
                 // the matching function for first match:
-                Assertions.assertEquals(s1.matchfound, false);
+                Assertions.assertEquals(s1.get_matchfound(), false);
                 s1.pcre2_singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
-                Assertions.assertEquals(s1.matchfound, true);
+                Assertions.assertEquals(s1.get_matchfound(), true);
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.get_offset();
@@ -555,8 +555,8 @@ class JavaPcreTest {
 
 
             a = 0;  /* simple counter for substring numbering */
-            Assertions.assertEquals(s1.matchfound, true);
-            matchfound = s1.matchfound;
+            Assertions.assertEquals(s1.get_matchfound(), true);
+            matchfound = s1.get_matchfound();
 
             // when match is found, print match group data
             groupcounter += 1;
@@ -702,8 +702,8 @@ class JavaPcreTest {
 
 
             a = 0;  /* simple counter for substring numbering */
-            Assertions.assertEquals(true, s1.matchfound);
-            matchfound = s1.matchfound;
+            Assertions.assertEquals(true, s1.get_matchfound());
+            matchfound = s1.get_matchfound();
 
             // when match is found, print match group data
             groupcounter += 1;
@@ -793,7 +793,7 @@ class JavaPcreTest {
         s1.set_offset(0);
         s1.pcre2_singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n", s1.get_offset());
         // no exception handling to make sure assertion-functions are reached properly
-        Assertions.assertFalse(s1.matchfound);
+        Assertions.assertFalse(s1.get_matchfound());
         s1.pcre2_Jcompile_free();
     }
 

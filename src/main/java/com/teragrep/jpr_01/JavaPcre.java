@@ -158,7 +158,7 @@ public class JavaPcre {
     private int ovector0;
     private int ovector1;
     private int offset;
-    boolean matchfound;
+    private boolean matchfound;
     boolean JPCRE2_ERROR_NOMATCH;
     String subject;
     Pointer re;
@@ -209,6 +209,10 @@ public class JavaPcre {
     }
     public void set_offset(int i){
         offset = i;
+    }
+
+    public boolean get_matchfound(){
+        return matchfound;
     }
 
     // checks the installed PCRE2 library version for compatibility.
