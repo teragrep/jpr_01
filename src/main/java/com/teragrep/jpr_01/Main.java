@@ -17,21 +17,21 @@ public class Main {
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
         // change compiler parameters before compiling:
-        //s1.compile_options.JPCRE2_UTF = true;                           // enable PCRE2_UTF option for compiling, always disabled by default.
-        //s1.compile_options.JPCRE2_UTF = false;                          // disable PCRE2_UTF option for compiling
+        //s1.get_compile_options().JPCRE2_UTF = true;                           // enable PCRE2_UTF option for compiling, always disabled by default.
+        //s1.get_compile_options().JPCRE2_UTF = false;                          // disable PCRE2_UTF option for compiling
         // s1.pattern_size = 0;                                            // default pattern_size is 0, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
 
         // Optional compiler parameters:
-        //s1.pcre2_gcontext_create();                                     // initializes general context parameter which is used for generating compiler/match context.
-        //s1.pcre2_ccontext_create();                                     // initializes compiler context parameter which can contain the extra options that don't fit inside compile_options.
-        //s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;      // enables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
-        //s1.extra_options.JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;     // disables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
+        //s1.gcontext_create();                                     // initializes general context parameter which is used for generating compiler/match context.
+        //s1.ccontext_create();                                     // initializes compiler context parameter which can contain the extra options that don't fit inside compile_options.
+        //s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;      // enables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
+        //s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;     // disables PCRE2_EXTRA_ALLOW_LOOKAROUND_BSK extra_option parameter
         // etc.
-        //s1.pcre2_ccontext_set_extra_options();                          // inject the extra_options modifiers to the compiler context.
+        //s1.ccontext_set_extra_options();                          // inject the extra_options modifiers to the compiler context.
 
         // The compile function:
         try {
-            s1.pcre2_compile_java(pattern);
+            s1.compile_java(pattern);
         }catch (Exception e){
             System.out.println(e);
             return;
@@ -42,7 +42,7 @@ public class Main {
         //s1.match_options.JPCRE2_ANCHORED = true;  /* enable PCRE2_ANCHORED option for matching */
         //s1.match_options.JPCRE2_ANCHORED = false; /* disable PCRE2_ANCHORED option for matching */
         //etc.
-        //s1.pcre2_mcontext_create();               /* initializes match context, no real use at the moment */
+        //s1.mcontext_create();               /* initializes match context, no real use at the moment */
 
 
         // a simple loop for getting all match groups at once:
@@ -54,7 +54,7 @@ public class Main {
             if (groupcounter == 0) {
                 // the matching function for first match:
                 try {
-                    s1.pcre2_singlematch_java(subject, s1.get_offset());
+                    s1.singlematch_java(subject, s1.get_offset());
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());
                     //System.out.print("non-recoverable error!\n");
@@ -76,9 +76,9 @@ public class Main {
                 if (s1.get_ovector0() == s1.get_ovector1())
                 {
                     if (s1.get_ovector0() == subject.length()) break;
-                    s1.pcre2_init_match_options();
-                    s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
-                    s1.match_options.JPCRE2_ANCHORED = true;
+                    s1.init_match_options();
+                    s1.get_match_options().JPCRE2_NOTEMPTY_ATSTART = true;
+                    s1.get_match_options().JPCRE2_ANCHORED = true;
                 }
                 /* If the previous match was not an empty string, there is one tricky case to
                 consider. If a pattern contains \K within a lookbehind assertion at the
@@ -95,7 +95,7 @@ public class Main {
                     {
                         if (previousoffset >= subject.length()) break;   /* Reached end of subject.   */
                         s1.set_offset(previousoffset + 1);                  /* Advance by one character. */
-                        if (s1.pcre2_get_utf8())                    /* If UTF-8, it may be more  */
+                        if (s1.get_utf8())                    /* If UTF-8, it may be more  */
                         {                                           /*   than one code unit.     */
                             int temp = s1.get_offset();
                             for (; temp < subject.length(); temp++){
@@ -110,7 +110,7 @@ public class Main {
 
 
                 try {
-                    s1.pcre2_singlematch_java(subject, s1.get_offset());
+                    s1.singlematch_java(subject, s1.get_offset());
                 } catch (Exception e) {
                     System.out.println(e);
                     //System.out.print("non-recoverable error!\n");
@@ -136,7 +136,7 @@ public class Main {
                 }                                                            /* All matches found if no options set */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
                     s1.set_ovector1(s1.get_offset() + 1);                          /* Advance one code unit */
-                    if (s1.pcre2_get_crlf_is_newline() &&                    /* If CRLF is a newline & */
+                    if (s1.get_crlf_is_newline() &&                    /* If CRLF is a newline & */
                             s1.get_offset() < subject.length()-1 &&                /* we are at CRLF, */
                             subject.charAt(s1.get_offset()) == '\r' &&
                             subject.charAt(s1.get_offset() - 1) == '\n')
@@ -144,7 +144,7 @@ public class Main {
                         int temp = s1.get_ovector1();
                         s1.set_ovector1(temp + 1);
                     }                                        /* Advance by one more. */
-                    else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
+                    else if (s1.get_utf8()){                            /* Otherwise, ensure we */
                         while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
                             if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
@@ -167,15 +167,15 @@ public class Main {
             // when match is found, print match group data which is stored in Map<Integer, String> s1.match_table
             groupcounter += 1;
             System.out.print("Match group: " + groupcounter + "\n");
-            for (Map.Entry<Integer, String> it : s1.pcre2_get_match_table().entrySet()) {
+            for (Map.Entry<Integer, String> it : s1.get_match_table().entrySet()) {
                 System.out.print(a + ": " + it.getValue() + "\n");
                 a += 1;
             }
 
             // print named group data if available, which is stored in Map<String, Integer> s1.name_table;
-            if (s1.pcre2_get_name_table().size() > 0) {
+            if (s1.get_name_table().size() > 0) {
                 System.out.print("named groups:\n");
-                for (Map.Entry<String, Integer> it : s1.pcre2_get_name_table().entrySet()) {
+                for (Map.Entry<String, Integer> it : s1.get_name_table().entrySet()) {
                     System.out.println(it.getKey() + " which corresponds to substring " + it.getValue());
                 }
             }
@@ -185,9 +185,9 @@ public class Main {
         Compiled pattern data is not freed automatically as it is used multiple times by matching.
         Also remember to free all the optional initialized context data. */
         System.out.print("\nMatching completed! Cleaning compile data.");
-//        s1.pcre2_mcontext_free();
-//        s1.pcre2_ccontext_free();
-//        s1.pcre2_gcontext_free();
-        s1.pcre2_Jcompile_free();
+//        s1.mcontext_free();
+//        s1.ccontext_free();
+//        s1.gcontext_free();
+        s1.jcompile_free();
     }
 }

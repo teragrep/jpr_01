@@ -166,9 +166,9 @@ public class JavaPcre {
     private Pointer gcontext;
     private Pointer ccontext;
     private Pointer mcontext;
-    LibJavaPcre.OptionsStruct compile_options;
-    LibJavaPcre.ExtraOptionsStruct extra_options;
-    LibJavaPcre.MatchOptionsStruct match_options;
+    private LibJavaPcre.OptionsStruct compile_options;
+    private LibJavaPcre.ExtraOptionsStruct extra_options;
+    private LibJavaPcre.MatchOptionsStruct match_options;
     private Map<String, Integer> name_table;
     private Map<Integer, String> match_table;
 
@@ -186,11 +186,11 @@ public class JavaPcre {
     }
     // Make another constructor if/when memory management is implemented to the context functions.
 
-    public Map<String, Integer>  pcre2_get_name_table(){
+    public Map<String, Integer>  get_name_table(){
         return name_table;
     }
 
-    public Map<Integer, String>  pcre2_get_match_table(){
+    public Map<Integer, String>  get_match_table(){
         return match_table;
     }
     public int get_ovector0(){
@@ -240,24 +240,33 @@ public class JavaPcre {
         LibJavaPcre.INSTANCE.pcre2_versioncheck();
     }
 
-    public void pcre2_init_compile_options(){
+    public void init_compile_options(){
         compile_options = new LibJavaPcre.OptionsStruct();
     }
+    public LibJavaPcre.OptionsStruct get_compile_options(){
+        return compile_options;
+    }
 
-    public void pcre2_init_match_options(){
+    public void init_match_options(){
         match_options = new LibJavaPcre.MatchOptionsStruct();
     }
-
-    public void pcre2_init_extra_options(){
-        extra_options = new LibJavaPcre.ExtraOptionsStruct();
+    public LibJavaPcre.MatchOptionsStruct get_match_options() {
+        return match_options;
     }
 
-    public boolean pcre2_get_utf8() {
+    public void init_extra_options(){
+        extra_options = new LibJavaPcre.ExtraOptionsStruct();
+    }
+    public LibJavaPcre.ExtraOptionsStruct get_extra_options() {
+        return extra_options;
+    }
+
+    public boolean get_utf8() {
         int temp = LibJavaPcre.INSTANCE.pcre2_get_utf8(re);
         return temp != 0;
     }
 
-    public boolean pcre2_get_crlf_is_newline() {
+    public boolean get_crlf_is_newline() {
         int temp = LibJavaPcre.INSTANCE.pcre2_get_crlf_is_newline(re);
         return temp != 0;
     }
@@ -267,27 +276,27 @@ public class JavaPcre {
         return tempboolean != 0;
     }
 
-    public void pcre2_gcontext_create(){
+    public void gcontext_create(){
         gcontext = LibJavaPcre.INSTANCE.pcre2_gcontext_create();
     }
-    public void pcre2_ccontext_create(){
+    public void ccontext_create(){
         if (gcontext == null){
             throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             ccontext = LibJavaPcre.INSTANCE.pcre2_ccontext_create(gcontext);
         }
     }
-    public void pcre2_ccontext_set_extra_options(){
+    public void ccontext_set_extra_options(){
         LibJavaPcre.INSTANCE.pcre2_ccontext_set_extra_options(ccontext, extra_options);
     }
-    public void pcre2_mcontext_create(){
+    public void mcontext_create(){
         if (gcontext == null){
             throw new IllegalArgumentException("General context is not initialized properly");
         } else {
             mcontext = LibJavaPcre.INSTANCE.pcre2_mcontext_create(gcontext);
         }
     }
-    public void pcre2_gcontext_free(){
+    public void gcontext_free(){
         if (gcontext == null){
             throw new IllegalArgumentException("No general context data to free.");
         } else {
@@ -295,7 +304,7 @@ public class JavaPcre {
             gcontext = null;
         }
     }
-    public void pcre2_ccontext_free(){
+    public void ccontext_free(){
         if (ccontext == null){
             throw new IllegalArgumentException("No compiler context data to free.");
         } else {
@@ -303,7 +312,7 @@ public class JavaPcre {
             ccontext = null;
         }
     }
-    public void pcre2_mcontext_free(){
+    public void mcontext_free(){
         if (mcontext == null){
             throw new IllegalArgumentException("No match context data to free.");
         } else {
@@ -312,7 +321,7 @@ public class JavaPcre {
         }
     }
 
-    public void pcre2_compile_java(String pat){
+    public void compile_java(String pat){
         pattern = pat;
         LibJavaPcre.CompileData.ByValue comp_val = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
         //re = LibJavaPcre.INSTANCE.pcre2_jcompile(pattern, pattern_size, compile_options, ccontext);
@@ -338,7 +347,7 @@ public class JavaPcre {
     }
 
     // This is the main function for getting a single regex match group.
-    public void pcre2_singlematch_java(String a, int b){
+    public void singlematch_java(String a, int b){
         if (re == null) {
             throw new IllegalStateException("Match pattern is not compiled");
         }
@@ -408,7 +417,7 @@ public class JavaPcre {
     }*/
 
     // frees the compiled pattern.
-    public void pcre2_Jcompile_free(){
+    public void jcompile_free(){
         if (re != null){
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
             re = null;
