@@ -266,7 +266,7 @@ class JavaPcreTest {
                                   "From:exddd@43434.com\r\n" +
                                   "From:7853456@exgem.com\r\n", s1.offset);
         a = 0;
-        for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
+        for(Map.Entry<Integer,String>it:s1.pcre2_get_match_table().entrySet()) {
             if (a==0) {
                 Assertions.assertEquals(0, a);
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -295,7 +295,7 @@ class JavaPcreTest {
         s1.pcre2_singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n", s1.offset);
         // no exception handling to make sure assertion-functions are reached properly
         a = 0;
-        for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
+        for(Map.Entry<Integer,String>it:s1.pcre2_get_match_table().entrySet()) {
             Assertions.assertTrue(a==0 || a==1 || a==2);
             if (a==0) {
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -311,9 +311,9 @@ class JavaPcreTest {
         if (a==0) {
             throw new IllegalStateException("No match when there should be a match");
         }else{
-            if (s1.name_table.size() > 0) {
+            if (s1.pcre2_get_name_table().size() > 0) {
             }
-            for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
+            for(Map.Entry<String,Integer>it:s1.pcre2_get_name_table().entrySet()) {
                 Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                 if (it.getValue()==1) {
                     Assertions.assertEquals("nimi", it.getKey());
@@ -340,7 +340,7 @@ class JavaPcreTest {
                                   "From:7853456@exgem.com\r\n", s1.offset);
         a = 0;
         //System.out.print("Match group:\n");
-        for(Map.Entry<Integer,String>it:s1.match_table.entrySet()) {
+        for(Map.Entry<Integer,String>it:s1.pcre2_get_match_table().entrySet()) {
             Assertions.assertTrue(a==0 || a==1 || a==2);
             if (a==0) {
                 Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -356,10 +356,10 @@ class JavaPcreTest {
         if (a==0) {
             //System.out.print("No match!\n");
         }else{
-            if (s1.name_table.size() > 0) {
+            if (s1.pcre2_get_name_table().size() > 0) {
                 //System.out.print("named groups:\n");
             }
-            for(Map.Entry<String,Integer>it:s1.name_table.entrySet()) {
+            for(Map.Entry<String,Integer>it:s1.pcre2_get_name_table().entrySet()) {
                 Assertions.assertEquals(2, it.getValue());
                 Assertions.assertEquals("sposti", it.getKey());
             }
@@ -397,10 +397,10 @@ class JavaPcreTest {
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
-                s1.offset = s1.ovector1; /* Start at end of previous match */
-                if (s1.ovector0 == s1.ovector1)
+                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
+                if (s1.get_ovector0() == s1.get_ovector1())
                 {
-                    if (s1.ovector0 == subject.length()) break;
+                    if (s1.get_ovector0() == subject.length()) break;
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
                 }
@@ -429,18 +429,22 @@ class JavaPcreTest {
                     break;
                 }                       /* All matches found */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.ovector1 = s1.offset + 1;                                        /* Advance one code unit */
+                    s1.set_ovector1(s1.offset + 1);                                      /* Advance one code unit */
                     if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
                             s1.offset < subject.length()-1 &&               /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
-                    {s1.ovector1 +=1;}                                        /* Advance by one more. */
+                    {
+                        int temp = s1.get_ovector1();
+                        s1.set_ovector1(temp + 1);
+                    }                                        /* Advance by one more. */
                     else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
-                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
-                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                        while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
                             }else{
-                                s1.ovector1 += 1;
+                                int temp = s1.get_ovector1();
+                                s1.set_ovector1(temp + 1);
                             }
                         }
                     }
@@ -483,11 +487,11 @@ class JavaPcreTest {
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
-                s1.offset = s1.ovector1; /* Start at end of previous match */
+                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
 
-                if (s1.ovector0 == s1.ovector1)
+                if (s1.get_ovector0() == s1.get_ovector1())
                 {
-                    if (s1.ovector0 == subject.length()) break;
+                    if (s1.get_ovector0() == subject.length()) break;
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
                 }
@@ -515,18 +519,22 @@ class JavaPcreTest {
                     break;
                 }                       /* All matches found */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.ovector1 = s1.offset + 1;                                      /* Advance one code unit */
+                    s1.set_ovector1(s1.offset + 1);                                      /* Advance one code unit */
                     if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
                             s1.offset < subject.length()-1 &&               /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
-                    {s1.ovector1 +=1;}                                        /* Advance by one more. */
+                    {
+                        int temp = s1.get_ovector1();
+                        s1.set_ovector1(temp + 1);
+                    }                                        /* Advance by one more. */
                     else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
-                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
-                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                        while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
                             }else{
-                                s1.ovector1 += 1;
+                                int temp = s1.get_ovector1();
+                                s1.set_ovector1(temp + 1);
                             }
                         }
                     }
@@ -543,7 +551,7 @@ class JavaPcreTest {
             // when match is found, print match group data
             groupcounter += 1;
             Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
-            for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
+            for (Map.Entry<Integer, String> it : s1.pcre2_get_match_table().entrySet()) {
                 Assertions.assertTrue(a==0 || a==1 || a==2);
                 if (a==0 && groupcounter == 1) {
                     Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -576,8 +584,8 @@ class JavaPcreTest {
             }
 
             // print named group data if available
-            if (s1.name_table.size() > 0) {
-                for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
+            if (s1.pcre2_get_name_table().size() > 0) {
+                for (Map.Entry<String, Integer> it : s1.pcre2_get_name_table().entrySet()) {
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
                         Assertions.assertEquals("nimi", it.getKey());
@@ -622,11 +630,11 @@ class JavaPcreTest {
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
-                s1.offset = s1.ovector1; /* Start at end of previous match */
+                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
 
-                if (s1.ovector0 == s1.ovector1)
+                if (s1.get_ovector0() == s1.get_ovector1())
                 {
-                    if (s1.ovector0 == subject.length()) break;
+                    if (s1.get_ovector0() == subject.length()) break;
                     s1.pcre2_init_match_options();
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
@@ -652,19 +660,23 @@ class JavaPcreTest {
                     break;
                 }                       /* All matches found */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.ovector1 = s1.offset + 1;                             /* Advance one code unit */
+                    s1.set_ovector1(s1.offset + 1);                             /* Advance one code unit */
                     Assertions.assertEquals(true, s1.pcre2_get_crlf_is_newline()); // should be true when (ANYCRLF*) is starting the pattern
                     if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
                             s1.offset < subject.length()-1 &&               /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
-                    {s1.ovector1 += 1;}                                        /* Advance by one more. */
+                    {
+                        int temp = s1.get_ovector1();
+                        s1.set_ovector1(temp + 1);
+                    }                                        /* Advance by one more. */
                     else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
-                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
-                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                        while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
                             }else{
-                                s1.ovector1 += 1;
+                                int temp = s1.get_ovector1();
+                                s1.set_ovector1(temp + 1);
                             }
                         }
                     }
@@ -682,7 +694,7 @@ class JavaPcreTest {
             groupcounter += 1;
 
 
-            for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
+            for (Map.Entry<Integer, String> it : s1.pcre2_get_match_table().entrySet()) {
                 Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
                 if (a==0 && groupcounter == 1) {
                     Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -715,8 +727,8 @@ class JavaPcreTest {
             }
 
             // print named group data if available
-            if (s1.name_table.size() > 0) {
-                for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
+            if (s1.pcre2_get_name_table().size() > 0) {
+                for (Map.Entry<String, Integer> it : s1.pcre2_get_name_table().entrySet()) {
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
                         Assertions.assertEquals("nimi", it.getKey());
@@ -762,11 +774,11 @@ class JavaPcreTest {
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
-                s1.offset = s1.ovector1; /* Start at end of previous match */
+                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
 
-                if (s1.ovector0 == s1.ovector1)
+                if (s1.get_ovector0() == s1.get_ovector1())
                 {
-                    if (s1.ovector0 == subject.length()) break;
+                    if (s1.get_ovector0() == subject.length()) break;
                     s1.pcre2_init_match_options();
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
@@ -792,19 +804,23 @@ class JavaPcreTest {
                     break;
                 }                       /* All matches found */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.ovector1 = s1.offset + 1;                             /* Advance one code unit */
+                    s1.set_ovector1(s1.offset + 1);                             /* Advance one code unit */
                     Assertions.assertEquals(true, s1.pcre2_get_crlf_is_newline()); // should be true when (ANYCRLF*) is starting the pattern
                     if (s1.pcre2_get_crlf_is_newline() &&               /* If CRLF is a newline & */
                             s1.offset < subject.length()-1 &&               /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
-                    {s1.ovector1 += 1;}                                        /* Advance by one more. */
+                    {
+                        int temp = s1.get_ovector1();
+                        s1.set_ovector1(temp + 1);
+                    }                                        /* Advance by one more. */
                     else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
-                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
-                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                        while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
                             }else{
-                                s1.ovector1 += 1;
+                                int temp = s1.get_ovector1();
+                                s1.set_ovector1(temp + 1);
                             }
                         }
                     }
@@ -822,11 +838,9 @@ class JavaPcreTest {
             groupcounter += 1;
             s1.pcre2_get_match_table();
             s1.pcre2_get_name_table();
-            Assertions.assertEquals(s1.match_table, s1.pcre2_get_match_table());
-            Assertions.assertEquals(s1.name_table, s1.pcre2_get_name_table());
 
 
-            for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
+            for (Map.Entry<Integer, String> it : s1.pcre2_get_match_table().entrySet()) {
                 Assertions.assertTrue(groupcounter==1 || groupcounter==2 || groupcounter==3);
                 if (a==0 && groupcounter == 1) {
                     Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
@@ -859,8 +873,8 @@ class JavaPcreTest {
             }
 
             // print named group data if available
-            if (s1.name_table.size() > 0) {
-                for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
+            if (s1.pcre2_get_name_table().size() > 0) {
+                for (Map.Entry<String, Integer> it : s1.pcre2_get_name_table().entrySet()) {
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
                         Assertions.assertEquals("nimi", it.getKey());

@@ -67,15 +67,15 @@ public class Main {
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.offset;
-                s1.offset = s1.ovector1; /* Start at end of previous match */
+                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
 
                 /* If the previous match was for an empty string, we are finished if we are
                 at the end of the subject. Otherwise, arrange to run another match at the
                 same point to see if a non-empty match can be found. */
 
-                if (s1.ovector0 == s1.ovector1)
+                if (s1.get_ovector0() == s1.get_ovector1())
                 {
-                    if (s1.ovector0 == subject.length()) break;
+                    if (s1.get_ovector0() == subject.length()) break;
                     s1.pcre2_init_match_options();
                     s1.match_options.JPCRE2_NOTEMPTY_ATSTART = true;
                     s1.match_options.JPCRE2_ANCHORED = true;
@@ -130,18 +130,22 @@ public class Main {
                     break;
                 }                                                            /* All matches found if no options set */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.ovector1 = s1.offset + 1;                             /* Advance one code unit */
+                    s1.set_ovector1(s1.offset + 1);                          /* Advance one code unit */
                     if (s1.pcre2_get_crlf_is_newline() &&                    /* If CRLF is a newline & */
                             s1.offset < subject.length()-1 &&                /* we are at CRLF, */
                             subject.charAt(s1.offset) == '\r' &&
                             subject.charAt(s1.offset - 1) == '\n')
-                    {s1.ovector1 +=1;}                                        /* Advance by one more. */
+                    {
+                        int temp = s1.get_ovector1();
+                        s1.set_ovector1(temp + 1);
+                    }                                        /* Advance by one more. */
                     else if (s1.pcre2_get_utf8()){                            /* Otherwise, ensure we */
-                        while (s1.ovector1 < subject.length()) {              /* advance a whole UTF-8 */
-                            if (s1.check_utf8(subject.charAt(s1.ovector1))) { /* character. */
+                        while (s1.get_ovector1() < subject.length()) {              /* advance a whole UTF-8 */
+                            if (s1.check_utf8(subject.charAt(s1.get_ovector1()))) { /* character. */
                                 break;
                             }else{
-                                s1.ovector1 += 1;
+                                int temp = s1.get_ovector1();
+                                s1.set_ovector1(temp + 1);
                             }
                         }
                     }
@@ -158,15 +162,15 @@ public class Main {
             // when match is found, print match group data which is stored in Map<Integer, String> s1.match_table
             groupcounter += 1;
             System.out.print("Match group: " + groupcounter + "\n");
-            for (Map.Entry<Integer, String> it : s1.match_table.entrySet()) {
+            for (Map.Entry<Integer, String> it : s1.pcre2_get_match_table().entrySet()) {
                 System.out.print(a + ": " + it.getValue() + "\n");
                 a += 1;
             }
 
             // print named group data if available, which is stored in Map<String, Integer> s1.name_table;
-            if (s1.name_table.size() > 0) {
+            if (s1.pcre2_get_name_table().size() > 0) {
                 System.out.print("named groups:\n");
-                for (Map.Entry<String, Integer> it : s1.name_table.entrySet()) {
+                for (Map.Entry<String, Integer> it : s1.pcre2_get_name_table().entrySet()) {
                     System.out.println(it.getKey() + " which corresponds to substring " + it.getValue());
                 }
             }

@@ -153,10 +153,10 @@ public class JavaPcre {
 
     // Add functions here
 
-    String pattern;
-    int pattern_size;
-    int ovector0;
-    int ovector1;
+    private String pattern;
+    private int pattern_size;
+    private int ovector0;
+    private int ovector1;
     int offset;
     boolean matchfound;
     boolean JPCRE2_ERROR_NOMATCH;
@@ -169,8 +169,8 @@ public class JavaPcre {
     LibJavaPcre.OptionsStruct compile_options;
     LibJavaPcre.ExtraOptionsStruct extra_options;
     LibJavaPcre.MatchOptionsStruct match_options;
-    Map<String, Integer> name_table;
-    Map<Integer, String> match_table;
+    private Map<String, Integer> name_table;
+    private Map<Integer, String> match_table;
 
     public JavaPcre(){
         compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
@@ -192,6 +192,16 @@ public class JavaPcre {
 
     public Map<Integer, String>  pcre2_get_match_table(){
         return match_table;
+    }
+    public int get_ovector0(){
+        return ovector0;
+    }
+
+    public int get_ovector1(){
+        return ovector1;
+    }
+    public void set_ovector1(int i){
+        ovector1 = i;
     }
 
     // checks the installed PCRE2 library version for compatibility.
