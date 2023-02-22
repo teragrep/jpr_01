@@ -159,7 +159,7 @@ public class JavaPcre {
     private int ovector1;
     private int offset;
     private boolean matchfound;
-    boolean JPCRE2_ERROR_NOMATCH;
+    private boolean JPCRE2_ERROR_NOMATCH;
     String subject;
     Pointer re;
     Pointer match_data;
@@ -213,6 +213,10 @@ public class JavaPcre {
 
     public boolean get_matchfound(){
         return matchfound;
+    }
+
+    public boolean get_JPCRE2_ERROR_NOMATCH() {
+        return JPCRE2_ERROR_NOMATCH;
     }
 
     // checks the installed PCRE2 library version for compatibility.

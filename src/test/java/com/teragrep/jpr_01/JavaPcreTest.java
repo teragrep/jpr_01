@@ -429,7 +429,7 @@ class JavaPcreTest {
                 s1.pcre2_singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
             }
-            if (s1.JPCRE2_ERROR_NOMATCH){
+            if (s1.get_JPCRE2_ERROR_NOMATCH()){
                 if (s1.checkmatchoptionzero()){
                     break;
                 }                       /* All matches found */
@@ -459,7 +459,7 @@ class JavaPcreTest {
             }
             matchfound = s1.get_matchfound();
         }
-        Assertions.assertEquals(s1.JPCRE2_ERROR_NOMATCH, true);
+        Assertions.assertEquals(s1.get_JPCRE2_ERROR_NOMATCH(), true);
         s1.pcre2_Jcompile_free();
     }
 
@@ -524,7 +524,7 @@ class JavaPcreTest {
                 s1.pcre2_singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
             }
-            if (s1.JPCRE2_ERROR_NOMATCH){
+            if (s1.get_JPCRE2_ERROR_NOMATCH()){
                 if (s1.checkmatchoptionzero()){
                     break;
                 }                       /* All matches found */
@@ -670,7 +670,7 @@ class JavaPcreTest {
                 }
                 s1.pcre2_singlematch_java(subject, s1.get_offset());
             }
-            if (s1.JPCRE2_ERROR_NOMATCH){
+            if (s1.get_JPCRE2_ERROR_NOMATCH()){
                 if (s1.checkmatchoptionzero()){
                     break;
                 }                       /* All matches found */

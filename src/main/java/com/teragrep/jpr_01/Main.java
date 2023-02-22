@@ -60,7 +60,7 @@ public class Main {
                     //System.out.print("non-recoverable error!\n");
                     break;
                 }
-                if (s1.JPCRE2_ERROR_NOMATCH){
+                if (s1.get_JPCRE2_ERROR_NOMATCH()){
                     // 0 matches found from the subject, break the loop and clear compiled data at the end.
                     break;
                 }
@@ -130,7 +130,7 @@ public class Main {
                 the current position is just before it, advance by an extra byte. (b)
                 Otherwise we must ensure that we skip an entire UTF character if we are in
                 UTF mode. */
-            if (s1.JPCRE2_ERROR_NOMATCH){
+            if (s1.get_JPCRE2_ERROR_NOMATCH()){
                 if (s1.checkmatchoptionzero()){
                     break;
                 }                                                            /* All matches found if no options set */
