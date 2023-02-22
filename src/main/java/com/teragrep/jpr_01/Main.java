@@ -38,7 +38,7 @@ public class Main {
         }
 
         /* change matching options and parameters before matching: */
-        s1.offset = 0;                              /* offset at where to start the match */
+        s1.set_offset(0);                           /* offset at where to start the match */
         //s1.match_options.JPCRE2_ANCHORED = true;  /* enable PCRE2_ANCHORED option for matching */
         //s1.match_options.JPCRE2_ANCHORED = false; /* disable PCRE2_ANCHORED option for matching */
         //etc.
@@ -54,7 +54,7 @@ public class Main {
             if (groupcounter == 0) {
                 // the matching function for first match:
                 try {
-                    s1.pcre2_singlematch_java(subject, s1.offset);
+                    s1.pcre2_singlematch_java(subject, s1.get_offset());
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());
                     //System.out.print("non-recoverable error!\n");
@@ -66,8 +66,8 @@ public class Main {
                 }
             }else{
                 // the matching function for concurrent matches:
-                previousoffset = s1.offset;
-                s1.offset = s1.get_ovector1(); /* Start at end of previous match */
+                previousoffset = s1.get_offset();
+                s1.set_offset(s1.get_ovector1()); /* Start at end of previous match */
 
                 /* If the previous match was for an empty string, we are finished if we are
                 at the end of the subject. Otherwise, arrange to run another match at the
@@ -91,21 +91,26 @@ public class Main {
                 else
                 {
                     //int startchar = previousoffset;
-                    if (s1.offset <= previousoffset)
+                    if (s1.get_offset() <= previousoffset)
                     {
                         if (previousoffset >= subject.length()) break;   /* Reached end of subject.   */
-                        s1.offset = previousoffset + 1;                  /* Advance by one character. */
+                        s1.set_offset(previousoffset + 1);                  /* Advance by one character. */
                         if (s1.pcre2_get_utf8())                    /* If UTF-8, it may be more  */
                         {                                           /*   than one code unit.     */
-                            for (; s1.offset < subject.length(); s1.offset++)
-                                if (s1.check_utf8(subject.charAt(s1.offset))) break;
+                            int temp = s1.get_offset();
+                            for (; temp < subject.length(); temp++){
+                                if (s1.check_utf8(subject.charAt(temp))){
+                                    s1.set_offset(temp);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
 
 
                 try {
-                    s1.pcre2_singlematch_java(subject, s1.offset);
+                    s1.pcre2_singlematch_java(subject, s1.get_offset());
                 } catch (Exception e) {
                     System.out.println(e);
                     //System.out.print("non-recoverable error!\n");
@@ -130,11 +135,11 @@ public class Main {
                     break;
                 }                                                            /* All matches found if no options set */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
-                    s1.set_ovector1(s1.offset + 1);                          /* Advance one code unit */
+                    s1.set_ovector1(s1.get_offset() + 1);                          /* Advance one code unit */
                     if (s1.pcre2_get_crlf_is_newline() &&                    /* If CRLF is a newline & */
-                            s1.offset < subject.length()-1 &&                /* we are at CRLF, */
-                            subject.charAt(s1.offset) == '\r' &&
-                            subject.charAt(s1.offset - 1) == '\n')
+                            s1.get_offset() < subject.length()-1 &&                /* we are at CRLF, */
+                            subject.charAt(s1.get_offset()) == '\r' &&
+                            subject.charAt(s1.get_offset() - 1) == '\n')
                     {
                         int temp = s1.get_ovector1();
                         s1.set_ovector1(temp + 1);
