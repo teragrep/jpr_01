@@ -115,15 +115,15 @@ class JavaPcreTest {
     @Test
     void pcre2_context_test() {
         JavaPcre s1 = new JavaPcre();
-        Assertions.assertEquals(null, s1.gcontext);
-        Assertions.assertEquals(null, s1.ccontext);
-        Assertions.assertEquals(null, s1.mcontext);
+        Assertions.assertEquals(null, s1.get_gcontext());
+        Assertions.assertEquals(null, s1.get_ccontext());
+        Assertions.assertEquals(null, s1.get_mcontext());
         s1.pcre2_gcontext_create();
         s1.pcre2_ccontext_create();
         s1.pcre2_mcontext_create();
-        Assertions.assertNotEquals(null, s1.gcontext);
-        Assertions.assertNotEquals(null, s1.ccontext);
-        Assertions.assertNotEquals(null, s1.mcontext);
+        Assertions.assertNotEquals(null, s1.get_gcontext());
+        Assertions.assertNotEquals(null, s1.get_ccontext());
+        Assertions.assertNotEquals(null, s1.get_mcontext());
 
 
         s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
@@ -134,9 +134,9 @@ class JavaPcreTest {
         s1.pcre2_gcontext_free();
         // no exception handling to make sure assertion-functions are reached properly
 
-        Assertions.assertEquals(null, s1.gcontext);
-        Assertions.assertEquals(null, s1.ccontext);
-        Assertions.assertEquals(null, s1.mcontext);
+        Assertions.assertEquals(null, s1.get_gcontext());
+        Assertions.assertEquals(null, s1.get_ccontext());
+        Assertions.assertEquals(null, s1.get_mcontext());
     }
 
     @Test

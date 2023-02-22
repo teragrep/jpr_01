@@ -162,10 +162,10 @@ public class JavaPcre {
     private boolean JPCRE2_ERROR_NOMATCH;
     private String subject;
     private Pointer re;
-    Pointer match_data;
-    Pointer gcontext;
-    Pointer ccontext;
-    Pointer mcontext;
+    private Pointer match_data;
+    private Pointer gcontext;
+    private Pointer ccontext;
+    private Pointer mcontext;
     LibJavaPcre.OptionsStruct compile_options;
     LibJavaPcre.ExtraOptionsStruct extra_options;
     LibJavaPcre.MatchOptionsStruct match_options;
@@ -221,6 +221,18 @@ public class JavaPcre {
 
     public Pointer get_re() {
         return re;
+    }
+
+    public Pointer get_gcontext() {
+        return gcontext;
+    }
+
+    public Pointer get_ccontext() {
+        return ccontext;
+    }
+
+    public Pointer get_mcontext() {
+        return mcontext;
     }
 
     // checks the installed PCRE2 library version for compatibility.
