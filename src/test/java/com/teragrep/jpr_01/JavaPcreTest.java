@@ -143,24 +143,24 @@ class JavaPcreTest {
     void pcre2_compile_test() {
         JavaPcre s1 = new JavaPcre();
         s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
-        Assertions.assertNotEquals(null, s1.re);
+        Assertions.assertNotEquals(null, s1.get_re());
         s1.pcre2_Jcompile_free();
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
 
         s1.pcre2_compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
-        Assertions.assertNotEquals(null, s1.re);
+        Assertions.assertNotEquals(null, s1.get_re());
         s1.pcre2_Jcompile_free();
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
 
         s1.pcre2_compile_java("From:([^@]+)@(?<sposti>[^\r]+)");
-        Assertions.assertNotEquals(null, s1.re);
+        Assertions.assertNotEquals(null, s1.get_re());
         s1.pcre2_Jcompile_free();
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
 
         s1.pcre2_compile_java("");
-        Assertions.assertNotEquals(null, s1.re);
+        Assertions.assertNotEquals(null, s1.get_re());
         s1.pcre2_Jcompile_free();
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
     }
 
     @Test
@@ -800,14 +800,14 @@ class JavaPcreTest {
     @Test
     void pcre2_Jcompile_free() {
         JavaPcre s1 = new JavaPcre();
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
         s1.pcre2_compile_java("From:([^@]+)@([^\r]+)");
         // no exception handling to make sure assertion-functions are reached properly
 
-        Assertions.assertNotEquals(null, s1.re);
+        Assertions.assertNotEquals(null, s1.get_re());
         s1.pcre2_Jcompile_free();
         // no exception handling to make sure assertion-functions are reached properly
-        Assertions.assertEquals(null, s1.re);
+        Assertions.assertEquals(null, s1.get_re());
     }
 
     @Test
