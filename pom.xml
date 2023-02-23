@@ -18,6 +18,7 @@
     <java.version>1.8</java.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.jupiter.version>5.7.1</junit.jupiter.version>
   </properties>
   
   <licenses>
@@ -69,15 +70,16 @@
       <version>3.3.0</version>
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.9.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.5</version>
+    </dependency>
+    <!-- testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -88,6 +90,25 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -132,7 +153,8 @@
             <configuration>
               <executable>./configure</executable>
               <arguments>
-                <argument>--prefix=/opt/Fail-Safe/${project.artifactId}</argument>
+                <argument>--prefix=/</argument>
+                <argument>--libdir=/</argument>
               </arguments>
               <workingDirectory>${project.build.directory}/${project.artifactId}/src/main/c</workingDirectory>
             </configuration>
@@ -162,7 +184,7 @@
               <arguments>
                 <argument>-j1</argument>
                 <argument>install</argument>
-                <argument>DESTDIR=${project.build.directory}/classes/lib</argument>
+                <argument>DESTDIR=${project.build.directory}/classes</argument>
               </arguments>
               <workingDirectory>${project.build.directory}/${project.artifactId}/src/main/c</workingDirectory>
             </configuration>
@@ -181,7 +203,7 @@
               <!-- <mainClass>test.org.Cliente</mainClass> -->
             </manifest>
             <manifestEntries>
-              <Class-Path>lib/</Class-Path>
+              <Class-Path>lib/javapcre/</Class-Path>
             </manifestEntries>
           </archive>
         </configuration>

@@ -1,4 +1,4 @@
-AC_INIT([JavaPcre], 1.0)
+AC_INIT([linux-x86-64], 1.0)
 #AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE
 LT_INIT
