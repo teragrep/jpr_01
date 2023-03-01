@@ -1,9 +1,114 @@
-= Building
+= jpr_01
+The jpr_01 library can be used to access PCRE2 Regex functionality from Java code. It uses Java Native Access to execute native C code for high performance and PCRE syntax compatibility compared to the native Java regex implementation.
 
-On Fedora 36
+The library can be used to retrieve the offsets of the input string that are matched against the given regular expression, and it can also retrieve multiple named groups within one matching operation. This information can be used for extracting information from the input string, or replacing parts of the input string.
+
+== Building
+
+Tested on Fedora 36
 
 [,bash]
----
+----
 dnf install pcre2-devel
 mvn clean package
----
+----
+
+== Adding the library to your project
+
+To use the library, it can be added via Maven:
+[,xml]
+----
+<dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>jpr_01</artifactId>
+      <version>3.0.1</version>
+</dependency>
+----
+
+After Maven has downloaded and setup the package, it can be imported and the JavaPcre object instantialized:
+
+[,java]
+----
+import com.teragrep.jpr_01.JavaPcre;
+ 
+JavaPcre pcre = new JavaPcre();
+----
+
+== Pattern compilation
+
+The regex matcher can be compiled for a given pattern using standard PCRE2 syntax
+
+[,java]
+----
+final String pattern = "^Hello.*$";
+pcre.compile_java(pattern);
+----
+
+To clear the compiled pattern, the jcompile_free() function can be used
+
+[,java]
+----
+pcre.jcompile_free();
+----
+
+== Matching
+
+To attempt matching the pattern, use the singlematch_java() function. The second argument specifies the offset, from which point of the String to start matching. To start from the beginning, use 0 (zero).
+
+[,java]
+----
+final String input = "Hello this is a input";
+pcre.singlematch_java(input, 0);
+----
+
+== Extraction
+
+If named capture groups are used, the results can be found via the match table and name table. The match table contains all the matches with unique IDs. Name table connects such unique IDs with any capture groups if given.
+
+[,java]
+----
+Map<String, Integer> nameTable = pcre.get_name_table(); // e.g. NameOfTeacher=1, NameOfAssistant=2
+Map<Integer, String> matchTable = pcre.get_match_table(); // e.g. 1="Anna", 2="Robert"
+----
+
+For example, these maps can be used to get the groups and their contents mapped into one:
+
+[,java]
+----
+final Map<String, String> results = new HashMap<>();
+for (final Map.Entry<String, Integer> me : nameTable.entrySet()) {
+    final String value = matchTable.get(me.getValue());
+    final String name = me.getKey();
+    results.put(name, value); // e.g. columnName=value
+}
+----
+
+== Match checking and location of matches
+
+To check whether or not there is a match, the get_matchfound() function can be used.
+[,java]
+----
+boolean hasMatch = pcre.get_matchfound();
+----
+
+For multiple matches, the get_matchfound() function can be used in conjunction with the singlematch_java()'s offset argument.
+
+[,java]
+----
+int offset = 0;
+pcre.singlematch_java(inputStr, offset);
+while (pcre.get_matchfound()) {
+    offset = pcre.get_ovector1();
+    pcre.singlematch_java(inputStr, offset);
+}
+----
+
+== Offsets
+
+The offsets (match starting index, match ending index) can be grabbed with the get_ovector0() and get_ovector1() functions.
+
+[,java]
+----
+int start = pcre.get_ovector0();
+int end = pcre.get_ovector1();
+----
