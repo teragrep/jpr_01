@@ -1,8 +1,9 @@
-# Building
+= Building
 
 On Fedora 36
 
-```
+[,bash]
+---
 dnf install pcre2-devel
 mvn clean package
-```
+---
