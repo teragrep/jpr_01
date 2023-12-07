@@ -5,6 +5,7 @@ import com.sun.jna.ptr.PointerByReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -162,6 +163,22 @@ class JavaPcreIT {
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
         Assertions.assertEquals(null, s1.get_re());
+    }
+
+    @Test
+    void pcre2_compile_test_with_group_data() {
+        JavaPcre s1 = new JavaPcre();
+        s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
+        Map<String, Integer> expected_nameTable = new HashMap<>();
+        expected_nameTable.put("nimi", 1);
+        expected_nameTable.put("sposti", 2);
+        Assertions.assertNotEquals(null, s1.get_re());
+        Map<String, Integer> nameTable = s1.get_name_table();
+        Assertions.assertEquals(2, nameTable.size());
+        Assertions.assertEquals(expected_nameTable, nameTable);
+        s1.jcompile_free();
+        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertEquals(0, nameTable.size());
     }
 
     @Test

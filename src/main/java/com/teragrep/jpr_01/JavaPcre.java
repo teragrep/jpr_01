@@ -124,9 +124,20 @@ public class JavaPcre {
             public int rc;
         }
 
+        @FieldOrder({ "names", "namesnum", "namescount" })
+        class GroupData extends Structure {
+            public static class ByValue extends GroupData implements Structure.ByValue {}
+            public Pointer names; // char**
+            public Pointer namesnum;
+            public int namescount;
+        }
+
         void RegexStruct_cleanup(RegexStruct.ByValue sVal);
 
         CompileData.ByValue pcre2_jcompile(String pattern, int i, OptionsStruct options, Pointer ccontext); // returns struct containing compiled pattern re
+
+        GroupData.ByValue pcre2_get_info_group(Pointer re); // returns struct containing group info
+        void free_group_data(GroupData.ByValue sVal); // releases the memory allocated to the group info struct.
 
         RegexStruct.ByValue pcre2_single_jmatch(String subject, Pointer re, int offset, MatchOptionsStruct match_options, Pointer mcontext); // returns pointer to a single match data.
         ErrorStruct.ByValue pcre2_translate_error_code(int errorcode);
@@ -183,8 +194,26 @@ public class JavaPcre {
         mcontext = null; // default value for when context is not used in match
         matchfound = false;
         JPCRE2_ERROR_NOMATCH = false;
+        name_table = new HashMap<>();
     }
     // Make another constructor if/when memory management is implemented to the context functions.
+
+    public void set_name_table(LibJavaPcre.GroupData.ByValue groupData) {
+        if (groupData.namescount > 0) {
+            if (!name_table.isEmpty()) {
+                name_table.clear();
+            }
+            final String[] regex_names = groupData.names.getStringArray(0, groupData.namescount);
+            final int[] namesnum = groupData.namesnum.getIntArray(0, groupData.namescount);
+            for (int namesloop = 0; namesloop < groupData.namescount; namesloop++) {
+                name_table.put(regex_names[namesloop], namesnum[namesloop]);
+            }
+        } else {
+            if (!name_table.isEmpty()) {
+                name_table.clear();
+            }
+        }
+    }
 
     public Map<String, Integer>  get_name_table(){
         return name_table;
@@ -340,6 +369,12 @@ public class JavaPcre {
             LibJavaPcre.INSTANCE.errorcleanup(p);
             throw new PatternSyntaxException(val, pattern, comp_val.erroroffset);
         }
+        else{
+            // initialize the groupData and translate it to name_table format.
+            LibJavaPcre.GroupData.ByValue groupData = LibJavaPcre.INSTANCE.pcre2_get_info_group(re);
+            set_name_table(groupData);
+            LibJavaPcre.INSTANCE.free_group_data(groupData);
+        }
     }
 
     public boolean checkmatchoptionzero(){
@@ -354,7 +389,6 @@ public class JavaPcre {
         if (a == null) {
             throw new IllegalStateException("Subject is null");
         }
-        name_table = new LinkedHashMap<>();
         subject = a;
         offset = b;
         match_table = new LinkedHashMap<>();
@@ -395,13 +429,6 @@ public class JavaPcre {
             matchfound = true;
             final String[] regex_vals = regex_val.vals.getStringArray(0, regex_val.numVals);
             final int[] regex_ovector = regex_val.ovector.getIntArray(0, (regex_val.numVals + 2));
-            if (regex_val.namescount > 0) {
-                final String[] regex_names = regex_val.names.getStringArray(0, regex_val.namescount);
-                final int[] namesnum = regex_val.namesnum.getIntArray(0, regex_val.namescount);
-                for (int namesloop = 0; namesloop < regex_val.namescount; namesloop++) {
-                    name_table.put(regex_names[namesloop], namesnum[namesloop]);
-                }
-            }
             for (int regexloop = 0; regexloop < regex_val.numVals; regexloop++) {
                 match_table.put(ind++, regex_vals[regexloop]);
             }
@@ -421,6 +448,9 @@ public class JavaPcre {
         if (re != null){
             LibJavaPcre.INSTANCE.pcre2_jcompile_free(re);
             re = null;
+            if (!name_table.isEmpty()) {
+                name_table.clear(); // clear name_table that is constructed using the compiled pattern.
+            }
         }else{
             throw new IllegalStateException("No data to free");
         }
