@@ -99,6 +99,12 @@ typedef struct CompileData_TAG {
     int erroroffset;
 } CompileData;
 
+typedef struct GroupData_TAG {
+    char** names;
+    int* namesnum;
+    int namescount;
+} GroupData;
+
 // regex struct/array implementation starts here
 typedef struct RegexStruct_TAG {
     int numVals;
@@ -379,6 +385,93 @@ int pcre2_check_utf8(char temp){
         return 0;
     }
 }
+
+// Provides method to access capture group info after compile but before matching. PCRE2_INFO_NAMETABLE is available via pcre2_pattern_info.
+GroupData pcre2_get_info_group(pcre2_code *re){
+    PCRE2_SPTR name_table;
+    uint32_t namecount;
+    uint32_t name_entry_size;
+    GroupData temp;
+    int i;
+
+    (void)pcre2_pattern_info(
+                re,                   /* the compiled pattern */
+                PCRE2_INFO_NAMECOUNT, /* get the number of named substrings */
+                &namecount);          /* where to put the answer */
+        // printf("TESTING NAMECOUNT: %d \r\n", namecount);
+        if (namecount == 0){
+            temp.namescount = namecount;
+            temp.names = (char**)malloc(sizeof(char*) * 1);
+            temp.namesnum = (int*)malloc(sizeof(int) * 1);
+            if (temp.names == NULL || temp.namesnum == NULL) {
+                printf("Error: Out of memory\r\n");
+                exit(-1);
+            }
+            memset(temp.names, 0, sizeof(char*) * 1);
+            memset(temp.namesnum, 0, sizeof(int) * 1);
+            // printf("TESTING NAMESCOUNT: %d \r\n", temp.namescount);
+        } else
+        {
+            PCRE2_SPTR tabptr;
+
+            /* Before we can access the substrings, we must extract the table for
+            translating names to numbers, and the size of each entry in the table. */
+
+            (void)pcre2_pattern_info(
+                    re,                       /* the compiled pattern */
+                    PCRE2_INFO_NAMETABLE,     /* address of the table */
+                    &name_table);             /* where to put the answer */
+
+            (void)pcre2_pattern_info(
+                    re,                       /* the compiled pattern */
+                    PCRE2_INFO_NAMEENTRYSIZE, /* size of each entry in the table */
+                    &name_entry_size);        /* where to put the answer */
+
+            tabptr = name_table;
+            temp.namescount = namecount;
+            temp.namesnum = (int*)malloc(sizeof(int) * temp.namescount);
+            temp.names = (char**)malloc(sizeof(char*) * temp.namescount);
+            if (temp.names == NULL || temp.namesnum == NULL) {
+                printf("Error: Out of memory\r\n");
+                exit(-1);
+            }
+            for (i = 0; i < namecount; i++)
+            {
+                int n = (tabptr[0] << 8) | tabptr[1]; // << is a bitwise left shift operator.
+                temp.namesnum[i] = n; // stores the numerical value for name-number pairing to the struct.
+                // name table is stored in this format:
+                // 00 01 d  a  t  e  00 ??
+                // 00 05 d  a  y  00 ?? ??
+                // etc.
+                // first two bytes (00 and 01) are the number of the capturing parenthesis, and ?? is an undefined byte.
+                // last 00 byte seems to be the zero termination of the string.
+                temp.names[i] = (char*)malloc(sizeof(char) * ((int)name_entry_size - 2));
+                if (temp.names[i] == NULL) {
+                    printf("Error: Out of memory\r\n");
+                    exit(-1);
+                }
+                memset(temp.names[i], 0, sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
+                memcpy(temp.names[i], (char *)(tabptr + 2), (int)(name_entry_size - 3));
+
+                tabptr += name_entry_size;
+            }
+        }
+        // printf("TESTING NAMESCOUNT: %d \r\n", temp.namescount);
+        return temp;
+}
+
+void free_group_data(GroupData sVal) {
+    // printf("(C) cleaning up GroupData sVal.names[loop]...\n");
+    int loop;
+    for (loop=0; loop<sVal.namescount; loop++){
+            free(sVal.names[loop]);
+        }
+        if (sVal.namescount>0){
+            free(sVal.names);
+            free(sVal.namesnum);
+        }
+}
+
 
 // this function contains matching for a single match
 RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOptionsStruct *temp, pcre2_match_context *mcontext){
