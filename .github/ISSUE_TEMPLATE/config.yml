@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question or get support
+    url: https://github.com/teragrep/jpr_01/discussions
+    about: Ask a question or request support 
+  - name: Report vulnerability
+    url: https://github.com/teragrep/teragrep/security/advisories/new
+    about: Privately report a security vulnerability
