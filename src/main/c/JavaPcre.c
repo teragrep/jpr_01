@@ -210,7 +210,7 @@ void pcre2_mcontext_free(pcre2_match_context *mcontext){
 void pcre2_translate_error_code_alternative(int errorcode, char** ppszVal) {
     *ppszVal = (char*)malloc(sizeof(char) * 256);
     if (*ppszVal != NULL){
-        memset(*ppszVal, 0, sizeof(char) * 256);
+        memset(*ppszVal, '\0', sizeof(char) * 256);
         PCRE2_UCHAR buffer[256];
         pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
         strcpy(*ppszVal, buffer);
@@ -407,7 +407,7 @@ GroupData pcre2_get_info_group(pcre2_code *re){
                 printf("Error: Out of memory\r\n");
                 exit(-1);
             }
-            memset(temp.names, 0, sizeof(char*) * 1);
+            memset(temp.names, '\0', sizeof(char*) * 1);
             memset(temp.namesnum, 0, sizeof(int) * 1);
             // printf("TESTING NAMESCOUNT: %d \r\n", temp.namescount);
         } else
@@ -450,7 +450,7 @@ GroupData pcre2_get_info_group(pcre2_code *re){
                     printf("Error: Out of memory\r\n");
                     exit(-1);
                 }
-                memset(temp.names[i], 0, sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
+                memset(temp.names[i], '\0', sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
                 memcpy(temp.names[i], (char *)(tabptr + 2), (int)(name_entry_size - 3));
 
                 tabptr += name_entry_size;
@@ -566,8 +566,8 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             printf("Error: Out of memory\r\n");
             exit(-1);
         }
-        memset(sVal.vals, 0, sizeof(char*) * 1);
-        memset(sVal.names, 0, sizeof(char*) * 1);
+        memset(sVal.vals, '\0', sizeof(char*) * 1);
+        memset(sVal.names, '\0', sizeof(char*) * 1);
         memset(sVal.namesnum, 0, sizeof(int) * 1);
         memset(sVal.ovector, 0, sizeof(int) * 1);
         sVal.namescount = 0;
@@ -599,7 +599,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
         printf("Error: Out of memory\r\n");
         exit(-1);
     }
-    memset(sVal.vals, 0, sizeof(char*) * sVal.numVals);
+    memset(sVal.vals, '\0', sizeof(char*) * sVal.numVals);
     memset(sVal.ovector, 0, sizeof(int) * (2 + (sVal.numVals * 2)));
     sVal.ovector[0] = (int)ovector[0];
     sVal.ovector[1] = (int)ovector[1];
@@ -617,7 +617,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             printf("Error: Out of memory\r\n");
             exit(-1);
         }
-        memset(sVal.vals[i], 0, sizeof(char) * ((int)substring_length + 1)); // initializes the array with null values.
+        memset(sVal.vals[i], '\0', sizeof(char) * ((int)substring_length + 1)); // initializes the array with null values.
         memcpy(sVal.vals[i], (char *)substring_start, (int)substring_length);
     }
 
@@ -636,7 +636,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
             printf("Error: Out of memory\r\n");
             exit(-1);
         }
-        memset(sVal.names, 0, sizeof(char*) * 1);
+        memset(sVal.names, '\0', sizeof(char*) * 1);
         memset(sVal.namesnum, 0, sizeof(int) * 1);
     } else
     {
@@ -682,7 +682,7 @@ RegexStruct pcre2_single_jmatch(char *b, pcre2_code *re, int offset, MatchOption
                 printf("Error: Out of memory\r\n");
                 exit(-1);
             }
-            memset(sVal.names[i], 0, sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
+            memset(sVal.names[i], '\0', sizeof(char) * ((int)name_entry_size - 2)); // initializes the string array with null values.
             memcpy(sVal.names[i], (char *)(tabptr + 2), (int)(name_entry_size - 3));
 
 
