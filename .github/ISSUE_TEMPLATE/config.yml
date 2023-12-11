@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Doc issue report
+    url: https://github.com/teragrep/doc_01/issues/new?template=doc-issue-report.md
+    about: Problems with Teragrep documentation
   - name: Ask a question or get support
     url: https://github.com/teragrep/jpr_01/discussions
     about: Ask a question or request support 
