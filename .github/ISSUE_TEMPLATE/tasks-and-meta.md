@@ -8,4 +8,4 @@ assignees: ''
 ---
 
 **Description**
-Add a short description and screen shots if needed.
+<!-- Add a short description and screen shots if needed. -->
