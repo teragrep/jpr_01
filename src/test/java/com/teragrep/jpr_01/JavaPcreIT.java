@@ -23,82 +23,73 @@ class JavaPcreIT {
     }
 
     @Test
-    void pcre2_slf4j_test() {
-        LOGGER.error("Testing error");
-        LOGGER.warn("Testing warn");
-        LOGGER.info("Testing info");
-        LOGGER.debug("Testing debug");
-        LOGGER.trace("Testing trace");
-    }
-
-    @Test
     void pcre2_options_test() {
         JavaPcre s1 = new JavaPcre();
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ANCHORED);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ALLOW_EMPTY_CLASS);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ALT_BSUX);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ALT_CIRCUMFLEX);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ALT_VERBNAMES);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_AUTO_CALLOUT);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_CASELESS);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_DOLLAR_ENDONLY);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_DOTALL);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_DUPNAMES);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ENDANCHORED);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_EXTENDED);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_EXTENDED_MORE);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_FIRSTLINE);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_LITERAL);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_MATCH_INVALID_UTF);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_MATCH_UNSET_BACKREF);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_MULTILINE);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NEVER_BACKSLASH_C);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NEVER_UCP);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NEVER_UTF);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NO_AUTO_CAPTURE);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NO_AUTO_POSSESS);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NO_DOTSTAR_ANCHOR);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NO_START_OPTIMIZE);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_NO_UTF_CHECK);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_UCP);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_UNGREEDY);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_USE_OFFSET_LIMIT);
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_UTF);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ANCHORED);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ALLOW_EMPTY_CLASS);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ALT_BSUX);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ALT_CIRCUMFLEX);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ALT_VERBNAMES);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_AUTO_CALLOUT);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_CASELESS);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_DOLLAR_ENDONLY);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_DOTALL);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_DUPNAMES);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ENDANCHORED);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_EXTENDED);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_EXTENDED_MORE);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_FIRSTLINE);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_LITERAL);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_MATCH_INVALID_UTF);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_MATCH_UNSET_BACKREF);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_MULTILINE);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NEVER_BACKSLASH_C);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NEVER_UCP);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NEVER_UTF);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NO_AUTO_CAPTURE);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NO_AUTO_POSSESS);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NO_DOTSTAR_ANCHOR);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NO_START_OPTIMIZE);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_NO_UTF_CHECK);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_UCP);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_UNGREEDY);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_USE_OFFSET_LIMIT);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_UTF);
 
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_ANCHORED);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_COPY_MATCHED_SUBJECT);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_ENDANCHORED);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NOTBOL);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NOTEOL);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NOTEMPTY);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NOTEMPTY_ATSTART);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NO_JIT);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_NO_UTF_CHECK);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_PARTIAL_HARD);
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_PARTIAL_SOFT);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_ANCHORED);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_COPY_MATCHED_SUBJECT);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_ENDANCHORED);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NOTBOL);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NOTEOL);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NOTEMPTY);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NOTEMPTY_ATSTART);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NO_JIT);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_NO_UTF_CHECK);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_PARTIAL_HARD);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_PARTIAL_SOFT);
 
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_ALT_BSUX);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_ESCAPED_CR_IS_LF);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_MATCH_LINE);
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_MATCH_WORD);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_ALLOW_SURROGATE_ESCAPES);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_ALT_BSUX);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_BAD_ESCAPE_IS_LITERAL);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_ESCAPED_CR_IS_LF);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_MATCH_LINE);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_MATCH_WORD);
 
 
 
         s1.get_compile_options().JPCRE2_ANCHORED = true;
-        Assertions.assertEquals(true, s1.get_compile_options().JPCRE2_ANCHORED);
+        Assertions.assertTrue(s1.get_compile_options().JPCRE2_ANCHORED);
         s1.get_match_options().JPCRE2_ANCHORED = true;
-        Assertions.assertEquals(true, s1.get_compile_options().JPCRE2_ANCHORED);
+        Assertions.assertTrue(s1.get_compile_options().JPCRE2_ANCHORED);
         s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = true;
-        Assertions.assertEquals(true, s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
+        Assertions.assertTrue(s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
         s1.get_compile_options().JPCRE2_ANCHORED = false;
-        Assertions.assertEquals(false, s1.get_compile_options().JPCRE2_ANCHORED);
+        Assertions.assertFalse(s1.get_compile_options().JPCRE2_ANCHORED);
         s1.get_match_options().JPCRE2_ANCHORED = false;
-        Assertions.assertEquals(false, s1.get_match_options().JPCRE2_ANCHORED);
+        Assertions.assertFalse(s1.get_match_options().JPCRE2_ANCHORED);
         s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK = false;
-        Assertions.assertEquals(false, s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
+        Assertions.assertFalse(s1.get_extra_options().JPCRE2_EXTRA_ALLOW_LOOKAROUND_BSK);
 
     }
 
@@ -117,9 +108,9 @@ class JavaPcreIT {
     @Test
     void pcre2_context_test() {
         JavaPcre s1 = new JavaPcre();
-        Assertions.assertEquals(null, s1.get_gcontext());
-        Assertions.assertEquals(null, s1.get_ccontext());
-        Assertions.assertEquals(null, s1.get_mcontext());
+        Assertions.assertNull(s1.get_gcontext());
+        Assertions.assertNull(s1.get_ccontext());
+        Assertions.assertNull(s1.get_mcontext());
         s1.gcontext_create();
         s1.ccontext_create();
         s1.mcontext_create();
@@ -136,9 +127,9 @@ class JavaPcreIT {
         s1.gcontext_free();
         // no exception handling to make sure assertion-functions are reached properly
 
-        Assertions.assertEquals(null, s1.get_gcontext());
-        Assertions.assertEquals(null, s1.get_ccontext());
-        Assertions.assertEquals(null, s1.get_mcontext());
+        Assertions.assertNull(s1.get_gcontext());
+        Assertions.assertNull(s1.get_ccontext());
+        Assertions.assertNull(s1.get_mcontext());
     }
 
     @Test
@@ -147,22 +138,22 @@ class JavaPcreIT {
         s1.compile_java("From:([^@]+)@([^\r]+)");
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
 
         s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
 
         s1.compile_java("From:([^@]+)@(?<sposti>[^\r]+)");
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
 
         s1.compile_java("");
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
     }
 
     @Test
@@ -177,7 +168,7 @@ class JavaPcreIT {
         Assertions.assertEquals(2, nameTable.size());
         Assertions.assertEquals(expected_nameTable, nameTable);
         s1.jcompile_free();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
         Assertions.assertEquals(0, nameTable.size());
     }
 
@@ -392,7 +383,7 @@ class JavaPcreIT {
         String pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
-        Assertions.assertEquals(s1.get_matchfound(), false);
+        Assertions.assertFalse(s1.get_matchfound());
 
         // The compile function:
         s1.compile_java(pattern);
@@ -408,10 +399,10 @@ class JavaPcreIT {
         while (matchfound) {
             if (groupcounter == 0) {
                 // the matching function for first match:
-                Assertions.assertEquals(s1.get_matchfound(), false);
+                Assertions.assertFalse(s1.get_matchfound());
                 s1.singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
-                Assertions.assertEquals(s1.get_matchfound(), false);
+                Assertions.assertFalse(s1.get_matchfound());
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.get_offset();
@@ -477,7 +468,7 @@ class JavaPcreIT {
             }
             matchfound = s1.get_matchfound();
         }
-        Assertions.assertEquals(s1.get_JPCRE2_ERROR_NOMATCH(), true);
+        Assertions.assertTrue(s1.get_JPCRE2_ERROR_NOMATCH());
         s1.jcompile_free();
     }
 
@@ -503,10 +494,10 @@ class JavaPcreIT {
         while (matchfound) {
             if (groupcounter == 0) {
                 // the matching function for first match:
-                Assertions.assertEquals(s1.get_matchfound(), false);
+                Assertions.assertFalse(s1.get_matchfound());
                 s1.singlematch_java(subject, s1.get_offset());
                 // no exception handling to make sure assertion-functions are reached properly
-                Assertions.assertEquals(s1.get_matchfound(), true);
+                Assertions.assertTrue(s1.get_matchfound());
             }else{
                 // the matching function for concurrent matches:
                 previousoffset = s1.get_offset();
@@ -573,7 +564,7 @@ class JavaPcreIT {
 
 
             a = 0;  /* simple counter for substring numbering */
-            Assertions.assertEquals(s1.get_matchfound(), true);
+            Assertions.assertTrue(s1.get_matchfound());
             matchfound = s1.get_matchfound();
 
             // when match is found, print match group data
@@ -694,7 +685,7 @@ class JavaPcreIT {
                 }                       /* All matches found */
                 if (groupcounter > 1) {                                      /* only check for (a) and (b) complications from concurrent matches */
                     s1.set_ovector1(s1.get_offset() + 1);                             /* Advance one code unit */
-                    Assertions.assertEquals(true, s1.get_crlf_is_newline()); // should be true when (ANYCRLF*) is starting the pattern
+                    Assertions.assertTrue(s1.get_crlf_is_newline()); // should be true when (ANYCRLF*) is starting the pattern
                     if (s1.get_crlf_is_newline() &&               /* If CRLF is a newline & */
                             s1.get_offset() < subject.length()-1 &&               /* we are at CRLF, */
                             subject.charAt(s1.get_offset()) == '\r' &&
@@ -720,7 +711,7 @@ class JavaPcreIT {
 
 
             a = 0;  /* simple counter for substring numbering */
-            Assertions.assertEquals(true, s1.get_matchfound());
+            Assertions.assertTrue(s1.get_matchfound());
             matchfound = s1.get_matchfound();
 
             // when match is found, print match group data
@@ -818,14 +809,14 @@ class JavaPcreIT {
     @Test
     void jcompile_free() {
         JavaPcre s1 = new JavaPcre();
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
         s1.compile_java("From:([^@]+)@([^\r]+)");
         // no exception handling to make sure assertion-functions are reached properly
 
         Assertions.assertNotEquals(null, s1.get_re());
         s1.jcompile_free();
         // no exception handling to make sure assertion-functions are reached properly
-        Assertions.assertEquals(null, s1.get_re());
+        Assertions.assertNull(s1.get_re());
     }
 
     @Test
