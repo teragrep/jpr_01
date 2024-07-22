@@ -184,17 +184,23 @@ public class JavaPcre {
     private Map<Integer, String> match_table;
 
     public JavaPcre(){
-        compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
-        match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
-        extra_options = new LibJavaPcre.ExtraOptionsStruct(); // initializes pcre2_compile extra options with default values of PCRE2 library.
-        pattern_size = 0; // default pattern size, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
-        re = null;
-        gcontext = null; // default value for when context is not used in compile or match
-        ccontext = null; // default value for when context is not used in compile
-        mcontext = null; // default value for when context is not used in match
-        matchfound = false;
-        JPCRE2_ERROR_NOMATCH = false;
-        name_table = new HashMap<>();
+        try {
+            compile_options = new LibJavaPcre.OptionsStruct(); // initializes pcre2_compile options with default values of PCRE2 library.
+            match_options = new LibJavaPcre.MatchOptionsStruct(); // initializes pcre2_match options with default values of PCRE2 library.
+            extra_options = new LibJavaPcre.ExtraOptionsStruct(); // initializes pcre2_compile extra options with default values of PCRE2 library.
+            pattern_size = 0; // default pattern size, value 0 will set the pcre2_compile length option to PCRE2_ZERO_TERMINATED.
+            re = null;
+            gcontext = null; // default value for when context is not used in compile or match
+            ccontext = null; // default value for when context is not used in compile
+            mcontext = null; // default value for when context is not used in match
+            matchfound = false;
+            JPCRE2_ERROR_NOMATCH = false;
+            name_table = new HashMap<>();
+        }
+        catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+            LOGGER.error("Failed to initialize JavaPcre: {}\nThis is most likely caused by noexec flag being set on that path.", unsatisfiedLinkError.getMessage(), unsatisfiedLinkError);
+            throw unsatisfiedLinkError;
+        }
     }
     // Make another constructor if/when memory management is implemented to the context functions.
 
