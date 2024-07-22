@@ -8,13 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 class JavaPcreIT {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JavaPcreIT.class);
-    
     @Test
     void pcre2_versioncheck_test() {
         JavaPcre s1 = new JavaPcre();
@@ -124,7 +118,6 @@ class JavaPcreIT {
         s1.mcontext_free();
         s1.ccontext_free();
         s1.gcontext_free();
-        // no exception handling to make sure assertion-functions are reached properly
 
         Assertions.assertNull(s1.get_gcontext());
         Assertions.assertNull(s1.get_ccontext());
@@ -173,18 +166,10 @@ class JavaPcreIT {
 
     @Test
     void pcre2_translator_test() {
-        // broken
-//        LibJavaPcre.ErrorStruct.ByValue errorstuff;
-//        errorstuff = LibJavaPcre.INSTANCE.pcre2_translate_error_code(-33);
-//        System.out.println("Test buffer output: "+(String)errorstuff.buffer);
-
-        // Working
         final PointerByReference ptrRef = new PointerByReference();
         JavaPcre.LibJavaPcre.INSTANCE.pcre2_translate_error_code_alternative(-33, ptrRef);
         final Pointer p = ptrRef.getValue();
-        if (p == null) {
-            throw new NullPointerException("Error happened while allocating memory to error string");
-        }
+        Assertions.assertNotNull(p);
         final String val = p.getString(0);
         Assertions.assertEquals("bad offset value", val);
         JavaPcre.LibJavaPcre.INSTANCE.errorcleanup(p);
@@ -194,34 +179,20 @@ class JavaPcreIT {
     @Test
     void pcre2_compile_failure_test() {
         JavaPcre s1 = new JavaPcre();
-        try {
-            s1.compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)");
-        }catch (Exception e){
-            Assertions.assertEquals("missing closing parenthesis near index 35\nFrom:(?<nimi>[^@]+@(?<sposti>[^\r]+)", e.getLocalizedMessage());
-            return;
-        }
-        throw new IllegalStateException("Exception handling broke down");
+        Exception exception = Assertions.assertThrows(Exception.class, () -> s1.compile_java("From:(?<nimi>[^@]+@(?<sposti>[^\r]+)"));
+        Assertions.assertEquals("missing closing parenthesis near index 35\nFrom:(?<nimi>[^@]+@(?<sposti>[^\r]+)", exception.getLocalizedMessage());
     }
-
 
     @Test
     void singlematch_java_failure_test() {
         JavaPcre s1 = new JavaPcre();
         s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
         // Error trigger: The value of startoffset was greater than the length of the subject.
         s1.set_offset(200);
-
-        try {
-            s1.singlematch_java("From:regular.expression@example.com\r\n" +
-                    "From:exddd@43434.com\r\n" +
-                    "From:7853456@exgem.com\r\n", s1.get_offset());
-        }catch (Exception e){
-            Assertions.assertEquals("Matching error -33: bad offset value", e.getLocalizedMessage());
-            s1.jcompile_free();
-            return;
-        }
-        throw new IllegalStateException("Exception handling broke down");
+        Exception exception = Assertions.assertThrows(Exception.class, () -> s1.singlematch_java("From:regular.expression@example.com\r\n" +
+                    "From:exddd@example.com\r\n" +
+                    "From:7853456@example.com\r\n", s1.get_offset()));
+        Assertions.assertEquals("Matching error -33: bad offset value", exception.getLocalizedMessage());
     }
 
     @Test
@@ -229,66 +200,37 @@ class JavaPcreIT {
         JavaPcre s1 = new JavaPcre();
         s1.set_offset(0);
         // Match pattern is not compiled to trigger an error
-
-        try {
-            s1.singlematch_java("From:regular.expression@example.com\r\n" +
-                    "From:exddd@43434.com\r\n" +
-                    "From:7853456@exgem.com\r\n", s1.get_offset());
-        }catch (Exception e){
-            //LOGGER.error(e.getMessage());
-            Assertions.assertEquals("Match pattern is not compiled", e.getLocalizedMessage());
-            return;
-        }
-        throw new IllegalStateException("Exception handling broke down");
+        Exception exception = Assertions.assertThrows(Exception.class, () -> s1.singlematch_java("From:regular.expression@example.com\r\n" +
+                    "From:exddd@example.com\r\n" +
+                    "From:7853456@example.com\r\n", s1.get_offset()));
+        Assertions.assertEquals("Match pattern is not compiled", exception.getLocalizedMessage());
     }
 
     @Test
     void singlematch_java_failure_test3() {
         JavaPcre s1 = new JavaPcre();
         s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
         s1.set_offset(0);
 
         // subject is null to trigger an error
-        try {
-            s1.singlematch_java(null, s1.get_offset());
-        }catch (Exception e){
-            //LOGGER.error(e.getMessage());
-            Assertions.assertEquals("Subject is null", e.getLocalizedMessage());
-            s1.jcompile_free();
-            return;
-        }
-        throw new IllegalStateException("Exception handling broke down");
+        Exception exception = Assertions.assertThrows(Exception.class, () -> s1.singlematch_java(null, s1.get_offset()));
+        Assertions.assertEquals("Subject is null", exception.getLocalizedMessage());
     }
 
     @Test
     void pcre2_singlematch_test1() {
-        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler/match options and context at default values.
         s1.compile_java("From:([^@]+)@([^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
         s1.set_offset(0);
 
         // function for getting a single match group
         s1.singlematch_java("From:regular.expression@example.com\r\n" +
-                                  "From:exddd@43434.com\r\n" +
-                                  "From:7853456@exgem.com\r\n", s1.get_offset());
-        a = 0;
-        for(Map.Entry<Integer,String>it:s1.get_match_table().entrySet()) {
-            if (a==0) {
-                Assertions.assertEquals(0, a);
-                Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
-            }
-            if (a==1) {
-                Assertions.assertEquals(1, a);
-                Assertions.assertEquals("regular.expression", it.getValue());
-            }
-            if (a==2) {
-                Assertions.assertEquals(2, a);
-                Assertions.assertEquals("example.com", it.getValue());
-            }
-            a += 1;
-        }
+                                  "From:exddd@example.com\r\n" +
+                                  "From:7853456@example.com\r\n", s1.get_offset());
+        Map<Integer,String> entries = s1.get_match_table();
+        Assertions.assertEquals("From:regular.expression@example.com", entries.get(0));
+        Assertions.assertEquals("regular.expression", entries.get(1));
+        Assertions.assertEquals("example.com", entries.get(2));
     }
 
     @Test
@@ -296,47 +238,24 @@ class JavaPcreIT {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
         s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
         s1.set_offset(0);
 
         // function for getting a single match group
-        s1.singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n", s1.get_offset());
+        s1.singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@example.com\r\nFrom:7853456@example.com\r\n", s1.get_offset());
         // no exception handling to make sure assertion-functions are reached properly
-        a = 0;
-        for(Map.Entry<Integer,String>it:s1.get_match_table().entrySet()) {
-            Assertions.assertTrue(a==0 || a==1 || a==2);
-            if (a==0) {
-                Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
-            }
-            if (a==1) {
-                Assertions.assertEquals("regular.expression", it.getValue());
-            }
-            if (a==2) {
-                Assertions.assertEquals("example.com", it.getValue());
-            }
-            a += 1;
-        }
-        if (a==0) {
-            throw new IllegalStateException("No match when there should be a match");
-        }else{
-            if (s1.get_name_table().size() > 0) {
-            }
-            for(Map.Entry<String,Integer>it:s1.get_name_table().entrySet()) {
-                Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
-                if (it.getValue()==1) {
-                    Assertions.assertEquals("nimi", it.getKey());
-                }
-                else if (it.getValue()==2) {
-                    Assertions.assertEquals("sposti", it.getKey());
-                }
-            }
-        }
-        s1.jcompile_free();
+        Map<Integer,String> entries = s1.get_match_table();
+        Assertions.assertEquals("From:regular.expression@example.com", entries.get(0));
+        Assertions.assertEquals("regular.expression", entries.get(1));
+        Assertions.assertEquals("example.com", entries.get(2));
+
+
+        Map<String,Integer> names = s1.get_name_table();
+        Assertions.assertEquals(1, names.get("nimi"));
+        Assertions.assertEquals(2, names.get("sposti"));
     }
 
     @Test
     void pcre2_singlematch_1namedgroup_test() {
-        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
 
         s1.compile_java("From:([^@]+)@(?<sposti>[^\r]+)");
@@ -344,35 +263,15 @@ class JavaPcreIT {
 
         // function for getting a single match group
         s1.singlematch_java("From:regular.expression@example.com\r\n" +
-                                  "From:exddd@43434.com\r\n" +
-                                  "From:7853456@exgem.com\r\n", s1.get_offset());
-        a = 0;
-        //System.out.print("Match group:\n");
-        for(Map.Entry<Integer,String>it:s1.get_match_table().entrySet()) {
-            Assertions.assertTrue(a==0 || a==1 || a==2);
-            if (a==0) {
-                Assertions.assertEquals("From:regular.expression@example.com", it.getValue());
-            }
-            if (a==1) {
-                Assertions.assertEquals("regular.expression", it.getValue());
-            }
-            if (a==2) {
-                Assertions.assertEquals("example.com", it.getValue());
-            }
-            a += 1;
-        }
-        if (a==0) {
-            //System.out.print("No match!\n");
-        }else{
-            if (s1.get_name_table().size() > 0) {
-                //System.out.print("named groups:\n");
-            }
-            for(Map.Entry<String,Integer>it:s1.get_name_table().entrySet()) {
-                Assertions.assertEquals(2, it.getValue());
-                Assertions.assertEquals("sposti", it.getKey());
-            }
-        }
-        s1.jcompile_free();
+                                  "From:exddd@example.com\r\n" +
+                                  "From:7853456@example.com\r\n", s1.get_offset());
+        Map<Integer, String> entries = s1.get_match_table();
+        Assertions.assertEquals("From:regular.expression@example.com", entries.get(0));
+        Assertions.assertEquals("regular.expression", entries.get(1));
+        Assertions.assertEquals("example.com", entries.get(2));
+
+        Map<String,Integer> names = s1.get_name_table();
+        Assertions.assertEquals(2, names.get("sposti"));
     }
 
     @Test
@@ -474,7 +373,7 @@ class JavaPcreIT {
     @Test
     void pcre2_matchall_test() {
         int a;
-        String subject = "From:regular.expression@example.com\r\n" + "From:exddd@43434.com\r\n" + "From:7853456@exgem.com\r\n";
+        String subject = "From:regular.expression@example.com\r\n" + "From:exddd@example.com\r\n" + "From:7853456@example.com\r\n";
         String pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
@@ -581,22 +480,22 @@ class JavaPcreIT {
                     Assertions.assertEquals("example.com", it.getValue());
                 }
                 if (a==0 && groupcounter == 2) {
-                    Assertions.assertEquals("From:exddd@43434.com", it.getValue());
+                    Assertions.assertEquals("From:exddd@example.com", it.getValue());
                 }
                 if (a==1 && groupcounter == 2) {
                     Assertions.assertEquals("exddd", it.getValue());
                 }
                 if (a==2 && groupcounter == 2) {
-                    Assertions.assertEquals("43434.com", it.getValue());
+                    Assertions.assertEquals("example.com", it.getValue());
                 }
                 if (a==0 && groupcounter == 3) {
-                    Assertions.assertEquals("From:7853456@exgem.com", it.getValue());
+                    Assertions.assertEquals("From:7853456@example.com", it.getValue());
                 }
                 if (a==1 && groupcounter == 3) {
                     Assertions.assertEquals("7853456", it.getValue());
                 }
                 if (a==2 && groupcounter == 3) {
-                    Assertions.assertEquals("exgem.com", it.getValue());
+                    Assertions.assertEquals("example.com", it.getValue());
                 }
                 a += 1;
             }
@@ -620,7 +519,7 @@ class JavaPcreIT {
     @Test
     void pcre2_matchall_clrf_test() {
         int a;
-        String subject = "From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n";
+        String subject = "From:regular.expression@example.com\r\nFrom:exddd@example.com\r\nFrom:7853456@example.com\r\n";
         String pattern = "(*ANYCRLF)From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)"; // (*ANYCRLF) in the pattern enables the PCRE2_NEWLINE_ANYCRLF newline-option
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
 
@@ -729,7 +628,7 @@ class JavaPcreIT {
                     Assertions.assertEquals("example.com", it.getValue());
                 }
                 if (a==0 && groupcounter == 2) {
-                    Assertions.assertEquals("From:exddd@43434.com", it.getValue());
+                    Assertions.assertEquals("From:exddd@example.com", it.getValue());
                 }
                 if (a==1 && groupcounter == 2) {
                     Assertions.assertEquals("exddd", it.getValue());
@@ -738,13 +637,13 @@ class JavaPcreIT {
                     Assertions.assertEquals("43434.com", it.getValue());
                 }
                 if (a==0 && groupcounter == 3) {
-                    Assertions.assertEquals("From:7853456@exgem.com", it.getValue());
+                    Assertions.assertEquals("From:7853456@example.com", it.getValue());
                 }
                 if (a==1 && groupcounter == 3) {
                     Assertions.assertEquals("7853456", it.getValue());
                 }
                 if (a==2 && groupcounter == 3) {
-                    Assertions.assertEquals("exgem.com", it.getValue());
+                    Assertions.assertEquals("example.com", it.getValue());
                 }
                 a += 1;
             }
@@ -774,7 +673,6 @@ class JavaPcreIT {
         String pattern = "(*ANYCRLF)From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         s1.get_compile_options().JPCRE2_UTF = true;
         s1.compile_java(pattern);
-        // no exception handling to make sure assertion-functions are reached properly
         boolean testi = s1.get_utf8();
         Assertions.assertTrue(testi);
         boolean testi2 = s1.get_crlf_is_newline();
@@ -784,25 +682,19 @@ class JavaPcreIT {
         pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         s1.get_compile_options().JPCRE2_UTF = false;
         s1.compile_java(pattern);
-        // no exception handling to make sure assertion-functions are reached properly
         testi = s1.get_utf8();
         Assertions.assertFalse(testi);
         testi2 = s1.get_crlf_is_newline();
         Assertions.assertFalse(testi2);
-
-        s1.jcompile_free();
     }
     @Test
     void pcre2_matchall_nomatch_test() {
         int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
         s1.compile_java("nomatch");
-        // no exception handling to make sure assertion-functions are reached properly
         s1.set_offset(0);
-        s1.singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@43434.com\r\nFrom:7853456@exgem.com\r\n", s1.get_offset());
-        // no exception handling to make sure assertion-functions are reached properly
+        s1.singlematch_java("From:regular.expression@example.com\r\nFrom:exddd@example.com\r\nFrom:7853456@example.com\r\n", s1.get_offset());
         Assertions.assertFalse(s1.get_matchfound());
-        s1.jcompile_free();
     }
 
     @Test
@@ -810,11 +702,9 @@ class JavaPcreIT {
         JavaPcre s1 = new JavaPcre();
         Assertions.assertNull(s1.get_re());
         s1.compile_java("From:([^@]+)@([^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
 
         Assertions.assertNotEquals(null, s1.get_re());
-        s1.jcompile_free();
-        // no exception handling to make sure assertion-functions are reached properly
+        Assertions.assertDoesNotThrow(s1::jcompile_free);
         Assertions.assertNull(s1.get_re());
     }
 
@@ -822,20 +712,8 @@ class JavaPcreIT {
     void jcompile_free_error(){
         JavaPcre s1 = new JavaPcre();
         s1.compile_java("From:([^@]+)@([^\r]+)");
-        // no exception handling to make sure assertion-functions are reached properly
-        // TODO: do this to all exceptions that are capable of blocking assertions.
-
-        try {
-            s1.jcompile_free();
-        }catch(Exception e){
-            Assertions.assertEquals("No data to free", e.getLocalizedMessage());
-        }
-        try {
-            s1.jcompile_free();
-        }catch(Exception e){
-            Assertions.assertEquals("No data to free", e.getLocalizedMessage());
-            return;
-        }
-        throw new IllegalStateException("Exception handling broke down");
+        Assertions.assertDoesNotThrow(s1::jcompile_free);
+        Exception exception = Assertions.assertThrows(Exception.class, s1::jcompile_free);
+        Assertions.assertEquals("No data to free", exception.getLocalizedMessage());
     }
 }
