@@ -235,7 +235,6 @@ class JavaPcreIT {
 
     @Test
     void pcre2_singlematch_2namedgroups_test() {
-        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
         s1.compile_java("From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)");
         s1.set_offset(0);
@@ -276,7 +275,6 @@ class JavaPcreIT {
 
     @Test
     void pcre2_singlematch_nomatch_test() {
-        int a;
         String subject = "nomatch";
         String pattern = "From:(?<nimi>[^@]+)@(?<sposti>[^\r]+)";
         JavaPcre s1 = new JavaPcre(); // also initializes all the compiler and matching options at default pcre2 values (all options disabled by default).
@@ -501,7 +499,7 @@ class JavaPcreIT {
             }
 
             // print named group data if available
-            if (s1.get_name_table().size() > 0) {
+            if (!s1.get_name_table().isEmpty()) {
                 for (Map.Entry<String, Integer> it : s1.get_name_table().entrySet()) {
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
@@ -649,7 +647,7 @@ class JavaPcreIT {
             }
 
             // print named group data if available
-            if (s1.get_name_table().size() > 0) {
+            if (!s1.get_name_table().isEmpty()) {
                 for (Map.Entry<String, Integer> it : s1.get_name_table().entrySet()) {
                     Assertions.assertTrue(it.getValue()==1 || it.getValue()==2);
                     if (it.getValue()==1) {
@@ -689,7 +687,6 @@ class JavaPcreIT {
     }
     @Test
     void pcre2_matchall_nomatch_test() {
-        int a;
         JavaPcre s1 = new JavaPcre(); // also initializes the compiler options at default values.
         s1.compile_java("nomatch");
         s1.set_offset(0);
